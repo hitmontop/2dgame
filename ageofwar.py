@@ -20,13 +20,14 @@ class unit:
         self.is_lock_on = False
 
     def update(self):
-        if 0 > self.x or self.x > 800 or 0 > self.y or self.x > 600:
+        if 0 > self.x or self.x > 800 or 0 > self.y or self.y > 600:
             self.hp=0
+
         unit.check_my_hp()
 
         if self.is_lock_on:
             if self.x < self.target.x:
-                if self.x - self.range < self.target.x:
+                if self.x + self.range < self.target.x:
                     self.x = self.x + self.speed
                 else:
                     unit.attack(self.dmg)
@@ -113,8 +114,8 @@ class ant(unit):
         self.hp = 1500
         self.dmg = 10
         self.sight = 100
-        self.range = 2
-        self.speed = 1
+        self.range = 50
+        self.speed = 3.0
         self.x, self.y = x, y
         self.is_foe = is_foe
         self.is_lock_on = False
