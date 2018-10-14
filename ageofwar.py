@@ -5,27 +5,48 @@ open_canvas()
 
 
 # game object class
-
-class SmallBall:
+class unit:
     def __init__(self):
-        self.image = load_image('ball21x21.png')
-        self.x, self.y = random.randint(10, 780), 600
-        self.v = random.randint(5, 20)
+        self.hp, self.dmg, self.range, self.speed, self.x, self.y, self.acc, self.frame
 
     def draw(self):
         self.image.draw(self.x, self.y)
 
     def update(self):
-        if self.y > 60:
-            self.y -= self.v
+        unit.move()
 
-class Grass:
+
+    def find_enemy_unit(self):
+        pass
+
+    def move(self):
+        self.x = self.x + self.speed
+
+    def frame_update(self):
+        pass
+
+    def engage(self):
+        pass
+
+    def death(self):
+        pass
+
+class ant(unit):
     def __init__(self):
-        self.image = load_image('grass.png')
+        self.hp = 100
+        self.dmg = 10
+        self.range = 5
+        self.speed = 1
+        self.x, self.y = 100, 100
 
-    def draw(self):
-        self.image.draw(400, 30)
+        self.image = load_image('ball21X21.png')
 
+
+
+
+
+
+'''
 class Boy:
     def __init__(self):
         self.x, self.y = random.randint(100, 700), 90
@@ -38,7 +59,7 @@ class Boy:
 
     def draw(self):
         self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-
+'''
 
 def handle_events():
     global running
@@ -52,12 +73,10 @@ def handle_events():
 
 
 # initialization code
-grass = Grass()
+enemy_units = []
+frendly_units = []
 
-
-
-
-
+frendly_units.append(ant())
 
 
 
@@ -71,12 +90,19 @@ while running:
     for ball in balls:
         ball.update()'''
 
+    for unit in frendly_units:
+        unit.update()
+
     clear_canvas()
     '''grass.draw()
     for boy in team:
         boy.draw()
     for ball in balls:
         ball.draw()'''
+
+    for unit in frendly_units:
+        unit.draw()
+
     update_canvas()
 
     delay(0.05)
