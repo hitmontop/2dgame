@@ -7,43 +7,67 @@ open_canvas()
 # game object class
 class unit:
     def __init__(self):
-        self.hp, self.dmg, self.range, self.speed, self.x, self.y, self.acc, self.frame
+        self.hp
+        self.dmg
+        self.range
+        self.speed
+        self.x
+        self.y
+        self.sight
+        self.is_foe
+        self.target
+        self.image
+
+    def update(self):
+        if self.is_foe:
+            if unit.search_for_enemy():
+                if self.x - self.range > self.target.x or self.target.x > self.x + self.range:
+                    self.x = self.x - self.speed
+            else:
+                self.x = self.x - self.speed
+        else:
+            if unit.search_for_enemy():
+                if self.x - self.range > self.target.x or self.target.x > self.x + self.range:
+                    self.x = self.x + self.speed
+            else:
+                self.x = self.x + self.speed
+
+
+    def search_for_enemy(self):
+        if self.is_foe:
+            for i in player_units:
+                if self.x - self.sight < i.x < self.x + self.sight:
+                    self.target = i
+                    return True
+        else:
+            for i in computer_units:
+                if self.x - self.sight < i.x < self.x + self.sight:
+                    self.target = i
+                    return True
+
+
+    def attack(self):
+        pass
 
     def draw(self):
         self.image.draw(self.x, self.y)
 
-    def update(self):
-        unit.move()
 
-
-    def find_enemy_unit(self):
-        pass
-
-    def move(self):
-        self.x = self.x + self.speed
-
-    def frame_update(self):
-        pass
-
-    def engage(self):
-        pass
-
-    def death(self):
-        pass
 
 class ant(unit):
-    def __init__(self):
+    def __init__(self, x, y, is_foe):
         self.hp = 100
         self.dmg = 10
-        self.range = 5
+        self.sight = 6000
+        self.range = 10
         self.speed = 1
-        self.x, self.y = 100, 100
+        self.x, self.y = x, y
+        self.is_foe = is_foe
 
-        self.image = load_image('ball21X21.png')
-
-
-
-
+        if self.is_foe:
+            self.image = load_image('ball21X21.png')
+        else:
+            self.image = load_image('ball41X41.png')
 
 
 '''
@@ -73,11 +97,12 @@ def handle_events():
 
 
 # initialization code
-enemy_units = []
-frendly_units = []
+player_units = []
+computer_units = []
 
-frendly_units.append(ant())
-
+player_units.append(ant(200, 200, False))
+computer_units.append(ant(600, 400, True))
+player_units.append(ant(100, 300, False))
 
 
 # game main loop
@@ -85,27 +110,21 @@ running = True
 while running:
     handle_events()
 
-    '''for boy in team:
-        boy.update()
-    for ball in balls:
-        ball.update()'''
-
-    for unit in frendly_units:
+    for unit in player_units:
+        unit.update()
+    for unit in computer_units:
         unit.update()
 
     clear_canvas()
-    '''grass.draw()
-    for boy in team:
-        boy.draw()
-    for ball in balls:
-        ball.draw()'''
 
-    for unit in frendly_units:
+    for unit in player_units:
+        unit.draw()
+    for unit in computer_units:
         unit.draw()
 
     update_canvas()
 
-    delay(0.05)
+    delay(0.01)
 
 
 
