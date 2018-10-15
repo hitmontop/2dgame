@@ -6,6 +6,8 @@ open_canvas()
 
 # game object class
 class Unit:
+    global cnt
+
     def __init__(self):
         self.hp
         self.dmg
@@ -21,7 +23,7 @@ class Unit:
         self.is_melee
 
     def update(self):
-        if 0 > self.x or self.x > 800 or 0 > self.y or self.y > 600:
+        if Unit.is_unit_out_of_screen():
             Unit.death()
 
         Unit.check_my_hp()
@@ -32,43 +34,55 @@ class Unit:
 
         if self.is_lock_on:
             if self.x < self.target.x:
-                if self.x + self.range < self.target.x:
-                    self.x = self.x + self.speed
+                if Unit.is_target_out_of_range_right():
+                    Unit.move_right()
                 else:
                     Unit.attack(self.dmg)
             else:
-                if self.x - self.range > self.target.x:
-                    self.x = self.x - self.speed
+                if Unit.is_target_out_of_range_left():
+                    Unit.move_left()
                 else:
                     Unit.attack(self.dmg)
 
         else:
             if Unit.search_for_enemy():
                 if self.x < self.target.x:
-                    if self.x - self.range < self.target.x:
-                        self.x = self.x + self.speed
+                    if Unit.is_target_out_of_range_right():
+                        Unit.move_right()
                     else:
                         Unit.attack(self.dmg)
                 else:
-                    if self.x - self.range > self.target.x:
-                        self.x = self.x - self.speed
+                    if Unit.is_target_out_of_range_left():
+                        Unit.move_left()
                     else:
                         Unit.attack(self.dmg)
 
             else:
                 if self.is_foe:
-                    self.x = self.x - self.speed
-
+                    Unit.move_left()
                 else:
-                    self.x = self.x + self.speed
+                    Unit.move_right()
 
+    def is_unit_out_of_screen(self):
+        if 0 > self.x or self.x > 800 or 0 > self.y or self.y > 600:
+            return True
 
+    def is_target_out_of_range_right(self):
+        if self.x + self.range < self.target.x:
+            return True
 
+    def is_target_out_of_range_left(self):
+        if self.x - self.range > self.target.x:
+            return True
 
+    def move_left(self):
+        self.x = self.x - self.speed
+
+    def move_right(self):
+        self.x = self.x + self.speed
 
     def search_for_enemy(self):
-
-        min= 10000
+        min = 10000
 
         if self.is_foe:
             for i in player_units:
@@ -97,7 +111,8 @@ class Unit:
         if self.is_melee:
             self.target.hp = self.target.hp - dmg
         else:
-            Spitter_ant_projectile(self.x, self.y, self.target)
+            if cnt % 10 == 0:
+                Spitter_ant_projectile(self.x, self.y, self.target)
 
 
 
@@ -119,11 +134,12 @@ class Unit:
 class Ant(Unit):
     def __init__(self, x, y, is_foe):
         self.hp = 5000
-        self.dmg = 100
+        self.dmg = 10
         self.sight = 100
         self.range = 2
         self.speed = 1.5
         self.x, self.y = x, y
+
         self.is_foe = is_foe
         self.is_lock_on = False
         self.is_melee = True
@@ -133,12 +149,14 @@ class Ant(Unit):
 
 class Spitter_ant(Unit):
     def __init__(self, x, y, is_foe):
+
         self.hp = 1500
-        self.dmg = 2
+        self.dmg = 1000
         self.sight = 300
         self.range = 100
         self.speed = 1.0
         self.x, self.y = x, y
+
         self.is_foe = is_foe
         self.is_lock_on = False
         self.is_melee = False
@@ -180,13 +198,12 @@ class Projectile:
 class Spitter_ant_projectile(Projectile):
     def __init__(self, x, y, target):
 
+        self.target = target
         self.speed = 3.0
         self.i = 0
-        self.x, self.y = x, y
         self.dmg = 1000
-        self.target = target
+        self.x, self.y = x, y
         self.destination_x, self.destination_y = self.target.x, self.target.y
-
         self.image = load_image('flame.png')
 
         projectiles.append(self)
