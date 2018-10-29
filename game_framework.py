@@ -1,0 +1,90 @@
+class GameState:
+    def __init__(self, state):
+        self.enter = enter
+        self.exit = state.exit
+        self.pause = state.pause
+        self.resume = state.resume
+        self.handle_events = state.handle_events
+        self.update = state.update
+        self.draw = state.draw
+
+class TestGameState:
+
+    def __init__(self, name):
+        self.name = name
+
+    def enter(self):
+        print("State [%s] Entered" % self.name)
+
+    def exit(self):
+        print("State [%s] Exited" % self.name)
+
+    def pause(self):
+        print("State [%s] Paused" % self.name)
+
+    def resume(self):
+        print("State [%s] Resumed" % self.name)
+
+    def handle_events(self):
+        print("State [%s] handle_events" % self.name)
+
+    def update(self):
+        print("State [%s] update" % self.name)
+
+    def draw(self):
+        print("State [%s] draw" % self.name)
+
+
+running = None
+stack = None
+
+def change_state(state):
+    global stack
+    if len(stack) > 0:
+        stack[-1].exit
+        stack.pop
+    stack.append(state)
+    enter
+
+def push_state(state):
+    global stack
+    if len(stack) > 0:
+        stack[-1].pause
+    stack.append(state)
+    enter
+
+def pop_state():
+    global stack
+    if len(stack) > 0:
+        stack.exit()
+        stack.pop()
+
+    if len(stack) > 0:
+        stack[-1].resume
+
+def quit():
+    global running
+    running = False
+
+def run(start_state):
+    global running, stack
+    running = True
+    stack = [start_state]
+    start_state.enter()
+    while running:
+        stack[-1].handle_events()
+        stack[-1].update()
+        stack[-1].draw()
+    while len(stack) > 0:
+        stack[-1].exit()
+        stack[-1].pop()
+
+
+def test_game_framework():
+    start_state = TestGameState('StartState')
+    run(start_state)
+
+
+
+if __name__ == '__main__':
+    test_game_framework()

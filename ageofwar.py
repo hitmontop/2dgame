@@ -32,8 +32,13 @@ class Unit:
             if self.target.hp <= 0:
                 self.is_lock_on = False
 
+            if Unit.is_target_out_of_range_right() or Unit.is_target_out_of_range_left() == False:
+                Unit.search_for_enemy_by_range()
+
+
+
         if self.is_lock_on:
-            if self.x < self.target.x:
+            if self.x <= self.target.x:
                 if Unit.is_target_out_of_range_right():
                     Unit.move_right()
                 else:
@@ -45,8 +50,8 @@ class Unit:
                     Unit.attack(self.dmg)
 
         else:
-            if Unit.search_for_enemy():
-                if self.x < self.target.x:
+            if Unit.search_for_enemy_by_sight():
+                if self.x <= self.target.x:
                     if Unit.is_target_out_of_range_right():
                         Unit.move_right()
                     else:
@@ -68,11 +73,11 @@ class Unit:
             return True
 
     def is_target_out_of_range_right(self):
-        if self.x + self.range < self.target.x:
+        if self.x + self.range <= self.target.x:
             return True
 
     def is_target_out_of_range_left(self):
-        if self.x - self.range > self.target.x:
+        if self.x - self.range >= self.target.x:
             return True
 
     def move_left(self):
@@ -81,12 +86,12 @@ class Unit:
     def move_right(self):
         self.x = self.x + self.speed
 
-    def search_for_enemy(self):
+    def search_for_enemy_by_sight(self):
         min = 10000
 
         if self.is_foe:
             for i in player_units:
-                if self.x - self.sight < i.x < self.x + self.sight:
+                if self.x - self.sight <= i.x <= self.x + self.sight:
                     if min > i.x:
                         min = i.x
                         self.target = i
@@ -97,7 +102,31 @@ class Unit:
 
         else:
             for i in computer_units:
-                if self.x - self.sight < i.x < self.x + self.sight:
+                if self.x - self.sight <= i.x <= self.x + self.sight:
+                    if min > i.x:
+                        min = i.x
+                        self.target = i
+                        self.is_lock_on = True
+
+            if self.is_lock_on:
+                return True
+
+    def search_for_enemy_by_range(self):
+        min= 10000
+        if self.is_foe:
+            for i in player_units:
+                if self.x - self.range <= i.x <= self.x + self.range:
+                    if min > i.x:
+                        min = i.x
+                        self.target = i
+                        self.is_lock_on = True
+
+            if self.is_lock_on:
+                return True
+
+        else:
+            for i in computer_units:
+                if self.x - self.range <= i.x <= self.x + self.range:
                     if min > i.x:
                         min = i.x
                         self.target = i
@@ -228,13 +257,14 @@ projectiles = []
 
 # game main loop
 
-cnt=0
+cnt = 0
 running = True
 while running:
     handle_events()
 
     if cnt % 100 == 0:
         computer_units.append(Spitter_ant(random.randint(10, 600), random.randint(200, 300), True))
+    if cnt % 60 == 0:
         player_units.append(Ant(random.randint(10, 600), random.randint(200, 300), False))
 
     for Unit in player_units:
