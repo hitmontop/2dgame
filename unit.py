@@ -20,7 +20,6 @@ class RunState:
 
     @staticmethod
     def enter(unit):
-        print("enter Run")
         unit.init_time = get_time()
         if unit.search_for_enemy_by_sight_and_get_target():
             unit.add_event(ChaseState)
@@ -31,7 +30,6 @@ class RunState:
 
     @staticmethod
     def do(unit):
-        print("do run")
         if unit.check_my_hp():
             unit.add_event(DyingState)
 
@@ -76,7 +74,7 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        print("enter Chase")
+
 
         unit.init_time = get_time()
         unit.is_safe_to_go = True
@@ -109,7 +107,6 @@ class ChaseState:
 
     @staticmethod
     def do(unit):
-        print("do Chase")
         if unit.check_my_hp():
             unit.add_event(DyingState)
 
@@ -153,7 +150,6 @@ class AttackState:
 
     @staticmethod
     def enter(unit):
-        print("enter Attack")
         unit.init_time = get_time()
         unit.cnt = unit.ATTACK_FRAMES_PER_ACTION
 
@@ -163,7 +159,6 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-        print("do attack")
 
         if unit.check_my_hp():
             unit.add_event(DyingState)
@@ -196,7 +191,6 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
-        print("enter dying")
         unit.init_time = get_time()
 
 
@@ -206,7 +200,6 @@ class DyingState:
 
     @staticmethod
     def do(unit):
-        print("do dying")
 
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                       unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
@@ -284,7 +277,6 @@ class Unit:
                 if self.x - self.sight <= i.x <= self.x + self.sight:
                     if min > i.x:
                         min = i.x
-                        print(min)
                         self.target = i
 
         else:
@@ -292,7 +284,6 @@ class Unit:
                 if self.x - self.sight <= i.x <= self.x + self.sight:
                     if min > i.x:
                         min = i.x
-                        print(min)
                         self.target = i
 
         if (min == 10000) is False:
@@ -307,7 +298,6 @@ class Unit:
                 if self.x - self.range <= i.x <= self.x + self.range:
                     if min > i.x:
                         min = i.x
-                        print(min)
                         self.target = i
 
         else:
@@ -315,7 +305,6 @@ class Unit:
                 if self.x - self.range <= i.x <= self.x + self.range:
                     if min > i.x:
                         min = i.x
-                        print(min)
                         self.target = i
 
         if (min == 10000) is False:
