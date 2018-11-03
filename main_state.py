@@ -50,11 +50,11 @@ def update():
         num = random.randint(0, 1)
 
         if num == 0:
-            ant = Ant(random.randint(600, 1100), random.randint(150, 200), True)
+            ant = Ant(random.randint(100, 1100), random.randint(150, 200), True)
             game_world.add_object(ant, 2)
 
         else:
-            ant = Ant(random.randint(100, 600), random.randint(150, 200), False)
+            ant = Ant(random.randint(100, 1100), random.randint(150, 200), False)
             game_world.add_object(ant, 1)
 
 

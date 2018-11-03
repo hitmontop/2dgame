@@ -22,7 +22,7 @@ class RunState:
     def enter(unit):
         print("enter Run")
         unit.init_time = get_time()
-        if unit.search_for_enemy_by_sight():
+        if unit.search_for_enemy_by_sight_and_get_target():
             unit.add_event(ChaseState)
 
     @staticmethod
@@ -77,13 +77,30 @@ class ChaseState:
     @staticmethod
     def enter(unit):
         print("enter Chase")
-        unit.is_safe_to_go = True
+
         unit.init_time = get_time()
-        if unit.search_for_enemy_by_sight():
+        unit.is_safe_to_go = True
+
+        if unit.target.hp <= 0 or unit.target is None:
+            unit.is_lock_on = False
+            unit.search_for_enemy_by_sight_and_get_target()
+
+        if unit.is_lock_on:
             if unit.check_range():
                 unit.add_event(AttackState)
                 unit.is_safe_to_go = False
+
+            elif unit.search_for_enemy_by_range_and_get_target():
+                pass
+
+            elif unit.check_sight():
+                pass
+
+            else:
+                unit.is_lock_on = False
+                unit.add_event(RunState)
         else:
+            unit.is_lock_on = False
             unit.add_event(RunState)
 
     @staticmethod
@@ -259,7 +276,7 @@ class Unit:
 
     ###############################################
 
-    def search_for_enemy_by_sight(self):
+    def search_for_enemy_by_sight_and_get_target(self):
         min = 10000
 
         if self.is_foe:
@@ -279,10 +296,37 @@ class Unit:
                         self.target = i
 
         if (min == 10000) is False:
+            self.is_lock_on = True
+            return True
+
+    def search_for_enemy_by_range_and_get_target(self):
+        min = 10000
+
+        if self.is_foe:
+            for i in game_world.search_objects(player_units_list):
+                if self.x - self.range <= i.x <= self.x + self.range:
+                    if min > i.x:
+                        min = i.x
+                        print(min)
+                        self.target = i
+
+        else:
+            for i in game_world.search_objects(computer_units_list):
+                if self.x - self.range <= i.x <= self.x + self.range:
+                    if min > i.x:
+                        min = i.x
+                        print(min)
+                        self.target = i
+
+        if (min == 10000) is False:
             return True
 
     def check_range(self):
         if self.x - self.range <= self.target.x <= self.x + self.range:
+            return True
+
+    def check_sight(self):
+        if self.x - self.sight <= self.target.x <= self.x + self.sight:
             return True
 
     def deal_damage_to_target(self):
