@@ -53,6 +53,14 @@ class RunState:
 
     @staticmethod
     def draw(unit):
+
+        if unit.is_foe is False:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
+        else:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
+
         if unit.is_foe is False:
             unit.image.clip_draw(int(unit.frame) * 100, 400,  100, 100, unit.x, unit.y)
         else:
@@ -107,6 +115,14 @@ class ChaseState:
 
     @staticmethod
     def draw(unit):
+
+        if unit.is_foe is False:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
+        else:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
+
         if unit.target.x > unit.x:
             unit.image.clip_draw(int(unit.frame) * 100, 400,  100, 100, unit.x, unit.y)
         else:
@@ -145,6 +161,14 @@ class AttackState:
 
     @staticmethod
     def draw(unit):
+
+        if unit.is_foe is False:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
+        else:
+            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
+            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
+
         if unit.target.x > unit.x:
             unit.image.clip_draw(int(unit.frame) * 100, 200,  100, 100, unit.x, unit.y)
         else:
@@ -208,6 +232,7 @@ class Unit:
         self.event_que = []
         self.cur_state = RunState
 
+        self.max_hp =0
         self.hp = 0
         self.damage = 0
         self.range = 0
@@ -224,8 +249,9 @@ class Unit:
         self.init_time =0
         self.cnt = 0
 
-        self.is_foe = False
 
+        self.is_foe = False
+        self.is_lock_on = False
         self.target = None
         self.is_melee = True
 
@@ -263,7 +289,7 @@ class Unit:
         self.target.hp -= self.damage
 
     def check_my_hp(self):
-        if self.hp == 0:
+        if self.hp <= 0:
             return True
 
     ###############################################

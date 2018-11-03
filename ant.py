@@ -3,6 +3,7 @@ from unit import*
 
 class Ant(Unit):
     image = None
+    font = None
 
     def __init__(self, x, y, is_foe):
 
@@ -27,6 +28,7 @@ class Ant(Unit):
         self.event_que = []
         self.cur_state = RunState
 
+        self.max_hp = 100
         self.hp = 100
         self.damage = 10
         self.range = self.PIXEL_PER_METER * 0.02
@@ -42,10 +44,13 @@ class Ant(Unit):
         self.cnt = 0
 
         self.is_foe = is_foe
-
+        self.is_lock_on = False
         self.target = None
         self.is_melee = True
         self.is_safe_to_go = False
 
         if Ant.image == None:
             Ant.image = load_image('ant.png')
+
+        if Ant.font == None:
+            self.font = load_font('ENCR10B.TTF', 16)

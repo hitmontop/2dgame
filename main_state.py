@@ -44,7 +44,7 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
-    if get_time() - init_time > 0.8 and cnt < 3:
+    if get_time() - init_time > 0.8 and cnt <= 18:
         init_time = get_time()
         cnt += 1
         num = random.randint(0, 1)
