@@ -5,36 +5,47 @@ class Ant(Unit):
     image = None
 
     def __init__(self, x, y, is_foe):
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.1
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.RUN_TIME_PER_ACTION = 0.5
+        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
+        self.RUN_FRAMES_PER_ACTION = 5
+
+        self.ATTACK_TIME_PER_ACTION = 1
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_FRAMES_PER_ACTION = 4
+
+        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
+        self.DYING_FRAMES_PER_ACTION = 2
+
         self.event_que = []
         self.cur_state = RunState
 
-
         self.hp = 100
         self.damage = 10
-        self.range = 10
-        self.sight = 1000
-        self.velocity = 1
-
-
+        self.range = self.PIXEL_PER_METER * 0.02
+        self.sight = self.PIXEL_PER_METER * 0.05
+        self.velocity = self.RUN_SPEED_PPS
 
         self.x = x
         self.y = y
 
-
-        self.attack_frame = 3
-        self.dying_frame = 1
-
         self.frame = 0
-
         self.time = 0
-
+        self.init_time = 0
+        self.cnt = 0
 
         self.is_foe = is_foe
 
-        if Ant.image == None:
-            Ant.image = load_image('ant.png')
-
         self.target = None
         self.is_melee = True
-        self.is_lock_on = False
+        self.is_safe_to_go = False
 
+        if Ant.image == None:
+            Ant.image = load_image('ant.png')
