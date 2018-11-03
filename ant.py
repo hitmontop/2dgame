@@ -2,22 +2,23 @@ from pico2d import*
 from unit import*
 
 class Ant(Unit):
+    image = None
 
-    def __init__(self):
+    def __init__(self, x, y, is_foe):
         self.event_que = []
         self.cur_state = RunState
 
 
         self.hp = 100
         self.damage = 10
-        self.range = 2
-        self.sight = 30
-        self.velocity = 0.3
+        self.range = 10
+        self.sight = 1000
+        self.velocity = 1
 
 
 
-        self.x = 300
-        self.y = 200
+        self.x = x
+        self.y = y
 
 
         self.attack_frame = 3
@@ -25,15 +26,15 @@ class Ant(Unit):
 
         self.frame = 0
 
-        self.timer = 0
+        self.time = 0
 
-        if type == 1:
-            self.is_foe = False
 
-        else:
-            self.is_foe = True
+        self.is_foe = is_foe
+
+        if Ant.image == None:
+            Ant.image = load_image('ant.png')
 
         self.target = None
-        self.image = load_image('ant.png')
         self.is_melee = True
         self.is_lock_on = False
+
