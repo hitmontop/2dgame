@@ -89,7 +89,8 @@ class ChaseState:
                 unit.is_safe_to_go = False
 
             elif unit.search_for_enemy_by_range_and_get_target():
-                pass
+                unit.add_event(AttackState)
+                unit.is_safe_to_go = False
 
             elif unit.check_sight():
                 pass
@@ -109,7 +110,6 @@ class ChaseState:
     def do(unit):
         if unit.check_my_hp():
             unit.add_event(DyingState)
-
 
         if unit.is_safe_to_go:
             distance = game_framework.frame_time * unit.velocity

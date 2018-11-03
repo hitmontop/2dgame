@@ -4,6 +4,7 @@ import game_world
 
 from background import*
 from ant import*
+from base import*
 
 name = "MainState"
 init_time = 0
@@ -15,8 +16,14 @@ def enter():
     global background, init_time
 
     init_time = get_time()
+
     background = Background()
     game_world.add_object(background, 0)
+
+    base = Base(50, 230, False)
+    game_world.add_object(base, 1)
+    base = Base(1150, 230, True)
+    game_world.add_object(base, 2)
 
 def exit():
     game_world.clear()
