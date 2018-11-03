@@ -1,14 +1,12 @@
-from pico2d import*
-import game_framework
-import game_world
-
 from background import*
 from ant import*
+from spitter_ant import*
 from base import*
+import random
 
 name = "MainState"
 init_time = 0
-num = 1
+num, num2 = 1, 1
 cnt =0
 background = None
 
@@ -46,7 +44,7 @@ def handle_events():
 
 
 def update():
-    global num, init_time, cnt
+    global num, num2, init_time, cnt
 
     for game_object in game_world.all_objects():
         game_object.update()
@@ -55,14 +53,23 @@ def update():
         init_time = get_time()
         cnt += 1
         num = random.randint(0, 1)
+        num2 = random.randint(0, 1)
 
         if num == 0:
-            ant = Ant(random.randint(100, 1100), random.randint(150, 200), True)
-            game_world.add_object(ant, 2)
+            if num2 == 0:
+                ant = Ant(random.randint(600, 1100), random.randint(150, 200), True)
+                game_world.add_object(ant, 2)
+            else:
+                spitter_ant = Spitter_Ant(random.randint(600, 1100), random.randint(150, 200), True)
+                game_world.add_object(spitter_ant, 2)
 
         else:
-            ant = Ant(random.randint(100, 1100), random.randint(150, 200), False)
-            game_world.add_object(ant, 1)
+            if num2 == 0:
+                ant = Ant(random.randint(100, 600), random.randint(150, 200), False)
+                game_world.add_object(ant, 1)
+            else:
+                spitter_ant = Spitter_Ant(random.randint(100, 600), random.randint(150, 200), False)
+                game_world.add_object(spitter_ant, 1)
 
 
 def draw():

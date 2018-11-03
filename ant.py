@@ -1,4 +1,3 @@
-from pico2d import*
 from unit import*
 
 class Ant(Unit):
@@ -6,6 +5,7 @@ class Ant(Unit):
     font = None
 
     def __init__(self, x, y, is_foe):
+        self.IMAGE_SIZE = 100
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.1
@@ -50,7 +50,7 @@ class Ant(Unit):
         self.is_safe_to_go = False
 
         if Ant.image == None:
-            Ant.image = load_image('ant.png')
+            self.image = load_image('ant.png')
 
         if Ant.font == None:
             self.font = load_font('ENCR10B.TTF', 16)

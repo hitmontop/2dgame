@@ -1,7 +1,4 @@
 from pico2d import*
-
-import main_state
-import game_world
 import game_framework
 
 
@@ -31,9 +28,9 @@ class IdleState:
             unit.font.draw(unit.x + 10, unit.y + 150, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.is_foe is False:
-            unit.image.clip_draw(0, 5 * 300,  300, 300, unit.x, unit.y)
+            unit.image.clip_draw(0, 5 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(0, 2 * 300,  300, 300, unit.x, unit.y)
+            unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 
@@ -66,9 +63,9 @@ class ExplodingState:
     def draw(unit):
 
         if unit.is_foe is False:
-            unit.image.clip_draw(int(unit.frame) * 300, 4 * 300,  300, 300, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 4 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(int(unit.frame) * 300, 1 * 300,  300, 300, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 1 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 class BrokenState:
@@ -89,14 +86,16 @@ class BrokenState:
     def draw(unit):
 
         if unit.is_foe is False:
-            unit.image.clip_draw(0, 3 * 300, 300, 300, unit.x, unit.y)
+            unit.image.clip_draw(0, 3 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(0, 0 * 300, 300, 300, unit.x, unit.y)
+            unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 class Base:
 
     def __init__(self, x, y, is_foe):
+
+        self.IMAGE_SIZE = 300
         self.PIXEL_PER_METER = (100 / 0.02)
 
         self.EXPLODING_TIME_PER_ACTION = 1

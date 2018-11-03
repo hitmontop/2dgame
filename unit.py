@@ -1,11 +1,7 @@
 from pico2d import*
 
-import main_state
 import game_world
 import game_framework
-import ant
-
-import random
 
 computer_units_list = 2
 player_units_list = 1
@@ -45,7 +41,7 @@ class RunState:
         unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) \
                      % unit.RUN_FRAMES_PER_ACTION
 
-        if get_time() - unit.init_time >= 0.1:
+        if get_time() - unit.init_time >= 0.5:
             unit.add_event(RunState)
 
 
@@ -60,9 +56,9 @@ class RunState:
             unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.is_foe is False:
-            unit.image.clip_draw(int(unit.frame) * 100, 400,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(int(unit.frame) * 100, 500,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 
@@ -74,7 +70,6 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-
 
         unit.init_time = get_time()
         unit.is_safe_to_go = True
@@ -119,10 +114,9 @@ class ChaseState:
             else:
                 unit.x -= distance
 
-                unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) \
-                            % unit.RUN_FRAMES_PER_ACTION
+                unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
 
-            if get_time() - unit.init_time >= 0.1:
+            if get_time() - unit.init_time >= 0.5:
                 unit.add_event(ChaseState)
 
 
@@ -138,9 +132,9 @@ class ChaseState:
             unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.target.x > unit.x:
-            unit.image.clip_draw(int(unit.frame) * 100, 400,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(int(unit.frame) * 100, 500,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 
@@ -182,9 +176,9 @@ class AttackState:
             unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.target.x > unit.x:
-            unit.image.clip_draw(int(unit.frame) * 100, 200,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(int(unit.frame) * 100, 300,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 class DyingState:
     # dying state: print one's dying motion
@@ -212,9 +206,9 @@ class DyingState:
     @staticmethod
     def draw(unit):
         if unit.velocity >= 0:
-            unit.image.clip_draw(int(unit.frame) * 100,  0,  100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE,  0,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
-            unit.image.clip_draw(int(unit.frame) * 100, 100, 100, 100, unit.x, unit.y)
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 next_state_table = {
     RunState: {TIMER: RunState},
@@ -226,6 +220,8 @@ next_state_table = {
 class Unit:
 
     def __init__(self):
+
+        self.IMAGE_SIZE = 0
 
         self.RUN_TIME_PER_ACTION = 0
         self.RUN_ACTION_PER_TIME = 0
