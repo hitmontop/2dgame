@@ -47,11 +47,9 @@ class ExplodingState:
 
     @staticmethod
     def do(unit):
-        print(unit.frame)
         unit.frame = (unit.frame + unit.EXPLODING_FRAMES_PER_ACTION * unit.EXPLODING_ACTION_PER_TIME * game_framework.frame_time) % unit.EXPLODING_FRAMES_PER_ACTION
 
         if get_time() - unit.init_time >= unit.EXPLODING_TIME_PER_ACTION:
-            print("timeout")
             unit.add_event(FlyingState)
 
     @staticmethod

@@ -21,7 +21,7 @@ class Ant(Unit):
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 4
 
-        self.DYING_TIME_PER_ACTION = 1
+        self.DYING_TIME_PER_ACTION = 3
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 
@@ -46,6 +46,10 @@ class Ant(Unit):
         self.target = None
         self.is_melee = True
         self.is_safe_to_go = False
+
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
 
         if Ant.image is None:
             self.image = load_image('ant.png')

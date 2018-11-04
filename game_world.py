@@ -2,9 +2,12 @@
 # layer 0: Background Objects
 # layer 1: player units
 # layer 2: computer units
-# layer 3: projectile
+# layer 3: corpse
+# layer 4: hp bar
+# layer 5: projectile
 
-objects = [[], [], [], []]
+
+objects = [[], [], [], [], [], []]
 
 def add_object(o, layer):
     objects[layer].append(o)

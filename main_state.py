@@ -57,18 +57,18 @@ def update():
 
         if num == 0:
             if num2 == 0:
-                ant = Ant(random.randint(600, 1100), random.randint(150, 200), True)
+                ant = Ant(random.randint(1000, 1100), random.randint(150, 200), True)
                 game_world.add_object(ant, 2)
             else:
-                spitter_ant = SpitterAnt(random.randint(600, 1100), random.randint(150, 200), True)
+                spitter_ant = SpitterAnt(random.randint(1000, 1100), random.randint(150, 200), True)
                 game_world.add_object(spitter_ant, 2)
 
         else:
             if num2 == 0:
-                ant = Ant(random.randint(100, 600), random.randint(150, 200), False)
+                ant = Ant(random.randint(100, 200), random.randint(150, 200), False)
                 game_world.add_object(ant, 1)
             else:
-                spitter_ant = SpitterAnt(random.randint(100, 600), random.randint(150, 200), False)
+                spitter_ant = SpitterAnt(random.randint(100, 200), random.randint(150, 200), False)
                 game_world.add_object(spitter_ant, 1)
 
 

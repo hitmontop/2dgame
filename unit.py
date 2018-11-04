@@ -3,6 +3,8 @@ from pico2d import*
 import game_world
 import game_framework
 
+from hp_bar import*
+
 computer_units_list = 2
 player_units_list = 1
 
@@ -45,14 +47,6 @@ class RunState:
 
     @staticmethod
     def draw(unit):
-
-        if unit.is_foe is False:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
-        else:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
-
         if unit.is_foe is False:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
@@ -109,8 +103,10 @@ class ChaseState:
 
             if unit.target.x > unit.x:
                 unit.x += distance
+
             else:
                 unit.x -= distance
+
 
             unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
 
@@ -122,12 +118,6 @@ class ChaseState:
     @staticmethod
     def draw(unit):
 
-        if unit.is_foe is False:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
-        else:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.target.x > unit.x:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
@@ -164,14 +154,6 @@ class AttackState:
 
     @staticmethod
     def draw(unit):
-
-        if unit.is_foe is False:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (100, 255, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (100, 255, 0))
-        else:
-            unit.font.draw(unit.x - 60, unit.y + 50, '(%d/' % unit.hp, (255, 0, 0))
-            unit.font.draw(unit.x - 10, unit.y + 50, '%d)' % unit.max_hp, (255, 0, 0))
-
         if unit.target.x > unit.x:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
         else:
@@ -182,7 +164,10 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+        game_world.remove_object(unit)
+        game_world.add_object(unit, 3)
         unit.init_time = get_time()
+        game_world.remove_object(unit.hp_bar)
 
 
     @staticmethod
@@ -248,12 +233,14 @@ class Unit:
         self.frame = 0
         self.init_time = 0
 
-
         self.is_foe = False
         self.is_lock_on = False
         self.target = None
         self.is_melee = True
         self.is_safe_to_go = False
+
+        self.hp_bar = None
+
 
     ###############################################
 

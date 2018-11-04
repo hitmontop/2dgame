@@ -12,7 +12,7 @@ class ProjectileSpitterAnt(Projectile):
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.EXPLODING_TIME_PER_ACTION = 0.5
+        self.EXPLODING_TIME_PER_ACTION = 0.3
         self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
         self.EXPLODING_FRAMES_PER_ACTION = 4
 
