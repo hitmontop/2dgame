@@ -48,15 +48,15 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
             print("a")
-            if coin >= 100:
-                coin -= 100
+            if coin >= 50:
+                coin -= 50
                 ant = Ant(random.randint(100, 200), random.randint(150, 200), False)
                 game_world.add_object(ant, 1)
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_s:
             print("s")
-            if coin >= 100:
-                coin -= 100
+            if coin >= 50:
+                coin -= 50
                 spitter_ant = SpitterAnt(random.randint(100, 200), random.randint(150, 200), False)
                 game_world.add_object(spitter_ant, 1)
 
