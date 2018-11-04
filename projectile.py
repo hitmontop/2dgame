@@ -37,12 +37,12 @@ class ExplodingState:
 
     @staticmethod
     def enter(unit):
+        if unit.target.hp > 0:
+            unit.deal_damage_to_target()
         unit.init_time = get_time()
 
     @staticmethod
     def exit(unit):
-        if unit.target.hp > 0:
-            unit.deal_damage_to_target()
         game_world.remove_object(unit)
 
     @staticmethod

@@ -297,7 +297,7 @@ class Unit:
         self.target.hp -= self.damage
 
     def check_my_hp(self):
-        if self.hp <= 0:
+        if self.hp <= 0 or self.x < -100 or self.x > 1300:
             return True
 
     ###############################################

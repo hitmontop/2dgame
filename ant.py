@@ -30,7 +30,7 @@ class Ant(Unit):
 
         self.max_hp = 100
         self.hp = 100
-        self.damage = 10
+        self.damage = 30
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.05
         self.velocity = self.RUN_SPEED_PPS

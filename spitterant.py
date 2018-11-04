@@ -24,14 +24,14 @@ class SpitterAnt(Unit):
 
         self.DYING_TIME_PER_ACTION = 3
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
-        self.DYING_FRAMES_PER_ACTION = 1
+        self.DYING_FRAMES_PER_ACTION = 2
 
         self.event_que = []
         self.cur_state = RunState
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 10
+        self.damage = 25
         self.range = self.PIXEL_PER_METER * 0.05
         self.sight = self.PIXEL_PER_METER * 0.1
         self.velocity = self.RUN_SPEED_PPS

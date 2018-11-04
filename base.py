@@ -1,5 +1,6 @@
 from pico2d import*
 import game_framework
+import game_world
 
 
 class IdleState:
@@ -21,10 +22,10 @@ class IdleState:
     def draw(unit):
 
         if unit.is_foe is False:
-            unit.font.draw(unit.x - 60, unit.y + 150, '(%d/' % unit.hp, (100, 255, 0))
+            unit.font.draw(unit.x - 40, unit.y + 150, '(%d/' % unit.hp, (100, 255, 0))
             unit.font.draw(unit.x + 10, unit.y + 150, '%d)' % unit.max_hp, (100, 255, 0))
         else:
-            unit.font.draw(unit.x - 60, unit.y + 150, '(%d/' % unit.hp, (255, 0, 0))
+            unit.font.draw(unit.x - 40, unit.y + 150, '(%d/' % unit.hp, (255, 0, 0))
             unit.font.draw(unit.x + 10, unit.y + 150, '%d)' % unit.max_hp, (255, 0, 0))
 
         if unit.is_foe is False:
@@ -40,6 +41,8 @@ class ExplodingState:
 
     @staticmethod
     def enter(unit):
+        game_world.remove_object(unit)
+        game_world.add_object(unit, 3)
         unit.init_time = get_time()
 
     @staticmethod
@@ -96,7 +99,7 @@ class Base:
         self.IMAGE_SIZE = 300
         self.PIXEL_PER_METER = (100 / 0.02)
 
-        self.EXPLODING_TIME_PER_ACTION = 1
+        self.EXPLODING_TIME_PER_ACTION = 0.5
         self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
         self.EXPLODING_FRAMES_PER_ACTION = 5
 
