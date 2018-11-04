@@ -36,8 +36,6 @@ class RunState:
         else:
             unit.x += distance
 
-        unit.time -= 1
-
         unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) \
                      % unit.RUN_FRAMES_PER_ACTION
 
@@ -114,7 +112,7 @@ class ChaseState:
             else:
                 unit.x -= distance
 
-                unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+            unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION * unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
 
             if get_time() - unit.init_time >= 0.5:
                 unit.add_event(ChaseState)
@@ -145,7 +143,6 @@ class AttackState:
     @staticmethod
     def enter(unit):
         unit.init_time = get_time()
-        unit.cnt = unit.ATTACK_FRAMES_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -160,7 +157,7 @@ class AttackState:
         unit.frame = (unit.frame + unit.ATTACK_FRAMES_PER_ACTION *
                       unit.ATTACK_ACTION_PER_TIME * game_framework.frame_time) % unit.ATTACK_FRAMES_PER_ACTION
 
-        if get_time() - unit.init_time >= unit.ATTACK_ACTION_PER_TIME:
+        if get_time() - unit.init_time >= unit.ATTACK_TIME_PER_ACTION:
             unit.add_event(ChaseState)
 
 
@@ -198,7 +195,7 @@ class DyingState:
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                       unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
-        if get_time() - unit.init_time >= unit.DYING_ACTION_PER_TIME:
+        if get_time() - unit.init_time >= unit.DYING_TIME_PER_ACTION:
             unit.add_event(RunState)
 
 
@@ -238,7 +235,7 @@ class Unit:
         self.event_que = []
         self.cur_state = RunState
 
-        self.max_hp =0
+        self.max_hp = 0
         self.hp = 0
         self.damage = 0
         self.range = 0
@@ -248,19 +245,14 @@ class Unit:
         self.x = 0
         self.y = 0
 
-        self.attack_frame = 0
-        self.dying_frame = 0
         self.frame = 0
-        self.time = 0
-        self.init_time =0
-        self.cnt = 0
+        self.init_time = 0
 
 
         self.is_foe = False
         self.is_lock_on = False
         self.target = None
         self.is_melee = True
-
         self.is_safe_to_go = False
 
     ###############################################

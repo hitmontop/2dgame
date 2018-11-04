@@ -21,7 +21,7 @@ class Ant(Unit):
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 4
 
-        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_TIME_PER_ACTION = 1
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 
@@ -39,9 +39,7 @@ class Ant(Unit):
         self.y = y
 
         self.frame = 0
-        self.time = 0
         self.init_time = 0
-        self.cnt = 0
 
         self.is_foe = is_foe
         self.is_lock_on = False
@@ -49,8 +47,8 @@ class Ant(Unit):
         self.is_melee = True
         self.is_safe_to_go = False
 
-        if Ant.image == None:
+        if Ant.image is None:
             self.image = load_image('ant.png')
 
-        if Ant.font == None:
+        if Ant.font is None:
             self.font = load_font('ENCR10B.TTF', 16)

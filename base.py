@@ -33,8 +33,6 @@ class IdleState:
             unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
-
-
 class ExplodingState:
 
     # chase state ; found the target but target out of range.
@@ -105,8 +103,8 @@ class Base:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 1000
-        self.hp = 1000
+        self.max_hp = 300
+        self.hp = 300
 
         self.x = x
         self.y = y

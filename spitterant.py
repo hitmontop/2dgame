@@ -1,6 +1,7 @@
 from unit import*
+from projectilespitterant import*
 
-class Spitter_Ant(Unit):
+class SpitterAnt(Unit):
     image = None
     font = None
 
@@ -21,7 +22,7 @@ class Spitter_Ant(Unit):
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 3
 
-        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_TIME_PER_ACTION = 1
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 
@@ -41,7 +42,6 @@ class Spitter_Ant(Unit):
         self.frame = 0
         self.time = 0
         self.init_time = 0
-        self.cnt = 0
 
         self.is_foe = is_foe
         self.is_lock_on = False
@@ -49,8 +49,12 @@ class Spitter_Ant(Unit):
         self.is_melee = True
         self.is_safe_to_go = False
 
-        if Spitter_Ant.image == None:
+        if SpitterAnt.image is None:
             self.image = load_image('spitter_ant.png')
 
-        if Spitter_Ant.font == None:
+        if SpitterAnt.font is None:
             self.font = load_font('ENCR10B.TTF', 16)
+
+    def deal_damage_to_target(self):
+        proj = ProjectileSpitterAnt(self.x, self.y, self.target)
+        game_world.add_object(proj, 3)

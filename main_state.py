@@ -1,6 +1,6 @@
 from background import*
 from ant import*
-from spitter_ant import*
+from spitterant import*
 from base import*
 import random
 
@@ -60,7 +60,7 @@ def update():
                 ant = Ant(random.randint(600, 1100), random.randint(150, 200), True)
                 game_world.add_object(ant, 2)
             else:
-                spitter_ant = Spitter_Ant(random.randint(600, 1100), random.randint(150, 200), True)
+                spitter_ant = SpitterAnt(random.randint(600, 1100), random.randint(150, 200), True)
                 game_world.add_object(spitter_ant, 2)
 
         else:
@@ -68,8 +68,9 @@ def update():
                 ant = Ant(random.randint(100, 600), random.randint(150, 200), False)
                 game_world.add_object(ant, 1)
             else:
-                spitter_ant = Spitter_Ant(random.randint(100, 600), random.randint(150, 200), False)
+                spitter_ant = SpitterAnt(random.randint(100, 600), random.randint(150, 200), False)
                 game_world.add_object(spitter_ant, 1)
+
 
 
 def draw():
