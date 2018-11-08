@@ -43,10 +43,10 @@ class SpitterAnt(Unit):
         self.time = 0
         self.init_time = 0
 
-        self.is_foe = is_foe
-        self.is_lock_on = False
         self.target = None
-        self.is_melee = True
+
+        self.is_foe = is_foe
+        self.is_this_unit_targeting_enemy = False
         self.is_safe_to_go = False
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
@@ -59,6 +59,6 @@ class SpitterAnt(Unit):
         if SpitterAnt.font is None:
             self.font = load_font('ENCR10B.TTF', 16)
 
-    def deal_damage_to_target(self):
-        proj = ProjectileSpitterAnt(self.x, self.y, self.target)
-        game_world.add_object(proj, 5)
+    def attack_target(self):
+        projectile = ProjectileSpitterAnt(self.x, self.y, self.target)
+        game_world.add_object(projectile, 4)

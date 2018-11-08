@@ -23,18 +23,12 @@ def enter():
     game_world.add_object(background, 0)
 
     base = Base(50, 230, False)
-    game_world.add_object(base, 1)
+    game_world.add_object(base, 2)
     base = Base(1150, 230, True)
     game_world.add_object(base, 2)
 
 def exit():
     game_world.clear()
-
-def pause():
-    pass
-
-def resume():
-    pass
 
 def handle_events():
     global coin
@@ -50,15 +44,15 @@ def handle_events():
             print("a")
             if coin >= 50:
                 coin -= 50
-                ant = Ant(random.randint(100, 200), random.randint(150, 200), False)
-                game_world.add_object(ant, 1)
+                ant = Ant(random.randint(100, 1100), random.randint(150, 200), False)
+                game_world.add_object(ant, 2)
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_s:
             print("s")
             if coin >= 50:
                 coin -= 50
-                spitter_ant = SpitterAnt(random.randint(100, 200), random.randint(150, 200), False)
-                game_world.add_object(spitter_ant, 1)
+                spitter_ant = SpitterAnt(random.randint(100, 1100), random.randint(150, 200), False)
+                game_world.add_object(spitter_ant, 2)
 
 
 
@@ -78,10 +72,10 @@ def update():
         cnt += 1
 
         if num2 == 0:
-            ant = Ant(random.randint(1000, 1100), random.randint(150, 200), True)
+            ant = Ant(random.randint(100, 1100), random.randint(150, 200), True)
             game_world.add_object(ant, 2)
         else:
-            spitter_ant = SpitterAnt(random.randint(1000, 1100), random.randint(150, 200), True)
+            spitter_ant = SpitterAnt(random.randint(100, 1100), random.randint(150, 200), True)
             game_world.add_object(spitter_ant, 2)
 
 

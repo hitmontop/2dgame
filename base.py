@@ -15,7 +15,7 @@ class IdleState:
 
     @staticmethod
     def do(unit):
-        if unit.check_my_hp():
+        if unit.is_this_unit_dead():
             unit.add_event(ExplodingState)
 
     @staticmethod
@@ -36,13 +36,10 @@ class IdleState:
 
 class ExplodingState:
 
-    # chase state ; found the target but target out of range.
-    # when other enemy move in to one's range while chasing state, one's target change to it.
-
     @staticmethod
     def enter(unit):
-        game_world.remove_object(unit)
-        game_world.add_object(unit, 3)
+        game_world.pull_object(unit)
+        game_world.add_object(unit, 1)
         unit.init_time = get_time()
 
     @staticmethod
@@ -118,10 +115,9 @@ class Base:
         self.is_foe = is_foe
 
         self.image = load_image('base.png')
-
         self.font = load_font('ENCR10B.TTF', 16)
 
-    def check_my_hp(self):
+    def is_this_unit_dead(self):
         if self.hp <= 0:
             return True
 

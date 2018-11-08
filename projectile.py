@@ -11,7 +11,8 @@ class FlyingState:
 
     @staticmethod
     def exit(unit):
-        pass
+        if unit.target.hp > 0:
+            unit.attack_target()
 
     @staticmethod
     def do(unit):
@@ -37,8 +38,6 @@ class ExplodingState:
 
     @staticmethod
     def enter(unit):
-        if unit.target.hp > 0:
-            unit.deal_damage_to_target()
         unit.init_time = get_time()
 
     @staticmethod
@@ -88,12 +87,10 @@ class Projectile:
 
         self.damage = 0
 
-
-
         self.event_que = []
         self.cur_state = FlyingState
 
-    def deal_damage_to_target(self):
+    def attack_target(self):
         self.target.hp -= self.damage
 
 ######################################################################

@@ -41,10 +41,10 @@ class Ant(Unit):
         self.frame = 0
         self.init_time = 0
 
-        self.is_foe = is_foe
-        self.is_lock_on = False
         self.target = None
-        self.is_melee = True
+
+        self.is_foe = is_foe
+        self.is_this_unit_targeting_enemy = False
         self.is_safe_to_go = False
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
