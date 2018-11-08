@@ -21,7 +21,7 @@ class Ant(Unit):
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 4
 
-        self.DYING_TIME_PER_ACTION = 3
+        self.DYING_TIME_PER_ACTION = 4
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 

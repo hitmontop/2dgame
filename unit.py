@@ -136,7 +136,8 @@ class AttackState:
 
     @staticmethod
     def exit(unit):
-        unit.deal_damage_to_target()
+        if unit.check_my_hp() is False:
+            unit.deal_damage_to_target()
 
     @staticmethod
     def do(unit):
@@ -242,7 +243,7 @@ class Unit:
         self.hp_bar = None
 
 
-    ###############################################
+########################################################################################################
 
     def search_for_enemy_by_sight_and_get_target(self):
         min = 10000
@@ -299,6 +300,8 @@ class Unit:
     def check_my_hp(self):
         if self.hp <= 0 or self.x < -100 or self.x > 1300:
             return True
+        else:
+            return False
 
     ###############################################
 

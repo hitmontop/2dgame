@@ -70,9 +70,9 @@ def update():
 
     if get_time() - coin_time > 0.1:
         coin_time = get_time()
-        coin += 10
+        coin += 2
 
-    if get_time() - init_time > 1 and cnt < 10:
+    if get_time() - init_time > 3:
         init_time = get_time()
         num2 = random.randint(0, 1)
         cnt += 1
