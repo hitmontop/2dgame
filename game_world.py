@@ -6,7 +6,7 @@
 # layer 4: projectile
 # layer 5: UI
 
-
+x, y = 0, 0
 objects = [[], [], [], [], [], []]
 
 

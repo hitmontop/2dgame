@@ -1,11 +1,12 @@
 from background import*
 from ant import*
-from spitterant import*
+from spitter_ant import*
 from bee import*
 from base import*
 import random
 
 name = "MainState"
+
 init_time = 0
 coin_time = 0
 coin = 0
