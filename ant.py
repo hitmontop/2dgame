@@ -1,6 +1,7 @@
-from unit import*
+from basic_ground_unit import*
 
-class Ant(Unit):
+
+class Ant(BasicGroundUnit):
     image = None
     font = None
 
@@ -13,7 +14,7 @@ class Ant(Unit):
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 0.5
+        self.RUN_TIME_PER_ACTION = 0.3
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 5
 
@@ -37,15 +38,23 @@ class Ant(Unit):
 
         self.x = x
         self.y = y
+        self.target_x_temp = 0
 
         self.frame = 0
         self.init_time = 0
 
         self.target = None
 
+        self.is_this_unit_can_attack_ground = True
+        self.is_this_unit_can_attack_air = False
+
+        self.is_air_unit = False
+
         self.is_foe = is_foe
         self.is_this_unit_targeting_enemy = False
         self.is_safe_to_go = False
+
+        self.valid_target_list = []
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
         self.hp_bar = hp_bar

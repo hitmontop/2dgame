@@ -3,7 +3,7 @@ from projectile import*
 class ProjectileSpitterAnt(Projectile):
     image = None
 
-    def __init__(self, x, y, target):
+    def __init__(self, x, y, target, damage):
         self.IMAGE_SIZE = 50
 
         self.PIXEL_PER_METER = (100 / 0.02)
@@ -25,7 +25,7 @@ class ProjectileSpitterAnt(Projectile):
         self.x, self.y = x, y
         self.destination_x, self.destination_y = target.x, target.y
 
-        self.damage = 10
+        self.damage = damage
 
         self.event_que = []
         self.cur_state = FlyingState

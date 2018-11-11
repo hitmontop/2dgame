@@ -103,8 +103,8 @@ class Base:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 300
-        self.hp = 300
+        self.max_hp = 3000
+        self.hp = 3000
 
         self.x = x
         self.y = y
@@ -113,6 +113,8 @@ class Base:
         self.init_time = 0
 
         self.is_foe = is_foe
+
+        self.is_air_unit = False
 
         self.image = load_image('base.png')
         self.font = load_font('ENCR10B.TTF', 16)

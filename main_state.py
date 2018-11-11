@@ -1,6 +1,7 @@
 from background import*
 from ant import*
 from spitterant import*
+from bee import*
 from base import*
 import random
 
@@ -41,17 +42,17 @@ def handle_events():
             game_framework.quit()
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
-            print("a")
             if coin >= 50:
                 coin -= 50
-                ant = Ant(random.randint(100, 1100), random.randint(150, 200), False)
-                game_world.add_object(ant, 2)
+                #ant = Ant(random.randint(100, 1100), random.randint(150, 200), False)
+                bee = Bee(random.randint(1, 2), random.randint(400, 450), False)
+                #game_world.add_object(ant, 2)
+                game_world.add_object(bee, 2)
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_s:
-            print("s")
             if coin >= 50:
                 coin -= 50
-                spitter_ant = SpitterAnt(random.randint(100, 1100), random.randint(150, 200), False)
+                spitter_ant = SpitterAnt(random.randint(1, 2), random.randint(150, 200), False)
                 game_world.add_object(spitter_ant, 2)
 
 
@@ -66,17 +67,23 @@ def update():
         coin_time = get_time()
         coin += 2
 
-    if get_time() - init_time > 3:
+    if get_time() - init_time > 2:
         init_time = get_time()
-        num2 = random.randint(0, 1)
         cnt += 1
 
-        if num2 == 0:
-            ant = Ant(random.randint(100, 1100), random.randint(150, 200), True)
-            game_world.add_object(ant, 2)
-        else:
-            spitter_ant = SpitterAnt(random.randint(100, 1100), random.randint(150, 200), True)
-            game_world.add_object(spitter_ant, 2)
+        spitter_ant = SpitterAnt(1100, random.randint(150, 200), True)
+        game_world.add_object(spitter_ant, 2)
+        ant = Ant(1100, random.randint(150, 200), True)
+        game_world.add_object(ant, 2)
+        bee = Bee(1100, random.randint(300, 420), True)
+        game_world.add_object(bee, 2)
+
+        spitter_ant = SpitterAnt(100, random.randint(150, 200), False)
+        game_world.add_object(spitter_ant, 2)
+        ant = Ant(100, random.randint(150, 200), False)
+        game_world.add_object(ant, 2)
+        bee = Bee(100, random.randint(300, 420), False)
+        game_world.add_object(bee, 2)
 
 
 
