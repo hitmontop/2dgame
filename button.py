@@ -15,12 +15,12 @@ class IdleState:
 
     @staticmethod
     def do(unit):
-        if unit.is_mouse_on_the_button():
+        if unit.is_mouse_on_the_button() and unit.clicked is False:
             unit.add_event(MouseOnState)
 
     @staticmethod
     def draw(unit):
-        unit.image.clip_draw(0, 100 * 2, 200, 100, unit.x, unit.y)
+        unit.image.clip_draw(0, unit.IMAGE_HEIGHT * 2, unit.IMAGE_WIDTH, unit.IMAGE_HEIGHT, unit.x, unit.y)
 
 
 class MouseOnState:
@@ -44,7 +44,7 @@ class MouseOnState:
 
     @staticmethod
     def draw(unit):
-        unit.image.clip_draw(0, 100 * 1, 200, 100, unit.x, unit.y)
+        unit.image.clip_draw(0, unit.IMAGE_HEIGHT * 1, unit.IMAGE_WIDTH, unit.IMAGE_HEIGHT, unit.x, unit.y)
 
 
 class ClickedState:
@@ -62,39 +62,33 @@ class ClickedState:
     def do(unit):
         if unit.clicked is False:
             if unit.is_mouse_on_the_button():
-                print("clicked")
                 unit.click_action()
                 unit.add_event(MouseOnState)
 
             else:
-                print("canceled")
                 unit.add_event(IdleState)
 
 
     @staticmethod
     def draw(unit):
-        unit.image.clip_draw(0, 100 * 0, 200, 100, unit.x, unit.y)
+        unit.image.clip_draw(0, unit.IMAGE_HEIGHT * 0, unit.IMAGE_WIDTH, unit.IMAGE_HEIGHT, unit.x, unit.y)
 
 
 class Button:
-    image = None
+    def __init__(self):
 
-    def __init__(self, x, y):
-
-        self.IMAGE_HEIGHT = 100
-        self.IMAGE_WIDTH = 200
+        self.IMAGE_HEIGHT = 0
+        self.IMAGE_WIDTH = 0
 
         self.event_que = []
         self.cur_state = IdleState
         self.clicked = False
 
-        self.x = x
-        self.y = y
+        self.x = 0
+        self.y = 0
 
         self.frame = 0
         self.init_time = 0
-        if Button.image is None:
-            self.image = load_image('button.png')
 
     def click_action(self):
         game_framework.change_state(main_state)

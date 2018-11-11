@@ -1,4 +1,5 @@
-from button import*
+from start_button import*
+from quit_button import*
 
 import main_state
 
@@ -9,8 +10,10 @@ name = "MainState"
 ui_list = []
 
 def enter():
-    button_1 = Button(300, 300)
-    ui_list.append(button_1)
+    start_button = StartButton(600, 500)
+    ui_list.append(start_button)
+    quit_button = QuitButton(600, 300)
+    ui_list.append(quit_button)
 
 def exit():
     for o in ui_list:
