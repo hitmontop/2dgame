@@ -3,7 +3,6 @@ from projectile_spitterant import*
 
 class SpitterAnt(BasicGroundUnit):
     image = None
-    font = None
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -62,10 +61,8 @@ class SpitterAnt(BasicGroundUnit):
         game_world.add_object(hp_bar, 4)
 
         if SpitterAnt.image is None:
-            self.image = load_image('spitter_ant.png')
+            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
-        if SpitterAnt.font is None:
-            self.font = load_font('ENCR10B.TTF', 16)
 
     def attack_target(self):
         projectile = ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)

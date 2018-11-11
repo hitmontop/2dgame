@@ -2,7 +2,7 @@ from pico2d import*
 
 class Background:
     def __init__(self):
-        self.image = load_image('background2.png')
+        self.image = load_image('resource\\image\\background2.png')
 
     def update(self):
         pass

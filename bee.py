@@ -6,7 +6,6 @@ UNIT_LIST = 2
 
 class Bee(BasicAirUnit):
     image = None
-    font = None
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -64,10 +63,7 @@ class Bee(BasicAirUnit):
         game_world.add_object(hp_bar, 4)
 
         if Bee.image is None:
-            self.image = load_image('bee.png')
-
-        if Bee.font is None:
-            self.font = load_font('ENCR10B.TTF', 16)
+            self.image = load_image('resource\\image\\unit\\bee.png')
 
     def attack_target(self):
         projectile = ProjectileBee(self.x, self.y, self.target, self.damage)

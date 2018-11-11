@@ -19,7 +19,7 @@ class StartButton(Button):
         self.init_time = 0
 
         if StartButton.image is None:
-            self.image = load_image('start_button.png')
+            self.image = load_image('resource\\image\\button\\start_button.png')
 
     def click_action(self):
         game_framework.change_state(main_state)

@@ -3,7 +3,6 @@ from basic_ground_unit import*
 
 class Ant(BasicGroundUnit):
     image = None
-    font = None
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -61,7 +60,4 @@ class Ant(BasicGroundUnit):
         game_world.add_object(hp_bar, 4)
 
         if Ant.image is None:
-            self.image = load_image('ant.png')
-
-        if Ant.font is None:
-            self.font = load_font('ENCR10B.TTF', 16)
+            self.image = load_image('resource\\image\\unit\\ant.png')

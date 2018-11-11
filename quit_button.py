@@ -19,7 +19,7 @@ class QuitButton(Button):
         self.init_time = 0
 
         if QuitButton.image is None:
-            self.image = load_image('quit_button.png')
+            self.image = load_image('resource\\image\\button\\quit_button.png')
 
     def click_action(self):
         game_framework.quit()

@@ -116,7 +116,7 @@ class Base:
 
         self.is_air_unit = False
 
-        self.image = load_image('base.png')
+        self.image = load_image('resource\\image\\unit\\base.png')
         self.font = load_font('ENCR10B.TTF', 16)
 
     def is_this_unit_dead(self):

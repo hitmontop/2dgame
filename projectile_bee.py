@@ -31,7 +31,7 @@ class ProjectileBee(Projectile):
         self.cur_state = FlyingState
 
         if ProjectileBee.image is None:
-            self.image = load_image('projectile_bee.png')
+            self.image = load_image('resource\\image\\projectile\\projectile_bee.png')
 
 
 

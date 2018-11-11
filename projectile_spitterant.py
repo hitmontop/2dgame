@@ -31,7 +31,7 @@ class ProjectileSpitterAnt(Projectile):
         self.cur_state = FlyingState
 
         if ProjectileSpitterAnt.image is None:
-            self.image = load_image('projectile_spitter_ant.png')
+            self.image = load_image('resource\\image\\projectile\\projectile_spitter_ant.png')
 
 
 
