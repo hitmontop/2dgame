@@ -4,7 +4,7 @@ class ProjectileSpitterAnt(Projectile):
     image = None
 
     def __init__(self, x, y, target, damage):
-        self.IMAGE_SIZE = 50
+        self.IMAGE_SIZE = 25
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.4

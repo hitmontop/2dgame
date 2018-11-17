@@ -31,9 +31,9 @@ class Bee(BasicAirUnit):
         self.event_que = []
         self.cur_state = RunState
 
-        self.max_hp = 100
-        self.hp = 100
-        self.damage = 30
+        self.max_hp = 80
+        self.hp = 80
+        self.damage = 20
         self.range = self.PIXEL_PER_METER * 0.05
         self.sight = self.PIXEL_PER_METER * 0.1
         self.velocity = self.RUN_SPEED_PPS

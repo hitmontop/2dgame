@@ -61,6 +61,15 @@ class ChaseState:
             unit.is_this_unit_targeting_enemy = False
             unit.add_event(RunState)
 
+            if unit.is_there_a_unit_searched_by_value(unit.range):
+                unit.filter_valid_target_list_with_value(unit.range)
+                unit.get_closest_target_in_list()
+                unit.add_event(AttackState)
+                unit.is_this_unit_targeting_enemy = True
+                unit.is_safe_to_go = False
+            else:
+                unit.add_event(RunState)
+
         else:
             unit.target_x_temp = unit.target.x
 

@@ -68,7 +68,7 @@ def update():
         coin_time = get_time()
         coin += 2
 
-    if get_time() - init_time > 2:
+    if get_time() - init_time > 2 and cnt < 15:
         init_time = get_time()
         cnt += 1
 
