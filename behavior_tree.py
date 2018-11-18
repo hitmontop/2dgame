@@ -19,10 +19,10 @@ class BehaviorTree:
         self.root.run()
 
 
-class LeafNode:
+class LeafNode(Node):
     def __init__(self, node_name, func_name):
         self.name = node_name
-        self.func = func_name()
+        self.func = func_name
 
     def run(self):
         return self.func()
@@ -50,7 +50,7 @@ class SequenceNode(Node):
         return BehaviorTree.SUCCESS
 
 
-class SelectorNode:
+class SelectorNode(Node):
 
     def __init__(self, node_name):
         self.name = node_name
@@ -59,6 +59,7 @@ class SelectorNode:
 
     def run(self):
         for o in range(self.prev_running_pos, len(self.children)):
+
             result = self.children[o].run()
 
             if result == BehaviorTree.RUNNING:

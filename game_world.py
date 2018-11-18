@@ -9,6 +9,14 @@
 x, y = 0, 0
 objects = [[], [], [], [], [], []]
 
+computer_ground_unit = []
+computer_air_unit = []
+computer_all_unit = []
+
+player_ground_unit = []
+player_air_unit = []
+player_all_unit = []
+
 
 def add_object(o, layer):
     objects[layer].append(o)

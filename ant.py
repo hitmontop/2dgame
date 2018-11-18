@@ -25,21 +25,20 @@ class Ant(BasicGroundUnit):
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 
-        self.event_que = []
-        self.cur_state = RunState
-
         self.max_hp = 100
         self.hp = 100
         self.damage = 30
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.05
-        self.velocity = self.RUN_SPEED_PPS
+        self.speed = 0
+        self.dir = 0
 
         self.x = x
         self.y = y
         self.target_x_temp = 0
 
         self.frame = 0
+        self.time = 0
         self.init_time = 0
 
         self.target = None
@@ -50,10 +49,11 @@ class Ant(BasicGroundUnit):
         self.is_air_unit = False
 
         self.is_foe = is_foe
-        self.is_this_unit_targeting_enemy = False
-        self.is_safe_to_go = False
 
         self.valid_target_list = []
+        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
+
+        self.build_behavior_tree()
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
         self.hp_bar = hp_bar
@@ -61,3 +61,5 @@ class Ant(BasicGroundUnit):
 
         if Ant.image is None:
             self.image = load_image('resource\\image\\unit\\ant.png')
+
+        self.add_self()

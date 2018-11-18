@@ -25,15 +25,13 @@ class SpitterAnt(BasicGroundUnit):
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
 
-        self.event_que = []
-        self.cur_state = RunState
-
         self.max_hp = 80
         self.hp = 80
         self.damage = 25
         self.range = self.PIXEL_PER_METER * 0.03
         self.sight = self.PIXEL_PER_METER * 0.07
-        self.velocity = self.RUN_SPEED_PPS
+        self.speed = 0
+        self.dir = 0
 
         self.x = x
         self.y = y
@@ -51,10 +49,11 @@ class SpitterAnt(BasicGroundUnit):
         self.is_air_unit = False
 
         self.is_foe = is_foe
-        self.is_this_unit_targeting_enemy = False
-        self.is_safe_to_go = False
 
         self.valid_target_list = []
+        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
+
+        self.build_behavior_tree()
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
         self.hp_bar = hp_bar
@@ -63,6 +62,7 @@ class SpitterAnt(BasicGroundUnit):
         if SpitterAnt.image is None:
             self.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
+        self.add_self()
 
     def attack_target(self):
         projectile = ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)

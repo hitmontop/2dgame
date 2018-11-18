@@ -119,6 +119,17 @@ class Base:
         self.image = load_image('resource\\image\\unit\\base.png')
         self.font = load_font('ENCR10B.TTF', 16)
 
+        self.add_self()
+
+    def add_self(self):
+        game_world.add_object(self, 2)
+
+        if self.is_foe:
+            game_world.computer_ground_unit.append(self)
+        else:
+            game_world.player_ground_unit.append(self)
+
+
     def is_this_unit_dead(self):
         if self.hp <= 0:
             return True
