@@ -27,7 +27,7 @@ class SpitterAnt(BasicGroundUnit):
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 25
+        self.damage = 1
         self.range = self.PIXEL_PER_METER * 0.03
         self.sight = self.PIXEL_PER_METER * 0.07
         self.speed = 0

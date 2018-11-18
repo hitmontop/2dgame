@@ -27,7 +27,7 @@ class Ant(BasicGroundUnit):
 
         self.max_hp = 100
         self.hp = 100
-        self.damage = 30
+        self.damage = 1
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.05
         self.speed = 0

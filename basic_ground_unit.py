@@ -6,6 +6,8 @@ from hp_bar import*
 
 UNIT_LIST = 2
 
+RUN, CHASE, ATTACK, DEATH = 1, 2, 3, 4
+
 class BasicGroundUnit:
 
     def __init__(self):
@@ -103,13 +105,24 @@ class BasicGroundUnit:
 
     def is_this_unit_dead(self):
         if self.hp <= 0:
-            return True
+            if self.is_foe:
+                game_world.computer_all_unit.remove(self)
+                if self.is_air_unit:
+                    game_world.computer_air_unit.remove(self)
+                else:
+                    game_world.computer_ground_unit.remove(self)
+            else:
+                game_world.player_all_unit.remove(self)
+                if self.is_air_unit:
+                    game_world.player_air_unit.remove(self)
+                else:
+                    game_world.player_ground_unit.remove(self)
+            game_world.remove_object(self.hp_bar)
+            game_world.remove_object(self)
 
         if self.x < 0 or self.x > 1200:
             self.hp = 0
-            return True
 
-        return False
 
 # -----------------------------------------------------------------------------------------------------------------#
 
@@ -198,6 +211,7 @@ class BasicGroundUnit:
 
 
     def run(self):
+        self.cur_state = RUN
         self.speed = self.RUN_SPEED_PPS
 
         if self.is_foe:
@@ -208,6 +222,7 @@ class BasicGroundUnit:
         return BehaviorTree.SUCCESS
 
     def chase(self):
+        self.cur_state = CHASE
         if self.target.x <= self.x:
             self.dir = -1
         else:
@@ -215,7 +230,8 @@ class BasicGroundUnit:
         return BehaviorTree.SUCCESS
 
     def attack(self):
-        self.dir = 0
+        self.attack_target()
+        return BehaviorTree.SUCCESS
 
     def fail_node(self):
         return BehaviorTree.FAIL
@@ -295,14 +311,14 @@ class BasicGroundUnit:
 # -----------------------------------------------------------------------------------------------------------------#
 
     def update(self):
+        self.is_this_unit_dead()
+
         self.bt.run()
-        if self.dir == 0:
-            pass
 
-        else:
-            self.frame = (self.frame + self.RUN_FRAMES_PER_ACTION * self.RUN_ACTION_PER_TIME * game_framework.frame_time) % self.RUN_FRAMES_PER_ACTION
+        self.frame = (self.frame + self.RUN_FRAMES_PER_ACTION *
+                          self.RUN_ACTION_PER_TIME * game_framework.frame_time) % self.RUN_FRAMES_PER_ACTION
+        self.x += self.RUN_SPEED_PPS * self.dir * game_framework.frame_time
 
-            self.x += self.RUN_SPEED_PPS * self.dir * game_framework.frame_time
 
     def draw(self):
         if self.dir == 1:
