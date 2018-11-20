@@ -17,7 +17,7 @@ class SpitterAnt(BasicGroundUnit):
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 6
 
-        self.ATTACK_TIME_PER_ACTION = 0.8
+        self.ATTACK_TIME_PER_ACTION = 1
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 3
         self.attack_init_time = 0
@@ -29,7 +29,7 @@ class SpitterAnt(BasicGroundUnit):
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 30
+        self.damage = 20
         self.range = self.PIXEL_PER_METER * 0.03
         self.sight = self.PIXEL_PER_METER * 0.07
         self.speed = 0

@@ -2,7 +2,8 @@ from background import Background
 from pico2d import*
 from ant import Ant
 from spitter_ant import SpitterAnt
-from base import Base
+from base_player import PlayerBase
+from base_computer import ComputerBase
 
 import game_framework
 import game_world
@@ -33,8 +34,8 @@ def enter():
     background = Background()
     game_world.add_object(background, 0)
 
-    player_base = Base(50, 230, False)
-    computer_base = Base(1150, 230, True)
+    player_base = PlayerBase(50, 230)
+    computer_base = ComputerBase(1150, 230)
 
     spitter_ant = SpitterAnt(1100, random.randint(150, 200), True)
     ant = Ant(100, random.randint(150, 200), False)

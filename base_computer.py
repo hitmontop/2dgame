@@ -96,9 +96,9 @@ class BrokenState:
             unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
-class Base:
+class ComputerBase:
 
-    def __init__(self, x, y, is_foe):
+    def __init__(self, x, y):
 
         self.IMAGE_SIZE = 300
         self.PIXEL_PER_METER = (100 / 0.02)
@@ -119,7 +119,7 @@ class Base:
         self.frame = 0
         self.init_time = 0
 
-        self.is_foe = is_foe
+        self.is_foe = True
 
         self.is_air_unit = False
 
@@ -134,21 +134,14 @@ class Base:
     def add_self(self):
         game_world.add_object(self, 2)
 
-        if self.is_foe:
-            game_world.computer_all_unit.append(self)
-            game_world.computer_ground_unit.append(self)
-        else:
-            game_world.player_all_unit.append(self)
-            game_world.player_ground_unit.append(self)
+        game_world.computer_all_unit.append(self)
+        game_world.computer_ground_unit.append(self)
 
 
     def delete_this_unit_from_checking_layer(self):
-        if self.is_foe:
-            game_world.computer_all_unit.remove(self)
-            game_world.computer_ground_unit.remove(self)
-        else:
-            game_world.player_all_unit.remove(self)
-            game_world.player_ground_unit.remove(self)
+        game_world.computer_all_unit.remove(self)
+        game_world.computer_ground_unit.remove(self)
+
 
     def get_bb(self, obj):
         return self.x - (self.IMAGE_SIZE-80) // 2, \
