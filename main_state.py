@@ -25,11 +25,12 @@ timer = 0
 
 def enter():
     game_world.add_layer(6)
+    button.GenerateAntButton(100,700)
 
     global background, font, player_base, computer_base
     font = load_font('ENCR10B.TTF', 16)
 
-    quit_button = button.QuitButton(600, 300)
+    quit_button = button.QuitButton(600, 700)
 
     background = Background()
     game_world.add_object(background, 0)
@@ -81,7 +82,7 @@ def update():
 
     timer -= game_framework.frame_time
     if timer <= 0:
-        game_world.money += 1
+        game_world.money += 10
         timer += 1
 
 
@@ -92,5 +93,6 @@ def draw():
 
     for game_object in game_world.all_objects():
         game_object.draw()
+
 
     update_canvas()

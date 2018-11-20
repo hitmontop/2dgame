@@ -288,6 +288,7 @@ class GenerateAntButton(Button):
 
     def click_action(self):
         game_world.money -= Ant.cost
+        main_state.player_base.generate_unit()
 
     def is_inactive(self):
         if game_world.money < Ant.cost:

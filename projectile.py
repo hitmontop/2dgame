@@ -16,7 +16,7 @@ class FlyingState:
 
     @staticmethod
     def do(unit):
-        print(unit.obj_left)
+
         if (unit.target is None) is False:
             unit.get_target_bb()
             unit.temp_x, unit.temp_y = unit.target.x, unit.target.y

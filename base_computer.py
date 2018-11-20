@@ -26,17 +26,7 @@ class IdleState:
     @staticmethod
     def draw(unit):
 
-        if unit.is_foe is False:
-            unit.font.draw(unit.x - 40, unit.y + 150, '(%d/' % unit.hp, (100, 255, 0))
-            unit.font.draw(unit.x + 10, unit.y + 150, '%d)' % unit.max_hp, (100, 255, 0))
-        else:
-            unit.font.draw(unit.x - 40, unit.y + 150, '(%d/' % unit.hp, (255, 0, 0))
-            unit.font.draw(unit.x + 10, unit.y + 150, '%d)' % unit.max_hp, (255, 0, 0))
-
-        if unit.is_foe is False:
-            unit.image.clip_draw(0, 5 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
-        else:
-            unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 class ExplodingState:
@@ -67,10 +57,7 @@ class ExplodingState:
     @staticmethod
     def draw(unit):
 
-        if unit.is_foe is False:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 4 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
-        else:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 1 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 1 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 class BrokenState:
@@ -90,10 +77,7 @@ class BrokenState:
     @staticmethod
     def draw(unit):
 
-        if unit.is_foe is False:
-            unit.image.clip_draw(0, 3 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
-        else:
-            unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
 
 
 class ComputerBase:
