@@ -2,9 +2,9 @@ from pico2d import*
 import game_framework
 import game_world
 
-from ant import*
-from spitter_ant import*
-from bee import*
+from ant import Ant
+from spitter_ant import SpitterAnt
+from bee import Bee
 
 import random
 

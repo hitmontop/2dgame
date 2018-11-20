@@ -1,6 +1,17 @@
-from background import*
-from base import*
-from buttons import*
+from background import Background
+from pico2d import*
+from ant import Ant
+from spitter_ant import SpitterAnt
+from base import Base
+
+import game_framework
+import game_world
+
+import button
+
+HEIGHT = 800
+
+import random
 
 name = "MainState"
 
@@ -12,8 +23,12 @@ font = None
 timer = 0
 
 def enter():
+    game_world.add_layer(6)
+
     global background, font, player_base, computer_base
     font = load_font('ENCR10B.TTF', 16)
+
+    quit_button = button.QuitButton(600, 300)
 
     background = Background()
     game_world.add_object(background, 0)
@@ -36,6 +51,23 @@ def handle_events():
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+
+
+        elif event.type == SDL_MOUSEMOTION:
+
+            game_world.x, game_world.y = event.x, HEIGHT - 1 - event.y
+
+
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+
+            for o in game_world.search_objects(5):
+                o.handle_event(event)
+
+
+        elif event.type == SDL_MOUSEBUTTONUP:
+
+            for o in game_world.search_objects(5):
+                o.handle_event(event)
 
 
 

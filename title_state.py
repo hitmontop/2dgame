@@ -1,22 +1,22 @@
-from buttons import*
-
+from button import*
 import main_state
+from background import Background
 
 HEIGHT = 800
 
 name = "MainState"
 
-ui_list = []
-
 def enter():
+    game_world.add_layer(6)
+
+    background = Background()
+    game_world.add_object(background, 0)
+
     start_button = StartButton(600, 500)
-    ui_list.append(start_button)
     quit_button = QuitButton(600, 300)
-    ui_list.append(quit_button)
 
 def exit():
-    for o in ui_list:
-        game_world.remove_object(o)
+    game_world.clear()
 
 def handle_events():
     events = get_events()
@@ -32,24 +32,24 @@ def handle_events():
             game_world.x, game_world.y = event.x, HEIGHT - 1 - event.y
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            for o in ui_list:
+            for o in game_world.search_objects(5):
                 o.handle_event(event)
 
         elif event.type == SDL_MOUSEBUTTONUP:
-            for o in ui_list:
+            for o in game_world.search_objects(5):
                 o.handle_event(event)
 
 
 
 def update():
-    for o in ui_list:
-        o.update()
-
+    for game_object in game_world.all_objects():
+        game_object.update()
 
 def draw():
     clear_canvas()
-    for o in ui_list:
-        o.draw()
+
+    for game_object in game_world.all_objects():
+        game_object.draw()
 
     update_canvas()
 

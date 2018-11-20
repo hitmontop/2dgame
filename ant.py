@@ -1,6 +1,5 @@
 from basic_ground_unit import*
 
-
 class Ant(BasicGroundUnit):
     image = None
     cost = 50

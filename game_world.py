@@ -8,7 +8,7 @@
 
 money = 0
 x, y = 0, 0
-objects = [[], [], [], [], [], []]
+objects = []
 
 computer_ground_unit = []
 computer_air_unit = []
@@ -17,6 +17,11 @@ computer_all_unit = []
 player_ground_unit = []
 player_air_unit = []
 player_all_unit = []
+
+
+def add_layer(l):
+    for i in range(l):
+        objects.append([])
 
 
 def add_object(o, layer):
