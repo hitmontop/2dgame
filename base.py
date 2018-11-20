@@ -110,8 +110,8 @@ class Base:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 1
-        self.hp = 1
+        self.max_hp = 100
+        self.hp = 100
 
         self.x = x
         self.y = y
@@ -150,6 +150,11 @@ class Base:
             game_world.player_all_unit.remove(self)
             game_world.player_ground_unit.remove(self)
 
+    def get_bb(self, obj):
+        return self.x - (self.IMAGE_SIZE-80) // 2, \
+               self.y - (self.IMAGE_SIZE-70) // 2, \
+               self.x + (self.IMAGE_SIZE-80) // 2, \
+               self.y + (self.IMAGE_SIZE-70) // 2
 
     def is_this_unit_dead(self):
         if self.hp <= 0:
@@ -177,3 +182,4 @@ class Base:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb(self))

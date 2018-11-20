@@ -16,16 +16,21 @@ class FlyingState:
 
     @staticmethod
     def do(unit):
-        distance = game_framework.frame_time * unit.velocity
+        print(unit.obj_left)
+        if (unit.target is None) is False:
+            unit.get_target_bb()
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
 
-        if unit.i < 100:
-            unit.i = unit.i + 2
-            t = unit.i / 100
-            unit.x = (1 - t) * unit.x + t * unit.destination_x
-            unit.y = (1 - t) * unit.y + t * unit.destination_y
-
-        else:
+        if unit.collide():
             unit.add_event(ExplodingState)
+
+        unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
+
+        unit.x += unit.RUN_SPEED_PPS * math.cos(unit.dir) * game_framework.frame_time
+        unit.y += unit.RUN_SPEED_PPS * math.sin(unit.dir) * game_framework.frame_time
+
+
+        #0unit.add_event(ExplodingState)
 
 
 
@@ -76,14 +81,16 @@ class Projectile:
         self.EXPLODING_ACTION_PER_TIME = 0
         self.EXPLODING_FRAMES_PER_ACTION = 0
 
-        self.i = 0
+
         self.target = None
+        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = 0, 0, 0, 0
         self.frame = 0
         self.init_time = 0
 
-        self.velocity = self.RUN_SPEED_PPS
+
         self.x, self.y = 0, 0
-        self.destination_x, self.destination_y = 0, 0
+        self.temp_x, self.temp_y = 0, 0
+        self.dir = math.atan2(self.target.y - self.y, self.target.x - self.x)
 
         self.damage = 0
 
@@ -92,6 +99,18 @@ class Projectile:
 
     def attack_target(self):
         self.target.hp -= self.damage
+
+    def get_target_bb(self):
+        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = self.target.get_bb(self)
+
+    def collide(self):
+        if self.obj_left > self.x: return False
+        if self.obj_bottom > self.y: return False
+        if self.obj_right < self.x: return False
+        if self.obj_top < self.y: return False
+        return True
+
+
 
 ######################################################################
 

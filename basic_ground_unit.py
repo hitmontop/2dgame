@@ -372,6 +372,12 @@ class BasicGroundUnit:
     def fail_node(self):
         return BehaviorTree.FAIL
 
+
+    def get_bb(self, obj):
+        return self.x - (self.IMAGE_SIZE-20) // 2, \
+               self.y - (self.IMAGE_SIZE-30) // 2, \
+               self.x + (self.IMAGE_SIZE-20) // 2, \
+               self.y + (self.IMAGE_SIZE-30) // 2
 # -----------------------------------------------------------------------------------------------------------------#
 
     def build_behavior_tree(self):
@@ -469,7 +475,7 @@ class BasicGroundUnit:
 
     def draw(self):
         self.cur_state.draw(self)
-
+        draw_rectangle(*self.get_bb(self))
 
 # -----------------------------------------------------------------------------------------------------------------#
 
