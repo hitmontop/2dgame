@@ -1,40 +1,34 @@
 from background import*
-from ant import*
-from spitter_ant import*
-from bee import*
 from base import*
-import random
+from buttons import*
 
 name = "MainState"
 
+player_base = None
+computer_base = None
 
-init_time = 0
-coin_time = 0
-coin = 0
-num, num2 = 1, 1
-cnt = 0
 background = None
 font = None
+timer = 0
 
 def enter():
-    global background, init_time, coin_time, font
+    global background, font, player_base, computer_base
     font = load_font('ENCR10B.TTF', 16)
-    init_time = get_time()
-    coin_time = get_time()
 
     background = Background()
     game_world.add_object(background, 0)
 
-    base = Base(50, 230, False)
-    game_world.add_object(base, 2)
-    base = Base(1150, 230, True)
-    game_world.add_object(base, 2)
+    player_base = Base(50, 230, False)
+    computer_base = Base(1150, 230, True)
+
+    spitter_ant = SpitterAnt(1100, random.randint(150, 200), True)
+    ant = Ant(100, random.randint(150, 200), False)
+
 
 def exit():
     game_world.clear()
 
 def handle_events():
-    global coin
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -47,23 +41,16 @@ def handle_events():
 
 
 def update():
-    global num, num2, init_time, cnt, coin_time, coin
+    global timer
 
     for game_object in game_world.all_objects():
         game_object.update()
 
-    if get_time() - coin_time > 0.1:
-        coin_time = get_time()
-        coin += 2
+    timer -= game_framework.frame_time
+    if timer <= 0:
+        game_world.money += 1
+        timer += 1
 
-    if get_time() - init_time > 2 and cnt < 3:
-        init_time = get_time()
-        cnt += 1
-
-        spitter_ant = SpitterAnt(1100, random.randint(150, 200), True)
-        ant = Ant(1100, random.randint(150, 200), True)
-        spitter_ant = SpitterAnt(100, random.randint(150, 200), False)
-        ant = Ant(100, random.randint(150, 200), False)
 
 
 
@@ -72,7 +59,5 @@ def draw():
 
     for game_object in game_world.all_objects():
         game_object.draw()
-
-    font.draw(50, 80, 'money = %d' % coin, (255, 255, 0))
 
     update_canvas()

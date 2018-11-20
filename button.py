@@ -1,7 +1,27 @@
 import game_world
 import game_framework
 import main_state
+
 from pico2d import*
+
+class InactiveState:
+    @staticmethod
+    def enter(unit):
+        pass
+
+    @staticmethod
+    def exit(unit):
+        pass
+
+    @staticmethod
+    def do(unit):
+        if unit.is_inactive() is False:
+            unit.add_event(IdleState)
+
+    @staticmethod
+    def draw(unit):
+        unit.image.clip_draw(0, unit.IMAGE_HEIGHT * 3, unit.IMAGE_WIDTH, unit.IMAGE_HEIGHT, unit.x, unit.y)
+
 
 class IdleState:
 
@@ -15,7 +35,10 @@ class IdleState:
 
     @staticmethod
     def do(unit):
-        if unit.is_mouse_on_the_button() and unit.clicked is False:
+        if unit.is_inactive():
+            unit.add_event(InactiveState)
+
+        elif unit.is_mouse_on_the_button() and unit.clicked is False:
             unit.add_event(MouseOnState)
 
     @staticmethod
@@ -36,7 +59,10 @@ class MouseOnState:
 
     @staticmethod
     def do(unit):
-        if unit.is_mouse_on_the_button():
+        if unit.is_inactive():
+            unit.add_event(InactiveState)
+
+        elif unit.is_mouse_on_the_button():
             if unit.clicked:
                 unit.add_event(ClickedState)
         else:
@@ -60,7 +86,10 @@ class ClickedState:
 
     @staticmethod
     def do(unit):
-        if unit.clicked is False:
+        if unit.is_inactive():
+            unit.add_event(InactiveState)
+
+        elif unit.clicked is False:
             if unit.is_mouse_on_the_button():
                 unit.click_action()
                 unit.add_event(MouseOnState)
@@ -81,7 +110,9 @@ class Button:
         self.IMAGE_WIDTH = 0
 
         self.event_que = []
+
         self.cur_state = IdleState
+
         self.clicked = False
 
         self.x = 0
@@ -92,6 +123,9 @@ class Button:
 
     def click_action(self):
         game_framework.change_state(main_state)
+
+    def is_inactive(self):
+        return False
 
     def is_mouse_on_the_button(self):
         if game_world.x < self.x - self.IMAGE_WIDTH / 2:
@@ -124,4 +158,6 @@ class Button:
             self.clicked = True
         elif event.type == SDL_MOUSEBUTTONUP:
             self.clicked = False
+
+
 

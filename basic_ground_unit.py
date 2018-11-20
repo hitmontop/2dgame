@@ -6,7 +6,138 @@ from hp_bar import*
 
 UNIT_LIST = 2
 
-RUN, CHASE, ATTACK, DEATH = 1, 2, 3, 4
+class RunState:
+
+    @staticmethod
+    def enter(unit):
+        unit.speed = unit.RUN_SPEED_PPS
+
+        if unit.is_foe:
+            unit.dir = -1
+
+        else:
+            unit.dir = 1
+
+    @staticmethod
+    def exit(unit):
+        pass
+
+    @staticmethod
+    def do(unit):
+
+        unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
+                      unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+        unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
+
+    @staticmethod
+    def draw(unit):
+
+        if unit.dir == 1:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+        else:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+
+
+class ChaseState:
+
+    @staticmethod
+    def enter(unit):
+        if unit.target.x <= unit.x:
+            unit.dir = -1
+        else:
+            unit.dir = 1
+
+    @staticmethod
+    def exit(unit):
+        pass
+
+    @staticmethod
+    def do(unit):
+        unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
+                      unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+        unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
+
+    @staticmethod
+    def draw(unit):
+        if unit.dir == 1:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+        else:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+
+
+
+class AttackState:
+
+    @staticmethod
+    def enter(unit):
+        unit.frame = 0
+        unit.attack_init_time = get_time()
+
+    @staticmethod
+    def exit(unit):
+        pass
+
+    @staticmethod
+    def do(unit):
+        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
+            unit.attack_target()
+            unit.attack_init_time = get_time()
+
+        if (unit.target is None) is False:
+            if unit.target.x <= unit.x:
+                unit.dir = -1
+            else:
+                unit.dir = 1
+
+        unit.frame = (unit.frame + unit.ATTACK_FRAMES_PER_ACTION *
+                      unit.ATTACK_ACTION_PER_TIME * game_framework.frame_time) % unit.ATTACK_FRAMES_PER_ACTION
+
+    @staticmethod
+    def draw(unit):
+        if unit.dir == 1:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+        else:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+
+class DyingState:
+
+    @staticmethod
+    def enter(unit):
+        unit.frame = 0
+        unit.delete_this_unit_from_checking_layer()
+
+        game_world.add_object(unit, 1)
+        game_world.pull_object(unit)
+
+        unit.dying_init_time = get_time()
+
+    @staticmethod
+    def exit(unit):
+        game_world.remove_object(unit)
+
+    @staticmethod
+    def do(unit):
+        if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
+            unit.add_event(RunState)
+
+        unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
+                    unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
+
+    @staticmethod
+    def draw(unit):
+        if unit.dir == 1:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+        else:
+            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, unit.x, unit.y)
+
 
 class BasicGroundUnit:
 
@@ -27,10 +158,12 @@ class BasicGroundUnit:
         self.ATTACK_TIME_PER_ACTION = 0
         self.ATTACK_ACTION_PER_TIME = 0
         self.ATTACK_FRAMES_PER_ACTION = 0
+        self.attack_init_time = 0
 
         self.DYING_TIME_PER_ACTION = 0
         self.DYING_ACTION_PER_TIME = 0
         self.DYING_FRAMES_PER_ACTION = 0
+        self.dying_init_time = 0
 
         self.max_hp = 0
         self.hp = 0
@@ -60,11 +193,17 @@ class BasicGroundUnit:
 
         self.build_behavior_tree()
         self.add_self()
+        self.event_que = []
+        self.cur_state = RunState
+
+
+
+
 
 # -----------------------------------------------------------------------------------------------------------------#
 
     def add_self(self):
-        game_world.add_object(self, 2)
+        game_world.add_object(self, UNIT_LIST)
 
         if self.is_foe:
             game_world.computer_all_unit.append(self)
@@ -101,30 +240,33 @@ class BasicGroundUnit:
             else:
                 self.valid_target_list = game_world.computer_air_unit
 
+# -----------------------------------------------------------------------------------------------------------------#
+
+    def delete_this_unit_from_checking_layer(self):
+        if self.is_foe:
+            game_world.computer_all_unit.remove(self)
+            if self.is_air_unit:
+                game_world.computer_air_unit.remove(self)
+            else:
+                game_world.computer_ground_unit.remove(self)
+        else:
+            game_world.player_all_unit.remove(self)
+            if self.is_air_unit:
+                game_world.player_air_unit.remove(self)
+            else:
+                game_world.player_ground_unit.remove(self)
+
+        game_world.remove_object(self.hp_bar)
 
 
     def is_this_unit_dead(self):
         if self.hp <= 0:
-            if self.is_foe:
-                game_world.computer_all_unit.remove(self)
-                if self.is_air_unit:
-                    game_world.computer_air_unit.remove(self)
-                else:
-                    game_world.computer_ground_unit.remove(self)
-            else:
-                game_world.player_all_unit.remove(self)
-                if self.is_air_unit:
-                    game_world.player_air_unit.remove(self)
-                else:
-                    game_world.player_ground_unit.remove(self)
-            game_world.remove_object(self.hp_bar)
-            game_world.remove_object(self)
-
-        if self.x < 0 or self.x > 1200:
+            return True
+        elif self.x < 0 or self.x > 1200:
             self.hp = 0
+            return True
 
-
-# -----------------------------------------------------------------------------------------------------------------#
+        return False
 
 
     def is_target_live(self):
@@ -204,33 +346,27 @@ class BasicGroundUnit:
 
 
     def attack_target(self):
-        self.target.hp -= self.damage
+        if (self.target is None) is False:
+            self.target.hp -= self.damage
 
 
 
 
 
     def run(self):
-        self.cur_state = RUN
-        self.speed = self.RUN_SPEED_PPS
+        if (self.cur_state is RunState) is False:
+            self.add_event(RunState)
 
-        if self.is_foe:
-            self.dir = -1
-
-        else:
-            self.dir = 1
         return BehaviorTree.SUCCESS
 
     def chase(self):
-        self.cur_state = CHASE
-        if self.target.x <= self.x:
-            self.dir = -1
-        else:
-            self.dir = 1
+        if (self.cur_state is ChaseState) is False:
+            self.add_event(ChaseState)
         return BehaviorTree.SUCCESS
 
     def attack(self):
-        self.attack_target()
+        if (self.cur_state is AttackState) is False:
+            self.add_event(AttackState)
         return BehaviorTree.SUCCESS
 
     def fail_node(self):
@@ -310,23 +446,29 @@ class BasicGroundUnit:
 
 # -----------------------------------------------------------------------------------------------------------------#
 
+    def add_event(self, event):
+        self.event_que.insert(0, event)
+
     def update(self):
-        self.is_this_unit_dead()
+        if self.is_this_unit_dead():
+            if (self.cur_state is DyingState) is False:
+                self.add_event(DyingState)
 
-        self.bt.run()
+        else:
+            self.init_time -= game_framework.frame_time
+            if self.init_time <= 0:
+                self.bt.run()
+                self.init_time += 0.1
 
-        self.frame = (self.frame + self.RUN_FRAMES_PER_ACTION *
-                          self.RUN_ACTION_PER_TIME * game_framework.frame_time) % self.RUN_FRAMES_PER_ACTION
-        self.x += self.RUN_SPEED_PPS * self.dir * game_framework.frame_time
-
+        self.cur_state.do(self)
+        if len(self.event_que) > 0:
+            event = self.event_que.pop()
+            self.cur_state.exit(self)
+            self.cur_state = event
+            self.cur_state.enter(self)
 
     def draw(self):
-        if self.dir == 1:
-            self.image.clip_draw(int(self.frame) * self.IMAGE_SIZE, self.IMAGE_SIZE * 4, self.IMAGE_SIZE,
-                                 self.IMAGE_SIZE, self.x, self.y)
-        else:
-            self.image.clip_draw(int(self.frame) * self.IMAGE_SIZE, self.IMAGE_SIZE * 5, self.IMAGE_SIZE,
-                                 self.IMAGE_SIZE, self.x, self.y)
+        self.cur_state.draw(self)
 
 
 # -----------------------------------------------------------------------------------------------------------------#

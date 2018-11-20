@@ -3,6 +3,7 @@ from basic_ground_unit import*
 
 class Ant(BasicGroundUnit):
     image = None
+    cost = 50
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -20,14 +21,16 @@ class Ant(BasicGroundUnit):
         self.ATTACK_TIME_PER_ACTION = 1
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 4
+        self.attack_init_time = 0
 
         self.DYING_TIME_PER_ACTION = 4
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
+        self.dying_init_time = 0
 
         self.max_hp = 100
         self.hp = 100
-        self.damage = 1
+        self.damage = 30
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.05
         self.speed = 0
@@ -63,3 +66,11 @@ class Ant(BasicGroundUnit):
             self.image = load_image('resource\\image\\unit\\ant.png')
 
         self.add_self()
+
+        self.event_que = []
+        self.cur_state = RunState
+
+        if self.is_foe:
+            self.dir = -1
+        else:
+            self.dir = 1

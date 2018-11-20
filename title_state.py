@@ -1,5 +1,4 @@
-from start_button import*
-from quit_button import*
+from buttons import*
 
 import main_state
 

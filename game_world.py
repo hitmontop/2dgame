@@ -6,6 +6,7 @@
 # layer 4: projectile
 # layer 5: UI
 
+money = 0
 x, y = 0, 0
 objects = [[], [], [], [], [], []]
 
@@ -26,7 +27,7 @@ def pull_object(o):
     for i in range(len(objects)):
         if o in objects[i]:
             objects[i].remove(o)
-
+            break
 
 def remove_object(o):
     for i in range(len(objects)):

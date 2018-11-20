@@ -2,6 +2,11 @@ from pico2d import*
 import game_framework
 import game_world
 
+from ant import*
+from spitter_ant import*
+from bee import*
+
+import random
 
 class IdleState:
 
@@ -38,8 +43,10 @@ class ExplodingState:
 
     @staticmethod
     def enter(unit):
+        unit.delete_this_unit_from_checking_layer()
         game_world.pull_object(unit)
         game_world.add_object(unit, 1)
+
         unit.init_time = get_time()
 
     @staticmethod
@@ -103,8 +110,8 @@ class Base:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 3000
-        self.hp = 3000
+        self.max_hp = 1
+        self.hp = 1
 
         self.x = x
         self.y = y
@@ -121,23 +128,46 @@ class Base:
 
         self.add_self()
 
+        self.init_time = 0
+        self.cnt =0
+
     def add_self(self):
         game_world.add_object(self, 2)
 
         if self.is_foe:
+            game_world.computer_all_unit.append(self)
             game_world.computer_ground_unit.append(self)
         else:
+            game_world.player_all_unit.append(self)
             game_world.player_ground_unit.append(self)
+
+
+    def delete_this_unit_from_checking_layer(self):
+        if self.is_foe:
+            game_world.computer_all_unit.remove(self)
+            game_world.computer_ground_unit.remove(self)
+        else:
+            game_world.player_all_unit.remove(self)
+            game_world.player_ground_unit.remove(self)
 
 
     def is_this_unit_dead(self):
         if self.hp <= 0:
             return True
+        elif self.x < 0 or self.x > 1200:
+            self.hp = 0
+            return True
+
+        return False
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def update(self):
+        if get_time() - self.init_time > 2 and self.cnt < 3:
+            self.init_time = get_time()
+            self.cnt += 1
+
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
