@@ -1,14 +1,17 @@
-from background import Background
+
 from pico2d import*
-from ant import Ant
-from spitter_ant import SpitterAnt
+
+from background import Background
+
 from base_player import PlayerBase
 from base_computer import ComputerBase
+
+import button
 
 import game_framework
 import game_world
 
-import button
+
 
 HEIGHT = 800
 
@@ -25,21 +28,25 @@ timer = 0
 
 def enter():
     game_world.add_layer(6)
-    button.GenerateAntButton(100,700)
+
+    button.AntGenerateButton(100, 700)
+    button.SpitterAntGenerateButton(200, 700)
+    button.BeeGenerateButton(300,700)
+    button.QueenAntGenerateButton(400, 700)
+    button.JumpSpiderGenerateButton(500, 700)
+    button.BazookaBugGenerateButton(600, 700)
+
 
     global background, font, player_base, computer_base
     font = load_font('ENCR10B.TTF', 16)
 
-    quit_button = button.QuitButton(600, 700)
+    quit_button = button.QuitButton(800, 700)
 
     background = Background()
     game_world.add_object(background, 0)
 
     player_base = PlayerBase(50, 230)
     computer_base = ComputerBase(1150, 230)
-
-    ant = Ant(1100, random.randint(150, 200), True)
-    ant = Ant(100, random.randint(150, 200), False)
 
 
 def exit():
@@ -79,6 +86,7 @@ def update():
 
     for game_object in game_world.all_objects():
         game_object.update()
+    game_world.sort_unit_layer()
 
     timer -= game_framework.frame_time
     if timer <= 0:

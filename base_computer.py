@@ -1,11 +1,7 @@
 from pico2d import*
 import game_framework
 import game_world
-
-from ant import Ant
-from spitter_ant import SpitterAnt
-from bee import Bee
-
+import units
 import random
 
 class IdleState:
@@ -126,6 +122,20 @@ class ComputerBase:
         game_world.computer_all_unit.remove(self)
         game_world.computer_ground_unit.remove(self)
 
+    def generate_unit(self , num):
+        if num == 0:
+            ant = units.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
+        elif num ==1:
+            spitter_ant = units.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num ==2:
+            bee = units.Bee(self.x, 300 + random.randint(0,100), self.is_foe)
+        elif num ==3:
+            queen_ant = units.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num ==4:
+            jump_spider = units.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == 5:
+            bazooka_bug = units.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE-80) // 2, \
@@ -146,9 +156,10 @@ class ComputerBase:
         self.event_que.insert(0, event)
 
     def update(self):
-        if get_time() - self.init_time > 2 and self.cnt < 3:
+        if get_time() - self.init_time > 3:
             self.init_time = get_time()
-            self.cnt += 1
+            i = random.randint(0,5)
+            self.generate_unit(i)
 
         self.cur_state.do(self)
         if len(self.event_que) > 0:

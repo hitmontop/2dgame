@@ -1,5 +1,5 @@
 
-import homing_projectile
+import bomb_projectile
 
 import game_world
 import game_framework
@@ -156,9 +156,9 @@ class DyingState:
                                  unit.IMAGE_SIZE, unit.x, unit.y)
 
 
-class SpitterAnt:
+class BazookaBug:
     image = None
-    cost = 30
+    cost = 50
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -186,8 +186,8 @@ class SpitterAnt:
         self.max_hp = 80
         self.hp = 80
         self.damage = 20
-        self.range = self.PIXEL_PER_METER * 0.04
-        self.sight = self.PIXEL_PER_METER * 0.07
+        self.range = self.PIXEL_PER_METER * 0.07
+        self.sight = self.PIXEL_PER_METER * 0.08
         self.speed = 0
         self.dir = 0
 
@@ -218,7 +218,7 @@ class SpitterAnt:
         self.hp_bar = hp_bar
         game_world.add_object(hp_bar, 4)
 
-        if SpitterAnt.image is None:
+        if BazookaBug.image is None:
             self.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
         self.add_self()
@@ -378,7 +378,7 @@ class SpitterAnt:
 
 
     def attack_target(self):
-        missile = homing_projectile.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
+        missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
 
 
 

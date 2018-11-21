@@ -18,6 +18,8 @@ player_ground_unit = []
 player_air_unit = []
 player_all_unit = []
 
+def sort_unit_layer():
+    objects[2].sort(key=lambda object : object.y, reverse = True)
 
 def add_layer(l):
     for i in range(l):

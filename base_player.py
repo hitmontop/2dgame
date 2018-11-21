@@ -2,12 +2,8 @@ from pico2d import *
 import game_framework
 import game_world
 
-from ant import Ant
-from spitter_ant import SpitterAnt
-from bee import Bee
-
+import units
 import random
-
 
 class IdleState:
 
@@ -108,7 +104,7 @@ class PlayerBase:
         self.is_air_unit = False
 
         self.image = load_image('resource\\image\\unit\\base.png')
-        self.font = load_font('ENCR10B.TTF', 16)
+
 
         self.add_self()
 
@@ -125,9 +121,19 @@ class PlayerBase:
         game_world.player_all_unit.remove(self)
         game_world.player_ground_unit.remove(self)
 
-    def generate_unit(self):
-        ant = Ant(random.randint(100, 1100), self.y- random.randint(20,50), self.is_foe)
-        ant = Ant(random.randint(100, 1100), self.y - random.randint(20, 50), True)
+    def generate_unit(self , num):
+        if num == 0:
+            ant = units.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
+        elif num ==1:
+            spitter_ant = units.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num ==2:
+            bee = units.Bee(self.x, 300 + random.randint(0,100), self.is_foe)
+        elif num ==3:
+            queen_ant = units.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num ==4:
+            jump_spider = units.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == 5:
+            bazooka_bug = units.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \
@@ -148,9 +154,6 @@ class PlayerBase:
         self.event_que.insert(0, event)
 
     def update(self):
-        if get_time() - self.init_time > 2 and self.cnt < 3:
-            self.init_time = get_time()
-            self.cnt += 1
 
         self.cur_state.do(self)
         if len(self.event_que) > 0:

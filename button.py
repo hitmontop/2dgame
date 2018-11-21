@@ -3,7 +3,9 @@ import game_framework
 import main_state
 
 from pico2d import*
-from ant import Ant
+import units
+
+ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug = range(6)
 
 class InactiveState:
     @staticmethod
@@ -259,7 +261,13 @@ class StartButton(Button):
         return True
 
 
-class GenerateAntButton(Button):
+
+
+
+
+
+
+class AntGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
@@ -283,26 +291,195 @@ class GenerateAntButton(Button):
         self.init_time = 0
         self.add_self()
 
-        if GenerateAntButton.image is None:
+        if AntGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= Ant.cost
-        main_state.player_base.generate_unit()
+        game_world.money -= units.Ant.cost
+        main_state.player_base.generate_unit(ant)
 
     def is_inactive(self):
-        if game_world.money < Ant.cost:
+        if game_world.money < units.Ant.cost:
             return True
         return False
 
-    def is_mouse_on_the_button(self):
-        if game_world.x < self.x - self.IMAGE_WIDTH / 2:
-            return False
-        elif game_world.x > self.x + self.IMAGE_WIDTH / 2:
-            return False
-        elif game_world.y < self.y - self.IMAGE_HEIGHT / 2:
-            return False
-        elif game_world.y > self.y + self.IMAGE_HEIGHT / 2:
-            return False
 
-        return True
+class SpitterAntGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if SpitterAntGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.SpitterAnt.cost
+        main_state.player_base.generate_unit(spitter_ant)
+
+    def is_inactive(self):
+        if game_world.money < units.SpitterAnt.cost:
+            return True
+        return False
+
+class QueenAntGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if QueenAntGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.QueenAnt.cost
+        main_state.player_base.generate_unit(queen_ant)
+
+    def is_inactive(self):
+        if game_world.money < units.QueenAnt.cost:
+            return True
+        return False
+
+class BeeGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if BeeGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.Bee.cost
+        main_state.player_base.generate_unit(bee)
+
+    def is_inactive(self):
+        if game_world.money < units.Bee.cost:
+            return True
+        return False
+
+class JumpSpiderGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if JumpSpiderGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.JumpSpider.cost
+        main_state.player_base.generate_unit(jump_spider)
+
+    def is_inactive(self):
+        if game_world.money < units.JumpSpider.cost:
+            return True
+        return False
+
+class BazookaBugGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if BazookaBugGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.JumpSpider.cost
+        main_state.player_base.generate_unit(bazooka_bug)
+
+    def is_inactive(self):
+        if game_world.money < units.JumpSpider.cost:
+            return True
+        return False

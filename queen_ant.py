@@ -4,6 +4,8 @@ import game_framework
 from behavior_tree import*
 from hp_bar import*
 
+import units
+
 UNIT_LIST = 2
 
 class RunState:
@@ -51,17 +53,31 @@ class ChaseState:
 
     @staticmethod
     def exit(unit):
-        pass
+        if unit.is_foe:
+            unit.dir = -1
+
+        else:
+            unit.dir = 1
 
     @staticmethod
     def do(unit):
+        if (unit.target is None) is False:
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
+
+        if (unit.target is None) is False:
+            if unit.target.x <= unit.x:
+                unit.dir = -1
+            else:
+                unit.dir = 1
+
         unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+
         unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
 
     @staticmethod
     def draw(unit):
-        if unit.dir == 1:
+        if  unit.dir == 1:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, unit.x, unit.y)
         else:
@@ -139,64 +155,80 @@ class DyingState:
                                  unit.IMAGE_SIZE, unit.x, unit.y)
 
 
-class BasicGroundUnit:
+class QueenAnt:
+    image = None
+    cost = 60
 
-    def __init__(self):
+    def __init__(self, x, y, is_foe):
+        self.IMAGE_SIZE = 100
 
-        self.IMAGE_SIZE = 0
-
-        self.PIXEL_PER_METER = 0
-        self.RUN_SPEED_KMPH = 0
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.02
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 0
-        self.RUN_ACTION_PER_TIME = 0
-        self.RUN_FRAMES_PER_ACTION = 0
+        self.RUN_TIME_PER_ACTION = 1
+        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
+        self.RUN_FRAMES_PER_ACTION = 6
 
-        self.ATTACK_TIME_PER_ACTION = 0
-        self.ATTACK_ACTION_PER_TIME = 0
-        self.ATTACK_FRAMES_PER_ACTION = 0
+        self.ATTACK_TIME_PER_ACTION = 4
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_FRAMES_PER_ACTION = 3
         self.attack_init_time = 0
 
-        self.DYING_TIME_PER_ACTION = 0
-        self.DYING_ACTION_PER_TIME = 0
-        self.DYING_FRAMES_PER_ACTION = 0
+        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
+        self.DYING_FRAMES_PER_ACTION = 2
         self.dying_init_time = 0
 
-        self.max_hp = 0
-        self.hp = 0
-        self.damage = 0
-        self.range = 0
-        self.sight = 0
+        self.max_hp = 80
+        self.hp = 80
+        self.damage = 20
+        self.range = self.PIXEL_PER_METER * 0.08
+        self.sight = self.PIXEL_PER_METER * 0.08
         self.speed = 0
         self.dir = 0
 
-        self.x = 0
-        self.y = 0
+        self.temp_x, self.temp_y = 0, 0
+        self.x = x
+        self.y = y
+        self.target_x_temp = 0
 
         self.frame = 0
+        self.time = 0
         self.init_time = 0
 
         self.target = None
 
-        self.is_this_unit_can_attack_ground = False
+        self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = False
-        self.is_air_unit = False
-        self.is_foe = False
 
-        self.hp_bar = None
+        self.is_air_unit = False
+
+        self.is_foe = is_foe
 
         self.valid_target_list = []
         self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
 
         self.build_behavior_tree()
+
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
+
+        if QueenAnt.image is None:
+            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
+
         self.add_self()
+
         self.event_que = []
         self.cur_state = RunState
 
-
+        if self.is_foe:
+            self.dir = -1
+        else:
+            self.dir = 1
 
 
 
@@ -292,7 +324,7 @@ class BasicGroundUnit:
         min_distance = 10000
         for o in self.valid_target_list:
             if self.collide(o):
-                if o.x < min_distance:
+                if abs(self.x - o.x) < min_distance:
                     min_distance = abs(self.x - o.x)
                     self.target = o
         return BehaviorTree.SUCCESS
@@ -301,7 +333,7 @@ class BasicGroundUnit:
     def get_proximate_target_with_sight(self):
         min_distance = 10000
         for o in self.valid_target_list:
-            if o.x < min_distance:
+            if abs(self.x - o.x) < min_distance:
                 min_distance = abs(self.x - o.x)
                 self.target = o
         return BehaviorTree.SUCCESS
@@ -345,8 +377,7 @@ class BasicGroundUnit:
 
 
     def attack_target(self):
-        if (self.target is None) is False:
-            self.target.hp -= self.damage
+        ant = units.Ant(self.x, self.y, self.is_foe)
 
 
 
@@ -385,11 +416,9 @@ class BasicGroundUnit:
         return True
 
     def collide(self, o):
-        my_left, my_bottom, my_right, my_top = self.get_bb()
         left, bottom, right, top = o.get_bb()
-
-        if my_right < left: return False
-        if my_left > right: return False
+        if self.x + self.range < left: return False
+        if self.x - self.range > right: return False
         return True
 
 # -----------------------------------------------------------------------------------------------------------------#
@@ -490,7 +519,3 @@ class BasicGroundUnit:
     def draw(self):
         self.cur_state.draw(self)
 # -----------------------------------------------------------------------------------------------------------------#
-
-
-
-
