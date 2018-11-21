@@ -101,7 +101,7 @@ class Projectile:
         self.target.hp -= self.damage
 
     def get_target_bb(self):
-        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = self.target.get_bb(self)
+        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = self.target.get_bb()
 
     def collide(self):
         if self.obj_left > self.x: return False

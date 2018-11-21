@@ -127,7 +127,7 @@ class ComputerBase:
         game_world.computer_ground_unit.remove(self)
 
 
-    def get_bb(self, obj):
+    def get_bb(self):
         return self.x - (self.IMAGE_SIZE-80) // 2, \
                self.y - (self.IMAGE_SIZE-70) // 2, \
                self.x + (self.IMAGE_SIZE-80) // 2, \
@@ -159,4 +159,4 @@ class ComputerBase:
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb(self))
+        draw_rectangle(*self.get_bb())

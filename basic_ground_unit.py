@@ -291,7 +291,7 @@ class BasicGroundUnit:
     def get_proximate_target_with_range(self):
         min_distance = 10000
         for o in self.valid_target_list:
-            if self.x - self.range <= o.x <= self.x + self.range:
+            if self.collide(o):
                 if o.x < min_distance:
                     min_distance = abs(self.x - o.x)
                     self.target = o
@@ -301,23 +301,22 @@ class BasicGroundUnit:
     def get_proximate_target_with_sight(self):
         min_distance = 10000
         for o in self.valid_target_list:
-            if self.x - self.sight <= o.x <= self.x + self.sight:
-                if o.x < min_distance:
-                    min_distance = abs(self.x - o.x)
-                    self.target = o
+            if o.x < min_distance:
+                min_distance = abs(self.x - o.x)
+                self.target = o
         return BehaviorTree.SUCCESS
 
 
     def is_target_in_range(self):
         if (self.target is None) is False:
-            if self.x - self.range <= self.target.x <= self.x + self.range:
+            if self.collide(self.target):
                 return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
 
 
     def is_target_in_sight(self):
         if (self.target is None) is False:
-            if self.x - self.sight <= self.target.x <= self.x + self.sight:
+            if self.collide_sight(self.target):
                 return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
 
@@ -325,7 +324,7 @@ class BasicGroundUnit:
     def is_there_any_enemy_in_range(self):
         if (self.valid_target_list is None) is False:
             for o in self.valid_target_list:
-                if self.x - self.range <= o.x <= self.x + self.range:
+                if self.collide(o):
                     return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
 
@@ -333,14 +332,14 @@ class BasicGroundUnit:
     def is_there_any_enemy_in_sight(self):
         if (self.valid_target_list is None) is False:
             for o in self.valid_target_list:
-                if self.x - self.sight <= o.x <= self.x + self.sight:
+                if self.collide_sight(o):
                     return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
 
     def is_there_no_enemy_in_sight(self):
         if (self.valid_target_list is None) is False:
             for o in self.valid_target_list:
-                if self.x - self.sight <= o.x <= self.x + self.sight:
+                if self.collide_sight(o):
                     return BehaviorTree.FAIL
         return BehaviorTree.SUCCESS
 
@@ -373,11 +372,26 @@ class BasicGroundUnit:
         return BehaviorTree.FAIL
 
 
-    def get_bb(self, obj):
-        return self.x - (self.IMAGE_SIZE-20) // 2, \
-               self.y - (self.IMAGE_SIZE-30) // 2, \
-               self.x + (self.IMAGE_SIZE-20) // 2, \
-               self.y + (self.IMAGE_SIZE-30) // 2
+    def get_bb(self):
+        return self.x - (self.IMAGE_SIZE-25) // 2, \
+               self.y - (self.IMAGE_SIZE-35) // 2, \
+               self.x + (self.IMAGE_SIZE-25) // 2, \
+               self.y + (self.IMAGE_SIZE-35) // 2
+
+    def collide_sight(self, o):
+        left, bottom, right, top = o.get_bb()
+        if self.x + self.sight < left: return False
+        if self.x - self.sight > right: return False
+        return True
+
+    def collide(self, o):
+        my_left, my_bottom, my_right, my_top = self.get_bb()
+        left, bottom, right, top = o.get_bb()
+
+        if my_right < left: return False
+        if my_left > right: return False
+        return True
+
 # -----------------------------------------------------------------------------------------------------------------#
 
     def build_behavior_tree(self):
@@ -475,8 +489,6 @@ class BasicGroundUnit:
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb(self))
-
 # -----------------------------------------------------------------------------------------------------------------#
 
 

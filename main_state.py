@@ -38,7 +38,7 @@ def enter():
     player_base = PlayerBase(50, 230)
     computer_base = ComputerBase(1150, 230)
 
-    spitter_ant = SpitterAnt(1100, random.randint(150, 200), True)
+    ant = Ant(1100, random.randint(150, 200), True)
     ant = Ant(100, random.randint(150, 200), False)
 
 

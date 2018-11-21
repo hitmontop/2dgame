@@ -126,9 +126,10 @@ class PlayerBase:
         game_world.player_ground_unit.remove(self)
 
     def generate_unit(self):
-        ant = Ant(self.x, self.y- random.randint(20,50), self.is_foe)
+        ant = Ant(random.randint(100, 1100), self.y- random.randint(20,50), self.is_foe)
+        ant = Ant(random.randint(100, 1100), self.y - random.randint(20, 50), True)
 
-    def get_bb(self, obj):
+    def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \
                self.y - (self.IMAGE_SIZE - 70) // 2, \
                self.x + (self.IMAGE_SIZE - 80) // 2, \
@@ -160,4 +161,4 @@ class PlayerBase:
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb(self))
+        draw_rectangle(*self.get_bb())

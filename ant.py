@@ -2,7 +2,7 @@ from basic_ground_unit import*
 
 class Ant(BasicGroundUnit):
     image = None
-    cost = 50
+    cost = 10
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
