@@ -2,7 +2,7 @@
 from pico2d import*
 
 from background import Background
-
+from camara import Camera
 from base_player import PlayerBase
 from base_computer import ComputerBase
 
@@ -10,7 +10,6 @@ import button
 
 import game_framework
 import game_world
-
 
 
 HEIGHT = 800
@@ -21,6 +20,7 @@ name = "MainState"
 
 player_base = None
 computer_base = None
+camera = None
 
 background = None
 font = None
@@ -38,13 +38,19 @@ def enter():
     button.BombardDragonFlyGenerateButton(700, 700)
 
 
-    global background, font, player_base, computer_base
+    global background, font, player_base, computer_base, camera
     font = load_font('ENCR10B.TTF', 16)
 
     quit_button = button.QuitButton(1000, 700)
 
     background = Background()
     game_world.add_object(background, 0)
+
+    camera = Camera()
+    game_world.add_object(camera, 5)
+
+    background.set_center_object(camera)
+    camera.set_background(background)
 
     player_base = PlayerBase(50, 230)
     computer_base = ComputerBase(1150, 230)

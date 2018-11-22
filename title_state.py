@@ -9,8 +9,8 @@ name = "MainState"
 def enter():
     game_world.add_layer(6)
 
-    background = Background()
-    game_world.add_object(background, 0)
+    #background = Background()
+    #game_world.add_object(background, 0)
 
     start_button = StartButton(600, 500)
     quit_button = QuitButton(600, 300)
