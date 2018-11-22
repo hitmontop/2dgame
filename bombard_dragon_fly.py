@@ -126,6 +126,8 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+
+
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -196,6 +198,9 @@ class BombardDragonFly:
         self.y = y
         self.target_x_temp = 0
 
+        self.flying_sound = load_wav('resource\\sound\\helicopter.wav')
+        self.flying_sound.set_volume(32)
+
         self.frame = 0
         self.time = 0
         self.init_time = 0
@@ -233,6 +238,7 @@ class BombardDragonFly:
         else:
             self.dir = 1
 
+        self.flying_sound.play()
 
 
 # -----------------------------------------------------------------------------------------------------------------#

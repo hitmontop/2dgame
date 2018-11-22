@@ -126,6 +126,8 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+        unit.dying_sound.play()
+
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -208,6 +210,11 @@ class SpitterAnt:
         self.is_air_unit = False
 
         self.is_foe = is_foe
+
+        self.attack_sound = load_wav('resource\\sound\\spit.wav')
+        self.attack_sound.set_volume(20)
+        self.dying_sound = load_wav('resource\\sound\\def_death.wav')
+        self.dying_sound.set_volume(32)
 
         self.valid_target_list = []
         self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
@@ -379,6 +386,7 @@ class SpitterAnt:
 
     def attack_target(self):
         if (self.target is None) is False:
+            self.attack_sound.play()
             missile = homing_projectile.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
 
 

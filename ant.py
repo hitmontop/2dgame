@@ -127,6 +127,8 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+        unit.dying_sound.play()
+
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -203,6 +205,11 @@ class Ant:
 
         self.temp_x, self.temp_y = 0, 0
         self.target = None
+
+        self.attack_sound = load_wav('resource\\sound\\bite_sound.wav')
+        self.attack_sound.set_volume(5)
+        self.dying_sound = load_wav('resource\\sound\\drone_death.wav')
+        self.dying_sound.set_volume(32)
 
         self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = False
@@ -384,6 +391,7 @@ class Ant:
 
     def attack_target(self):
         if (self.target is None) is False:
+            self.attack_sound.play()
             self.target.hp -= self.damage
 
 

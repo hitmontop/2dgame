@@ -128,6 +128,7 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+        unit.dying_sound.play()
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -180,7 +181,7 @@ class Bee:
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 2
 
-        self.ATTACK_TIME_PER_ACTION = 1
+        self.ATTACK_TIME_PER_ACTION = 0.3
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 2
         self.attack_init_time = 0
@@ -208,6 +209,9 @@ class Bee:
 
         self.temp_x, self.temp_y = 0, 0
         self.target = None
+
+        self.dying_sound = load_wav('resource\\sound\\scourge_death.wav')
+        self.dying_sound.set_volume(32)
 
         self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = True
@@ -512,7 +516,6 @@ class Bee:
         self.event_que.insert(0, event)
 
     def update(self):
-        print(self.cur_state)
         if self.is_this_unit_dead():
             if (self.cur_state is DyingState) is False:
                 self.add_event(DyingState)

@@ -39,6 +39,7 @@ class ExplodingState:
 
     @staticmethod
     def enter(unit):
+        unit.explode_sound.play()
         unit.init_time = get_time()
 
     @staticmethod
@@ -92,6 +93,7 @@ class BombProjectile:
 
         self.add_self()
 
+        self.explode_sound = None
 
     def add_self(self):
         game_world.add_object(self, 4)
@@ -186,6 +188,9 @@ class ProjectileBazookaBug(BombProjectile):
 
         self.event_que = []
         self.cur_state = FlyingState
+
+        self.explode_sound = load_wav('resource\\sound\\bomb_explosion.wav')
+        self.explode_sound.set_volume(32)
 
         if ProjectileBazookaBug.image is None:
             self.image = load_image('resource\\image\\projectile\\projectile_bazookabug.png')

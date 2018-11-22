@@ -53,7 +53,7 @@ class MouseOnState:
 
     @staticmethod
     def enter(unit):
-        pass
+        unit.mouseover_sound.play()
 
 
     @staticmethod
@@ -121,6 +121,8 @@ class Button:
         self.x = 0
         self.y = 0
 
+        self.mouseover_sound = None
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -184,6 +186,9 @@ class QuitButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -238,6 +243,9 @@ class StartButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -287,6 +295,9 @@ class AntGenerateButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -324,6 +335,9 @@ class SpitterAntGenerateButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -359,6 +373,9 @@ class QueenAntGenerateButton(Button):
 
         self.x = x
         self.y = y
+
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
 
         self.frame = 0
         self.init_time = 0
@@ -396,6 +413,9 @@ class BeeGenerateButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -431,6 +451,9 @@ class JumpSpiderGenerateButton(Button):
 
         self.x = x
         self.y = y
+
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
 
         self.frame = 0
         self.init_time = 0
@@ -468,6 +491,9 @@ class BazookaBugGenerateButton(Button):
         self.x = x
         self.y = y
 
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+
         self.frame = 0
         self.init_time = 0
         self.add_self()
@@ -503,6 +529,9 @@ class BombardDragonFlyGenerateButton(Button):
 
         self.x = x
         self.y = y
+
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
 
         self.frame = 0
         self.init_time = 0

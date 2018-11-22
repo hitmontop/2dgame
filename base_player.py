@@ -85,6 +85,10 @@ class PlayerBase:
         self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
         self.EXPLODING_FRAMES_PER_ACTION = 5
 
+        self.bgm = load_music('resource\\sound\\background_music.mp3')
+        self.bgm.set_volume(10)
+        self.bgm.repeat_play()
+
         self.event_que = []
         self.cur_state = IdleState
 

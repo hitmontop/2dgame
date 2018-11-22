@@ -126,6 +126,7 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
+        unit.dying_sound.play()
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -173,7 +174,7 @@ class BazookaBug:
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 6
 
-        self.ATTACK_TIME_PER_ACTION = 1
+        self.ATTACK_TIME_PER_ACTION = 2
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 3
         self.attack_init_time = 0
@@ -195,6 +196,11 @@ class BazookaBug:
         self.x = x
         self.y = y
         self.target_x_temp = 0
+
+        self.attack_sound = load_wav('resource\\sound\\rocket_launch.wav')
+        self.attack_sound.set_volume(10)
+        self.dying_sound = load_wav('resource\\sound\\hydra_death.wav')
+        self.dying_sound.set_volume(32)
 
         self.frame = 0
         self.time = 0
@@ -379,6 +385,7 @@ class BazookaBug:
 
     def attack_target(self):
         if (self.target is None) is False:
+            self.attack_sound.play()
             missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
 
 
