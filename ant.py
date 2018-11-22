@@ -3,6 +3,8 @@ import game_framework
 
 from behavior_tree import*
 from hp_bar import*
+import unit_functions
+import main_state
 
 UNIT_LIST = 2
 
@@ -37,13 +39,14 @@ class RunState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
         if unit.dir == 1:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
         else:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
 
 
 class ChaseState:
@@ -79,12 +82,14 @@ class ChaseState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
         if  math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
         else:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
 
 
 
@@ -116,12 +121,14 @@ class AttackState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
         if unit.dir == 1:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
         else:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
 
 class DyingState:
 
@@ -151,12 +158,14 @@ class DyingState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
         if unit.dir == 1:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
         else:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, unit.x, unit.y)
+                                 unit.IMAGE_SIZE, cx, cy)
 
 
 class Ant:
@@ -299,15 +308,6 @@ class Ant:
 
         game_world.remove_object(self.hp_bar)
 
-
-    def is_this_unit_dead(self):
-        if self.hp <= 0:
-            return True
-        elif self.x < 0 or self.x > 1200:
-            self.hp = 0
-            return True
-
-        return False
 
 
     def is_target_live(self):
@@ -520,7 +520,7 @@ class Ant:
         self.event_que.insert(0, event)
 
     def update(self):
-        if self.is_this_unit_dead():
+        if unit_functions.is_this_unit_dead(self):
             if (self.cur_state is DyingState) is False:
                 self.add_event(DyingState)
 

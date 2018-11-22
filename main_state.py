@@ -1,5 +1,7 @@
-
 from pico2d import*
+
+import game_framework
+import game_world
 
 from background import Background
 from camara import Camera
@@ -8,15 +10,14 @@ from base_computer import ComputerBase
 
 import button
 
-import game_framework
-import game_world
 
-
-HEIGHT = 800
 
 import random
 
 name = "MainState"
+
+canvas_width = 0
+canvas_height = 0
 
 player_base = None
 computer_base = None
@@ -27,15 +28,17 @@ font = None
 timer = 0
 
 def enter():
+    get_canvas_w_d()
+
     game_world.add_layer(6)
 
-    button.AntGenerateButton(100, 700)
-    button.SpitterAntGenerateButton(200, 700)
-    button.BeeGenerateButton(300,700)
-    button.QueenAntGenerateButton(400, 700)
-    button.JumpSpiderGenerateButton(500, 700)
-    button.BazookaBugGenerateButton(600, 700)
-    button.BombardDragonFlyGenerateButton(700, 700)
+    button.AntGenerateButton(100, 750)
+    button.SpitterAntGenerateButton(200, 750)
+    button.BeeGenerateButton(300,750)
+    button.QueenAntGenerateButton(400, 750)
+    button.JumpSpiderGenerateButton(500, 750)
+    button.BazookaBugGenerateButton(600, 750)
+    button.BombardDragonFlyGenerateButton(700, 750)
 
 
     global background, font, player_base, computer_base, camera
@@ -53,7 +56,7 @@ def enter():
     camera.set_background(background)
 
     player_base = PlayerBase(50, 230)
-    computer_base = ComputerBase(1150, 230)
+    computer_base = ComputerBase(background.w - 50, 230)
 
 
 def exit():
@@ -71,7 +74,7 @@ def handle_events():
 
         elif event.type == SDL_MOUSEMOTION:
 
-            game_world.x, game_world.y = event.x, HEIGHT - 1 - event.y
+            game_world.x, game_world.y = event.x, canvas_height - 1 - event.y
 
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
@@ -111,3 +114,10 @@ def draw():
 
 
     update_canvas()
+
+
+def get_canvas_w_d():
+    global canvas_width, canvas_height
+
+    canvas_height = get_canvas_height()
+    canvas_width = get_canvas_width()

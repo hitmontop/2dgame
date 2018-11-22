@@ -2,6 +2,7 @@
 from pico2d import*
 import game_world
 import game_framework
+import unit_functions
 
 class IdleState:
 
@@ -27,22 +28,24 @@ class IdleState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
         unit.image.opacify(unit.opacity)
 
         if unit.opacity > 0.8:
-            unit.image.clip_draw(unit.IMAGE_SIZE * 4, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+            unit.image.clip_draw(unit.IMAGE_SIZE * 4, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
         elif unit.opacity > 0.6:
-            unit.image.clip_draw(unit.IMAGE_SIZE * 3, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+            unit.image.clip_draw(unit.IMAGE_SIZE * 3, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
         elif unit.opacity > 0.4:
-            unit.image.clip_draw(unit.IMAGE_SIZE * 2, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+            unit.image.clip_draw(unit.IMAGE_SIZE * 2, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
         elif unit.opacity > 0.2:
-            unit.image.clip_draw(unit.IMAGE_SIZE * 1, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+            unit.image.clip_draw(unit.IMAGE_SIZE * 1, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
         else:
-            unit.image.clip_draw(unit.IMAGE_SIZE * 0, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+            unit.image.clip_draw(unit.IMAGE_SIZE * 0, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 

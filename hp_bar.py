@@ -1,5 +1,7 @@
 from pico2d import*
 
+import unit_functions
+
 class IdleState:
 
     @staticmethod
@@ -18,67 +20,69 @@ class IdleState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
         if unit.is_foe:
             if (unit.hp / unit.max_hp) * 10 > 9:
-                unit.image.clip_draw(50, 5 * 9, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 9, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 8:
-                unit.image.clip_draw(50, 5 * 8, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 8, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 7:
-                unit.image.clip_draw(50, 5 * 7, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 7, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 6:
-                unit.image.clip_draw(50, 5 * 6, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 6, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 5:
-                unit.image.clip_draw(50, 5 * 5, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 5, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 4:
-                unit.image.clip_draw(50, 5 * 4, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 4, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 3:
-                unit.image.clip_draw(50, 5 * 3, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 3, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 2:
-                unit.image.clip_draw(50, 5 * 2, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 2, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 1:
-                unit.image.clip_draw(50, 5 * 1, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 1, 50, 5, cx, cy)
 
             else:
-                unit.image.clip_draw(50, 5 * 0, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(50, 5 * 0, 50, 5, cx, cy)
 
         else:
             if (unit.hp / unit.max_hp) * 10 > 9:
-                unit.image.clip_draw(0, 5 * 9, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 9, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 8:
-                unit.image.clip_draw(0, 5 * 8, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 8, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 7:
-                unit.image.clip_draw(0, 5 * 7, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 7, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 6:
-                unit.image.clip_draw(0, 5 * 6, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 6, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 5:
-                unit.image.clip_draw(0, 5 * 5, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 5, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 4:
-                unit.image.clip_draw(0, 5 * 4, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 4, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 3:
-                unit.image.clip_draw(0, 5 * 3, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 3, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 2:
-                unit.image.clip_draw(0, 5 * 2, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 2, 50, 5, cx, cy)
 
             elif (unit.hp / unit.max_hp) * 10 > 1:
-                unit.image.clip_draw(0, 5 * 1, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 1, 50, 5, cx, cy)
 
             else:
-                unit.image.clip_draw(0, 5 * 0, 50, 5, unit.x, unit.y)
+                unit.image.clip_draw(0, 5 * 0, 50, 5, cx, cy)
 
 
 class HpBar:

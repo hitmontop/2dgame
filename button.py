@@ -3,7 +3,7 @@ import game_framework
 import main_state
 
 from pico2d import*
-import units
+import unit_list
 
 ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly = range(7)
 
@@ -306,11 +306,11 @@ class AntGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.Ant.cost
+        game_world.money -= unit_list.Ant.cost
         main_state.player_base.generate_unit(ant)
 
     def is_inactive(self):
-        if game_world.money < units.Ant.cost:
+        if game_world.money < unit_list.Ant.cost:
             return True
         return False
 
@@ -346,11 +346,11 @@ class SpitterAntGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.SpitterAnt.cost
+        game_world.money -= unit_list.SpitterAnt.cost
         main_state.player_base.generate_unit(spitter_ant)
 
     def is_inactive(self):
-        if game_world.money < units.SpitterAnt.cost:
+        if game_world.money < unit_list.SpitterAnt.cost:
             return True
         return False
 
@@ -385,11 +385,11 @@ class QueenAntGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.QueenAnt.cost
+        game_world.money -= unit_list.QueenAnt.cost
         main_state.player_base.generate_unit(queen_ant)
 
     def is_inactive(self):
-        if game_world.money < units.QueenAnt.cost:
+        if game_world.money < unit_list.QueenAnt.cost:
             return True
         return False
 
@@ -424,11 +424,11 @@ class BeeGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.Bee.cost
+        game_world.money -= unit_list.Bee.cost
         main_state.player_base.generate_unit(bee)
 
     def is_inactive(self):
-        if game_world.money < units.Bee.cost:
+        if game_world.money < unit_list.Bee.cost:
             return True
         return False
 
@@ -463,11 +463,11 @@ class JumpSpiderGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.JumpSpider.cost
+        game_world.money -= unit_list.JumpSpider.cost
         main_state.player_base.generate_unit(jump_spider)
 
     def is_inactive(self):
-        if game_world.money < units.JumpSpider.cost:
+        if game_world.money < unit_list.JumpSpider.cost:
             return True
         return False
 
@@ -502,11 +502,11 @@ class BazookaBugGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.JumpSpider.cost
+        game_world.money -= unit_list.JumpSpider.cost
         main_state.player_base.generate_unit(bazooka_bug)
 
     def is_inactive(self):
-        if game_world.money < units.JumpSpider.cost:
+        if game_world.money < unit_list.JumpSpider.cost:
             return True
         return False
 
@@ -541,10 +541,10 @@ class BombardDragonFlyGenerateButton(Button):
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= units.BombardDragonFly.cost
+        game_world.money -= unit_list.BombardDragonFly.cost
         main_state.player_base.generate_unit(bombard_dragonfly)
 
     def is_inactive(self):
-        if game_world.money < units.BombardDragonFly.cost:
+        if game_world.money < unit_list.BombardDragonFly.cost:
             return True
         return False

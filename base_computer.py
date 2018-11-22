@@ -1,7 +1,10 @@
 from pico2d import*
 import game_framework
 import game_world
-import units
+
+import unit_list
+import unit_functions
+
 import random
 
 class IdleState:
@@ -21,8 +24,9 @@ class IdleState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(0, 2 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 class ExplodingState:
@@ -50,8 +54,9 @@ class ExplodingState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 1 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 1 * unit.IMAGE_SIZE,  unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 class BrokenState:
@@ -70,8 +75,9 @@ class BrokenState:
 
     @staticmethod
     def draw(unit):
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        unit.image.clip_draw(0, 0 * unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 class ComputerBase:
@@ -122,17 +128,17 @@ class ComputerBase:
 
     def generate_unit(self , num):
         if num == 0:
-            ant = units.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
+            ant = unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
         elif num ==1:
-            spitter_ant = units.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+            spitter_ant = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==2:
-            bee = units.Bee(self.x, 300 + random.randint(0,100), self.is_foe)
+            bee = unit_list.Bee(self.x, 300 + random.randint(0,100), self.is_foe)
         elif num ==3:
-            queen_ant = units.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+            queen_ant = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==4:
-            jump_spider = units.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
+            jump_spider = unit_list.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == 5:
-            bazooka_bug = units.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+            bazooka_bug = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
 
 
     def get_bb(self):
@@ -144,10 +150,6 @@ class ComputerBase:
     def is_this_unit_dead(self):
         if self.hp <= 0:
             return True
-        elif self.x < 0 or self.x > 1200:
-            self.hp = 0
-            return True
-
         return False
 
     def add_event(self, event):

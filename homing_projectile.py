@@ -2,6 +2,8 @@ from pico2d import*
 import game_world
 import game_framework
 
+import unit_functions
+
 
 class FlyingState:
 
@@ -36,7 +38,9 @@ class FlyingState:
 
     @staticmethod
     def draw(unit):
-        unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
+        unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 class ExplodingState:
@@ -58,7 +62,9 @@ class ExplodingState:
 
     @staticmethod
     def draw(unit):
-        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.x, unit.y)
+        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
+
+        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
 
 
 
