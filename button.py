@@ -5,7 +5,7 @@ import main_state
 from pico2d import*
 import units
 
-ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug = range(6)
+ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly = range(7)
 
 class InactiveState:
     @staticmethod
@@ -481,5 +481,41 @@ class BazookaBugGenerateButton(Button):
 
     def is_inactive(self):
         if game_world.money < units.JumpSpider.cost:
+            return True
+        return False
+
+class BombardDragonFlyGenerateButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        self.event_que = []
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.clicked = False
+
+        self.x = x
+        self.y = y
+
+        self.frame = 0
+        self.init_time = 0
+        self.add_self()
+
+        if BombardDragonFlyGenerateButton.image is None:
+            self.image = load_image('resource\\image\\button\\generate_button.png')
+
+    def click_action(self):
+        game_world.money -= units.BombardDragonFly.cost
+        main_state.player_base.generate_unit(bombard_dragonfly)
+
+    def is_inactive(self):
+        if game_world.money < units.BombardDragonFly.cost:
             return True
         return False

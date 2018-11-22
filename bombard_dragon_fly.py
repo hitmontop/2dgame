@@ -4,7 +4,10 @@ import game_framework
 from behavior_tree import*
 from hp_bar import*
 
+import bomb_projectile
+
 UNIT_LIST = 2
+
 
 class RunState:
 
@@ -29,11 +32,6 @@ class RunState:
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
         unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
 
-        if abs(unit.y - unit.INIT_HEIGHT) > unit.PIXEL_PER_METER * 0.0002:
-            if unit.y < unit.INIT_HEIGHT:
-                unit.y += unit.RUN_SPEED_PPS * game_framework.frame_time
-            else:
-                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
 
     @staticmethod
     def draw(unit):
@@ -68,18 +66,20 @@ class ChaseState:
         if (unit.target is None) is False:
             unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
 
-        unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
-
-        unit.x += unit.RUN_SPEED_PPS * math.cos(unit.dir) * game_framework.frame_time
-        unit.y += unit.RUN_SPEED_PPS * math.sin(unit.dir) * game_framework.frame_time
-
+        if (unit.target is None) is False:
+            if unit.target.x <= unit.x:
+                unit.dir = -1
+            else:
+                unit.dir = 1
 
         unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
 
+        unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
+
     @staticmethod
     def draw(unit):
-        if  math.cos(unit.dir) > 0:
+        if  unit.dir == 1:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, unit.x, unit.y)
         else:
@@ -102,9 +102,7 @@ class AttackState:
     @staticmethod
     def do(unit):
 
-        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
-            unit.attack_target()
-            unit.attack_init_time = get_time()
+        unit.attack_target()
 
         if (unit.target is None) is False:
             if unit.target.x <= unit.x:
@@ -112,8 +110,8 @@ class AttackState:
             else:
                 unit.dir = 1
 
-        unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
-                      unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+        unit.frame = (unit.frame + unit.ATTACK_FRAMES_PER_ACTION *
+                      unit.ATTACK_ACTION_PER_TIME * game_framework.frame_time) % unit.ATTACK_FRAMES_PER_ACTION
 
     @staticmethod
     def draw(unit):
@@ -145,9 +143,6 @@ class DyingState:
         if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
             unit.add_event(RunState)
 
-        if unit.y > unit.DYING_HEIGHT:
-            unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
-
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
@@ -161,28 +156,26 @@ class DyingState:
                                  unit.IMAGE_SIZE, unit.x, unit.y)
 
 
-class Bee:
+class BombardDragonFly:
     image = None
-    cost = 30
+    cost = 40
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
-        self.INIT_HEIGHT = y
-        self.DYING_HEIGHT = y - 150
 
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.15
+        self.RUN_SPEED_KMPH = 0.2
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 0.1
+        self.RUN_TIME_PER_ACTION = 0.5
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
-        self.RUN_FRAMES_PER_ACTION = 2
+        self.RUN_FRAMES_PER_ACTION = 6
 
         self.ATTACK_TIME_PER_ACTION = 1
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
-        self.ATTACK_FRAMES_PER_ACTION = 2
+        self.ATTACK_FRAMES_PER_ACTION = 3
         self.attack_init_time = 0
 
         self.DYING_TIME_PER_ACTION = 4
@@ -190,14 +183,15 @@ class Bee:
         self.DYING_FRAMES_PER_ACTION = 2
         self.dying_init_time = 0
 
-        self.max_hp = 100
-        self.hp = 100
-        self.damage = 30
+        self.max_hp = 80
+        self.hp = 80
+        self.damage = 20
         self.range = self.PIXEL_PER_METER * 0.02
-        self.sight = self.PIXEL_PER_METER * 0.05
+        self.sight = self.PIXEL_PER_METER * 0.02
         self.speed = 0
         self.dir = 0
 
+        self.temp_x, self.temp_y = 0, 0
         self.x = x
         self.y = y
         self.target_x_temp = 0
@@ -206,13 +200,15 @@ class Bee:
         self.time = 0
         self.init_time = 0
 
-        self.temp_x, self.temp_y = 0, 0
         self.target = None
 
         self.is_this_unit_can_attack_ground = True
-        self.is_this_unit_can_attack_air = True
+        self.is_this_unit_can_attack_air = False
 
         self.is_air_unit = True
+
+        self.is_attacked = False
+
         self.is_foe = is_foe
 
         self.valid_target_list = []
@@ -224,8 +220,8 @@ class Bee:
         self.hp_bar = hp_bar
         game_world.add_object(hp_bar, 4)
 
-        if Bee.image is None:
-            self.image = load_image('resource\\image\\unit\\bee.png')
+        if BombardDragonFly.image is None:
+            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
         self.add_self()
 
@@ -236,6 +232,7 @@ class Bee:
             self.dir = -1
         else:
             self.dir = 1
+
 
 
 # -----------------------------------------------------------------------------------------------------------------#
@@ -306,14 +303,13 @@ class Bee:
 
         return False
 
-    def is_target_live(self):
-        if (self.target in self.valid_target_list) is False:
-            self.target = None
 
+    def is_target_live(self):
         if self.target is None:
             self.target = None
         elif self.target.hp <= 0:
             self.target = None
+        return BehaviorTree.FAIL
 
 
     def is_target_empty(self):
@@ -330,9 +326,10 @@ class Bee:
     def get_proximate_target_with_range(self):
         min_distance = 10000
         for o in self.valid_target_list:
-            if abs(self.x - o.x) < min_distance:
-                min_distance = abs(self.x - o.x)
-                self.target = o
+            if self.collide(o):
+                if abs(self.x - o.x) < min_distance:
+                    min_distance = abs(self.x - o.x)
+                    self.target = o
         return BehaviorTree.SUCCESS
 
 
@@ -384,9 +381,9 @@ class Bee:
 
     def attack_target(self):
         if (self.target is None) is False:
-            self.target.hp -= self.damage
-
-
+            self.is_attacked = True
+            missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
+            self.add_event(RunState)
 
 
 
@@ -397,12 +394,12 @@ class Bee:
         return BehaviorTree.SUCCESS
 
     def chase(self):
-        if (self.cur_state is ChaseState) is False:
+        if (self.cur_state is ChaseState) is False and self.is_attacked is False:
             self.add_event(ChaseState)
         return BehaviorTree.SUCCESS
 
     def attack(self):
-        if (self.cur_state is AttackState) is False:
+        if (self.cur_state is AttackState) is False and self.is_attacked is False:
             self.add_event(AttackState)
         return BehaviorTree.SUCCESS
 
@@ -423,15 +420,9 @@ class Bee:
         return True
 
     def collide(self, o):
-        my_left, my_bottom, my_right, my_top = self.get_bb()
         left, bottom, right, top = o.get_bb()
-
-        if my_right < left: return False
-        if my_left > right: return False
-        if my_bottom > top : return False
-        if my_top < bottom : return False
-
-
+        if self.x + self.range < left: return False
+        if self.x - self.range > right: return False
         return True
 
 # -----------------------------------------------------------------------------------------------------------------#
@@ -512,7 +503,6 @@ class Bee:
         self.event_que.insert(0, event)
 
     def update(self):
-        print(self.cur_state)
         if self.is_this_unit_dead():
             if (self.cur_state is DyingState) is False:
                 self.add_event(DyingState)

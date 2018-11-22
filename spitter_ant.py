@@ -378,7 +378,8 @@ class SpitterAnt:
 
 
     def attack_target(self):
-        missile = homing_projectile.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
+        if (self.target is None) is False:
+            missile = homing_projectile.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
 
 
 

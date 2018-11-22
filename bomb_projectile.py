@@ -25,7 +25,6 @@ class FlyingState:
 
         unit.generate_smoke_time -= game_framework.frame_time
         if unit.generate_smoke_time <= 0:
-            print("generate smoke")
             smoke.Smoke(unit.x, unit.y)
             unit.generate_smoke_time += 0.1
 

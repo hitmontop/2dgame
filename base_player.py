@@ -31,8 +31,6 @@ class ExplodingState:
     @staticmethod
     def enter(unit):
         unit.delete_this_unit_from_checking_layer()
-        game_world.pull_object(unit)
-        game_world.add_object(unit, 1)
 
         unit.init_time = get_time()
 
@@ -112,7 +110,7 @@ class PlayerBase:
         self.cnt = 0
 
     def add_self(self):
-        game_world.add_object(self, 2)
+        game_world.add_object(self, 1)
 
         game_world.player_all_unit.append(self)
         game_world.player_ground_unit.append(self)
@@ -134,6 +132,8 @@ class PlayerBase:
             jump_spider = units.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == 5:
             bazooka_bug = units.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == 6:
+            bombard_dragonfly = units.BombardDragonFly(self.x, 400 + random.randint(0,100), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \

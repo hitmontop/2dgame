@@ -154,6 +154,10 @@ class DyingState:
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
+        if unit.is_air_unit:
+            if unit.y > unit.INIT_HEIGHT:
+                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+
     @staticmethod
     def draw(unit):
         if unit.dir == 1:
@@ -192,9 +196,9 @@ class JumpSpider:
         self.DYING_FRAMES_PER_ACTION = 2
         self.dying_init_time = 0
 
-        self.max_hp = 100
-        self.hp = 100
-        self.damage = 30
+        self.max_hp = 200
+        self.hp = 200
+        self.damage = 50
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.05
         self.speed = 0
@@ -304,6 +308,8 @@ class JumpSpider:
 
 
     def switch_to_flying_unit(self):
+        self.is_air_unit = True
+
         if self.is_foe:
             game_world.computer_ground_unit.remove(self)
             game_world.computer_air_unit.append(self)
@@ -312,6 +318,8 @@ class JumpSpider:
             game_world.player_air_unit.append(self)
 
     def switch_to_ground_unit(self):
+        self.is_air_unit = False
+
         if self.is_foe:
             game_world.computer_air_unit.remove(self)
             game_world.computer_ground_unit.append(self)

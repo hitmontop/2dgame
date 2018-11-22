@@ -30,8 +30,6 @@ class ExplodingState:
     @staticmethod
     def enter(unit):
         unit.delete_this_unit_from_checking_layer()
-        game_world.pull_object(unit)
-        game_world.add_object(unit, 1)
 
         unit.init_time = get_time()
 
@@ -112,7 +110,7 @@ class ComputerBase:
         self.cnt =0
 
     def add_self(self):
-        game_world.add_object(self, 2)
+        game_world.add_object(self, 1)
 
         game_world.computer_all_unit.append(self)
         game_world.computer_ground_unit.append(self)

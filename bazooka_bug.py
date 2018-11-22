@@ -378,7 +378,8 @@ class BazookaBug:
 
 
     def attack_target(self):
-        missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
+        if (self.target is None) is False:
+            missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
 
 
 

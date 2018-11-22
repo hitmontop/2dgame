@@ -35,12 +35,13 @@ def enter():
     button.QueenAntGenerateButton(400, 700)
     button.JumpSpiderGenerateButton(500, 700)
     button.BazookaBugGenerateButton(600, 700)
+    button.BombardDragonFlyGenerateButton(700, 700)
 
 
     global background, font, player_base, computer_base
     font = load_font('ENCR10B.TTF', 16)
 
-    quit_button = button.QuitButton(800, 700)
+    quit_button = button.QuitButton(1000, 700)
 
     background = Background()
     game_world.add_object(background, 0)
