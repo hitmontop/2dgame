@@ -58,7 +58,7 @@ class ChaseState:
 
     @staticmethod
     def exit(unit):
-        unit.switch_to_ground_unit()
+
         unit.run_bt = True
 
     @staticmethod
@@ -71,14 +71,15 @@ class ChaseState:
 
         if abs(unit.x - unit.destination_x) > unit.PIXEL_PER_METER * 0.002:
             if unit.x <= unit.destination_x:
-                unit.x += unit.RUN_SPEED_PPS * 4 * game_framework.frame_time
+                unit.x += unit.RUN_SPEED_PPS * 2 * game_framework.frame_time
                 unit.y += unit.RUN_SPEED_PPS * 2 * game_framework.frame_time
             else:
-                unit.x -= unit.RUN_SPEED_PPS * 4 * game_framework.frame_time
+                unit.x -= unit.RUN_SPEED_PPS * 2 * game_framework.frame_time
                 unit.y += unit.RUN_SPEED_PPS * 2 * game_framework.frame_time
         else:
             unit.y -= unit.RUN_SPEED_PPS * 3 * game_framework.frame_time
             if unit.y < unit.INIT_HEIGHT:
+                unit.switch_to_ground_unit()
                 unit.add_event(RunState)
 
 

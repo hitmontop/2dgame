@@ -50,6 +50,7 @@ class IdleState:
 
 
 class Smoke:
+    image = None
     def __init__(self, x, y):
         self.IMAGE_SIZE = 50
 
@@ -67,7 +68,8 @@ class Smoke:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.image = load_image('resource\\image\\projectile\\smoke.png')
+        if Smoke.image is None:
+            Smoke.image = load_image('resource\\image\\projectile\\smoke.png')
 
         self.add_self()
 
@@ -81,7 +83,7 @@ class Smoke:
             self.generate_smoke_time += 0.1
 
     def add_self(self):
-        game_world.add_object(self, 1)
+        game_world.add_object(self, 4)
 
     def add_event(self, event):
         self.event_que.insert(0, event)

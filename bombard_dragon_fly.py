@@ -3,6 +3,7 @@ import game_framework
 import unit_functions
 from behavior_tree import*
 from hp_bar import*
+from smoke import Smoke
 
 import bomb_projectile
 
@@ -194,7 +195,7 @@ class BombardDragonFly:
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 20
+        self.damage = 100
         self.range = self.PIXEL_PER_METER * 0.02
         self.sight = self.PIXEL_PER_METER * 0.02
         self.speed = 0
@@ -211,6 +212,7 @@ class BombardDragonFly:
         self.frame = 0
         self.time = 0
         self.init_time = 0
+        self.smoke_time =0
 
         self.target = None
 
@@ -385,7 +387,7 @@ class BombardDragonFly:
     def attack_target(self):
         if (self.target is None) is False:
             self.is_attacked = True
-            missile = bomb_projectile.ProjectileBazookaBug(self.x, self.y, self.target,self.valid_target_list, self.damage)
+            missile = bomb_projectile.ProjectileBomBardDragonFly(self.x, self.y, self.target,self.valid_target_list, self.damage)
             self.add_event(RunState)
 
 
@@ -515,6 +517,12 @@ class BombardDragonFly:
             if self.init_time <= 0:
                 self.bt.run()
                 self.init_time += 0.1
+                smoke = Smoke(self.x, self.y)
+
+        self.smoke_time -= game_framework.frame_time
+        if self.smoke_time <= 0:
+            smoke = Smoke(self.x, self.y)
+            self.smoke_time += 0.1
 
         self.cur_state.do(self)
         if len(self.event_que) > 0:

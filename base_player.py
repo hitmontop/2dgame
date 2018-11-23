@@ -145,7 +145,7 @@ class PlayerBase:
         elif num == 5:
             bazooka_bug = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == 6:
-            bombard_dragonfly = unit_list.BombardDragonFly(self.x, 400 + random.randint(0,100), self.is_foe)
+            bombard_dragonfly = unit_list.BombardDragonFly(self.x, 500 + random.randint(0,100), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \
