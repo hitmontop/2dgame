@@ -47,18 +47,14 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        if unit.target.x <= unit.x:
-            unit.dir = -1
-        else:
-            unit.dir = 1
+        if (unit.target is None) is False:
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
+
+        unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
 
     @staticmethod
     def exit(unit):
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def do(unit):

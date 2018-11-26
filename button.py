@@ -94,6 +94,7 @@ class ClickedState:
 
         elif unit.clicked is False:
             if unit.is_mouse_on_the_button():
+                unit.press_sound.play()
                 unit.click_action()
                 unit.add_event(MouseOnState)
 
@@ -121,7 +122,10 @@ class Button:
         self.x = 0
         self.y = 0
 
-        self.mouseover_sound = None
+        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
+        self.mouseover_sound.set_volume(32)
+        self.press_sound = load_wav('resource\\sound\\press.wav')
+        self.press_sound.set_volume(100)
 
         self.frame = 0
         self.init_time = 0
@@ -131,7 +135,7 @@ class Button:
         game_world.add_object(self, 5)
 
     def click_action(self):
-        game_framework.change_state(main_state)
+        pass
 
     def is_inactive(self):
         return False
@@ -174,24 +178,10 @@ class QuitButton(Button):
     image = None
 
     def __init__(self, x, y):
+        super().__init__()
         self.IMAGE_HEIGHT = 150
         self.IMAGE_WIDTH = 300
-
-        self.event_que = []
-
-        self.cur_state = IdleState
-
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if QuitButton.image is None:
             self.image = load_image('resource\\image\\button\\quit_button.png')
@@ -208,47 +198,17 @@ class QuitButton(Button):
             return False
         elif game_world.y > self.y + (self.IMAGE_HEIGHT - 60) / 2:
             return False
-
         return True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class StartButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 150
         self.IMAGE_WIDTH = 300
-
-        self.event_que = []
-
-        self.cur_state = IdleState
-
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if StartButton.image is None:
             self.image = load_image('resource\\image\\button\\start_button.png')
@@ -265,7 +225,6 @@ class StartButton(Button):
             return False
         elif game_world.y > self.y + (self.IMAGE_HEIGHT - 60) / 2:
             return False
-
         return True
 
 
@@ -279,28 +238,16 @@ class AntGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if AntGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -319,28 +266,16 @@ class SpitterAntGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if SpitterAntGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -358,28 +293,16 @@ class QueenAntGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if QueenAntGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -397,28 +320,16 @@ class BeeGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if BeeGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -436,28 +347,16 @@ class JumpSpiderGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if JumpSpiderGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -475,28 +374,16 @@ class BazookaBugGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if BazookaBugGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
@@ -514,28 +401,16 @@ class BombardDragonFlyGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
-
+        super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
-
-        self.event_que = []
 
         if self.is_inactive():
             self.cur_state = InactiveState
         else:
             self.cur_state = IdleState
 
-        self.clicked = False
-
-        self.x = x
-        self.y = y
-
-        self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
-        self.mouseover_sound.set_volume(32)
-
-        self.frame = 0
-        self.init_time = 0
-        self.add_self()
+        self.x, self.y = x, y
 
         if BombardDragonFlyGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')

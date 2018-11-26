@@ -57,11 +57,7 @@ class ChaseState:
 
     @staticmethod
     def exit(unit):
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def do(unit):

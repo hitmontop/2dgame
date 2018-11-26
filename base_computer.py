@@ -132,7 +132,7 @@ class ComputerBase:
         elif num ==1:
             spitter_ant = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==2:
-            bee = unit_list.Bee(self.x, 300 + random.randint(0,100), self.is_foe)
+            pass
         elif num ==3:
             queen_ant = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==4:

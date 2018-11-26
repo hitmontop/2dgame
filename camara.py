@@ -13,9 +13,9 @@ class Camera:
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
 
-        self.x, self.y = self.canvas_width // 2, self.canvas_height // 2
-    def update(self):
+        self.x, self.y = (self.canvas_width // 2), self.canvas_height // 2
 
+    def update(self):
         if self.collision_left():
             self.x -= self.RUN_SPEED_PPS * game_framework.frame_time
 
@@ -28,8 +28,6 @@ class Camera:
 
     def set_background(self, bg):
         self.bg = bg
-        self.x = self.bg.w / 2
-        self.y = self.bg.h / 2
 
     def draw(self):
         pass

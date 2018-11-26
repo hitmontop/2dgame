@@ -58,7 +58,6 @@ class ChaseState:
 
     @staticmethod
     def exit(unit):
-
         unit.run_bt = True
 
     @staticmethod

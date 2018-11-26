@@ -53,18 +53,14 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        if unit.target.x <= unit.x:
-            unit.dir = -1
-        else:
-            unit.dir = 1
+        if (unit.target is None) is False:
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
+
+        unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
 
     @staticmethod
     def exit(unit):
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def do(unit):
@@ -218,7 +214,7 @@ class Ant:
         self.attack_sound = load_wav('resource\\sound\\bite_sound.wav')
         self.attack_sound.set_volume(5)
         self.dying_sound = load_wav('resource\\sound\\drone_death.wav')
-        self.dying_sound.set_volume(32)
+        self.dying_sound.set_volume(10)
 
         self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = False

@@ -52,18 +52,14 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        if unit.target.x <= unit.x:
-            unit.dir = -1
-        else:
-            unit.dir = 1
+        if (unit.target is None) is False:
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
+
+        unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
 
     @staticmethod
     def exit(unit):
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def do(unit):
@@ -203,7 +199,7 @@ class Bee:
         self.hp = 100
         self.damage = 30
         self.range = self.PIXEL_PER_METER * 0.02
-        self.sight = self.PIXEL_PER_METER * 0.05
+        self.sight = self.PIXEL_PER_METER * 0.03
         self.speed = 0
         self.dir = 0
 
@@ -219,7 +215,7 @@ class Bee:
         self.target = None
 
         self.dying_sound = load_wav('resource\\sound\\scourge_death.wav')
-        self.dying_sound.set_volume(32)
+        self.dying_sound.set_volume(10)
 
         self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = True
@@ -333,11 +329,13 @@ class Bee:
 
 
     def get_proximate_target_with_range(self):
+        temp_target = None
         min_distance = 10000
         for o in self.valid_target_list:
             if abs(self.x - o.x) < min_distance:
                 min_distance = abs(self.x - o.x)
-                self.target = o
+                temp_target = o
+        self.target = temp_target
         return BehaviorTree.SUCCESS
 
 
@@ -517,6 +515,7 @@ class Bee:
         self.event_que.insert(0, event)
 
     def update(self):
+        print(self.cur_state , self.dir)
         if unit_functions.is_this_unit_dead(self):
             if (self.cur_state is DyingState) is False:
                 self.add_event(DyingState)

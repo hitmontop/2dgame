@@ -49,18 +49,12 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        if unit.target.x <= unit.x:
-            unit.dir = -1
-        else:
-            unit.dir = 1
+        if (unit.target is None) is False:
+            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
 
     @staticmethod
     def exit(unit):
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def do(unit):
@@ -222,7 +216,7 @@ class SpitterAnt:
         self.attack_sound = load_wav('resource\\sound\\spit.wav')
         self.attack_sound.set_volume(20)
         self.dying_sound = load_wav('resource\\sound\\def_death.wav')
-        self.dying_sound.set_volume(32)
+        self.dying_sound.set_volume(10)
 
         self.valid_target_list = []
         self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
