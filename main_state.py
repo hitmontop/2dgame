@@ -14,6 +14,9 @@ import button
 
 import random
 
+
+import unit_list
+
 name = "MainState"
 
 canvas_width = 0
@@ -58,6 +61,7 @@ def enter():
     player_base = PlayerBase(50, 230)
     computer_base = ComputerBase(background.w - 50, 230)
 
+    bee = unit_list.Bee(computer_base.x, computer_base.y + 200 - random.randint(0, 50), computer_base.is_foe)
 
 def exit():
     game_world.clear()

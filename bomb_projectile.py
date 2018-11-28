@@ -147,20 +147,6 @@ class BombProjectile:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ProjectileBazookaBug(BombProjectile):
     image = None
 
@@ -168,7 +154,7 @@ class ProjectileBazookaBug(BombProjectile):
         self.IMAGE_SIZE = 50
 
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.1
+        self.RUN_SPEED_KMPH = 0.2
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)

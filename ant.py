@@ -4,7 +4,6 @@ import game_framework
 from behavior_tree import*
 from hp_bar import*
 import unit_functions
-import main_state
 
 UNIT_LIST = 2
 
@@ -41,7 +40,7 @@ class RunState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if unit.dir > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -80,7 +79,7 @@ class ChaseState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if  math.cos(unit.dir) > 0:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -107,10 +106,7 @@ class AttackState:
             unit.attack_init_time = get_time()
 
         if (unit.target is None) is False:
-            if unit.target.x <= unit.x:
-                unit.dir = -1
-            else:
-                unit.dir = 1
+            unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
 
         unit.frame = (unit.frame + unit.ATTACK_FRAMES_PER_ACTION *
                       unit.ATTACK_ACTION_PER_TIME * game_framework.frame_time) % unit.ATTACK_FRAMES_PER_ACTION
@@ -119,7 +115,7 @@ class AttackState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -156,7 +152,7 @@ class DyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:

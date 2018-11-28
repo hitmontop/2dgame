@@ -1,9 +1,9 @@
 import game_world
 import game_framework
-import unit_functions
 
 from behavior_tree import*
 from hp_bar import*
+import unit_functions
 
 UNIT_LIST = 2
 
@@ -30,17 +30,17 @@ class RunState:
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
         unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
 
-        if abs(unit.y - unit.INIT_HEIGHT) > unit.PIXEL_PER_METER * 0.0002:
+        if abs(unit.y - unit.INIT_HEIGHT) > unit.PIXEL_PER_METER * 0.002:
             if unit.y < unit.INIT_HEIGHT:
-                unit.y += unit.RUN_SPEED_PPS * game_framework.frame_time
+                unit.y += unit.RUN_SPEED_PPS/10 * game_framework.frame_time
             else:
-                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+                unit.y -= unit.RUN_SPEED_PPS/10 * game_framework.frame_time
 
     @staticmethod
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if unit.dir > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -79,7 +79,7 @@ class ChaseState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if  math.cos(unit.dir) > 0:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -101,25 +101,21 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-
         if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
             unit.attack_target()
             unit.attack_init_time = get_time()
 
         if (unit.target is None) is False:
-            if unit.target.x <= unit.x:
-                unit.dir = -1
-            else:
-                unit.dir = 1
+            unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
 
-        unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
-                      unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
+        unit.frame = (unit.frame + unit.ATTACK_FRAMES_PER_ACTION *
+                      unit.ATTACK_ACTION_PER_TIME * game_framework.frame_time) % unit.ATTACK_FRAMES_PER_ACTION
 
     @staticmethod
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -131,6 +127,7 @@ class DyingState:
     @staticmethod
     def enter(unit):
         unit.dying_sound.play()
+
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
 
@@ -148,9 +145,6 @@ class DyingState:
         if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
             unit.add_event(RunState)
 
-        if unit.y > unit.DYING_HEIGHT:
-            unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
-
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
@@ -158,7 +152,7 @@ class DyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
+        if unit.dir > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -166,84 +160,63 @@ class DyingState:
                                  unit.IMAGE_SIZE, cx, cy)
 
 
-class Bee:
+class MeeleUnit:
     image = None
-    cost = 30
+    cost = 10
 
-    def __init__(self, x, y, is_foe):
-        self.IMAGE_SIZE = 100
-        self.INIT_HEIGHT = y
-        self.DYING_HEIGHT = y - 150
+    def __init__(self):
+        self.IMAGE_SIZE
+        self.INIT_HEIGHT
+        self.DYING_HEIGHT
 
-        self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.15
-        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
-        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
-        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+        self.PIXEL_PER_METER
+        self.RUN_SPEED_KMPH
+        self.RUN_SPEED_MPM
+        self.RUN_SPEED_MPS
+        self.RUN_SPEED_PPS
 
-        self.RUN_TIME_PER_ACTION = 0.1
-        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
-        self.RUN_FRAMES_PER_ACTION = 2
+        self.RUN_TIME_PER_ACTION
+        self.RUN_ACTION_PER_TIME
+        self.RUN_FRAMES_PER_ACTION
 
-        self.ATTACK_TIME_PER_ACTION = 0.3
-        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
-        self.ATTACK_FRAMES_PER_ACTION = 2
-        self.attack_init_time = 0
+        self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_ACTION_PER_TIME
+        self.ATTACK_FRAMES_PER_ACTION
+        self.attack_init_time
 
-        self.DYING_TIME_PER_ACTION = 4
-        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
-        self.DYING_FRAMES_PER_ACTION = 2
-        self.dying_init_time = 0
+        self.DYING_TIME_PER_ACTION
+        self.DYING_ACTION_PER_TIME
+        self.DYING_FRAMES_PER_ACTION
+        self.dying_init_time
 
-        self.max_hp = 100
-        self.hp = 100
-        self.damage = 30
-        self.range = self.PIXEL_PER_METER * 0.02
-        self.sight = self.PIXEL_PER_METER * 0.03
-        self.speed = 0
-        self.dir = 0
+        self.max_hp
+        self.hp
+        self.damage
+        self.sight
 
-        self.x = x
-        self.y = y
-        self.target_x_temp = 0
+        self.dir
+        self.x
+        self.y
+        self.temp_x, self.temp_y
 
-        self.frame = 0
-        self.time = 0
-        self.init_time = 0
+        self.frame
+        self.time
+        self.init_time
 
-        self.temp_x, self.temp_y = 0, 0
-        self.target = None
+        self.target
 
-        self.dying_sound = load_wav('resource\\sound\\scourge_death.wav')
-        self.dying_sound.set_volume(10)
+        self.attack_sound
+        self.dying_sound
 
-        self.is_this_unit_can_attack_ground = True
-        self.is_this_unit_can_attack_air = True
+        self.is_this_unit_can_attack_ground
+        self.is_this_unit_can_attack_air
+        self.is_air_unit
 
-        self.is_air_unit = True
-        self.is_foe = is_foe
+        self.valid_target_list
 
-        self.valid_target_list = []
-        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
-
-        self.build_behavior_tree()
-
-        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
-        self.hp_bar = hp_bar
-        game_world.add_object(hp_bar, 4)
-
-        if Bee.image is None:
-            self.image = load_image('resource\\image\\unit\\bee.png')
-
-        self.add_self()
-
-        self.event_que = []
-        self.cur_state = RunState
-
-        if self.is_foe:
-            self.dir = -1
-        else:
-            self.dir = 1
+        self.event_que
+        self.cur_state
+        self.is_foe
 
 
 # -----------------------------------------------------------------------------------------------------------------#
@@ -305,7 +278,6 @@ class Bee:
         game_world.remove_object(self.hp_bar)
 
 
-        return False
 
     def is_target_live(self):
         if (self.target in self.valid_target_list) is False:
@@ -315,6 +287,8 @@ class Bee:
             self.target = None
         elif self.target.hp <= 0:
             self.target = None
+
+        return BehaviorTree.FAIL
 
 
     def is_target_empty(self):
@@ -329,13 +303,12 @@ class Bee:
 
 
     def get_proximate_target_with_range(self):
-        temp_target = None
         min_distance = 10000
         for o in self.valid_target_list:
-            if abs(self.x - o.x) < min_distance:
-                min_distance = abs(self.x - o.x)
-                temp_target = o
-        self.target = temp_target
+            if self.collide(o):
+                if abs(self.x - o.x) < min_distance:
+                    min_distance = abs(self.x - o.x)
+                    self.target = o
         return BehaviorTree.SUCCESS
 
 
@@ -387,6 +360,7 @@ class Bee:
 
     def attack_target(self):
         if (self.target is None) is False:
+            self.attack_sound.play()
             self.target.hp -= self.damage
 
 
@@ -515,7 +489,6 @@ class Bee:
         self.event_que.insert(0, event)
 
     def update(self):
-        print(self.cur_state , self.dir)
         if unit_functions.is_this_unit_dead(self):
             if (self.cur_state is DyingState) is False:
                 self.add_event(DyingState)
@@ -536,3 +509,168 @@ class Bee:
     def draw(self):
         self.cur_state.draw(self)
 # -----------------------------------------------------------------------------------------------------------------#
+
+
+
+
+class Bee(MeeleUnit):
+    image = None
+    cost = 30
+
+    def __init__(self, x, y, is_foe):
+
+        self.IMAGE_SIZE = 100
+        self.INIT_HEIGHT = y
+        self.DYING_HEIGHT = y - 150
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.15
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.RUN_TIME_PER_ACTION = 0.1
+        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
+        self.RUN_FRAMES_PER_ACTION = 2
+
+        self.ATTACK_TIME_PER_ACTION = 0.3
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_FRAMES_PER_ACTION = 2
+        self.attack_init_time = 0
+
+        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
+        self.DYING_FRAMES_PER_ACTION = 2
+        self.dying_init_time = 0
+
+        self.max_hp = 100
+        self.hp = 100
+        self.damage = 30
+        self.sight = self.PIXEL_PER_METER * 0.05
+
+        self.dir = 0
+        self.x = x
+        self.y = y
+        self.temp_x, self.temp_y = 0, 0
+
+        self.frame = 0
+        self.time = 0
+        self.init_time = 0
+
+        self.target = None
+
+        self.attack_sound = load_wav('resource\\sound\\scourge_death.wav')
+        self.attack_sound.set_volume(10)
+        self.dying_sound = load_wav('resource\\sound\\scourge_death.wav')
+        self.dying_sound.set_volume(10)
+
+        self.is_this_unit_can_attack_ground = True
+        self.is_this_unit_can_attack_air = True
+        self.is_air_unit = True
+        self.is_foe = is_foe
+
+        self.valid_target_list = []
+        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
+
+        self.build_behavior_tree()
+
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
+
+        self.event_que = []
+        self.cur_state = RunState
+
+        if self.is_foe:
+            self.dir = -1
+        else:
+            self.dir = 1
+
+        if Bee.image is None:
+            self.image = load_image('resource\\image\\unit\\bee.png')
+
+        self.add_self()
+
+
+
+class Ant(MeeleUnit):
+    image = None
+    cost = 10
+
+    def __init__(self, x, y, is_foe):
+        self.IMAGE_SIZE = 100
+        self.INIT_HEIGHT = y
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.1
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.RUN_TIME_PER_ACTION = 0.3
+        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
+        self.RUN_FRAMES_PER_ACTION = 5
+
+        self.ATTACK_TIME_PER_ACTION = 1
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_FRAMES_PER_ACTION = 4
+        self.attack_init_time = 0
+
+        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
+        self.DYING_FRAMES_PER_ACTION = 2
+        self.dying_init_time = 0
+
+        self.max_hp = 100
+        self.hp = 100
+        self.damage = 30
+        self.range = self.PIXEL_PER_METER * 0.02
+        self.sight = self.PIXEL_PER_METER * 0.05
+
+        self.dir = 0
+        self.x = x
+        self.y = y
+        self.temp_x, self.temp_y = 0, 0
+
+        self.frame = 0
+        self.time = 0
+        self.init_time = 0
+
+        self.target = None
+
+        self.attack_sound = load_wav('resource\\sound\\bite_sound.wav')
+        self.attack_sound.set_volume(10)
+        self.dying_sound = load_wav('resource\\sound\\drone_death.wav')
+        self.dying_sound.set_volume(10)
+
+        self.is_this_unit_can_attack_ground = True
+        self.is_this_unit_can_attack_air = False
+        self.is_air_unit = False
+        self.is_foe = is_foe
+
+        self.valid_target_list = []
+        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
+
+        self.build_behavior_tree()
+
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
+
+        self.event_que = []
+        self.cur_state = RunState
+
+        if self.is_foe:
+            self.dir = -1
+        else:
+            self.dir = 1
+
+        if Bee.image is None:
+            self.image = load_image('resource\\image\\unit\\ant.png')
+
+        self.add_self()
+
+
+
+
+
