@@ -127,20 +127,20 @@ class ComputerBase:
         game_world.computer_ground_unit.remove(self)
 
     def generate_unit(self , num):
-        '''
         if num == 0:
             ant = unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
         elif num ==1:
             spitter_ant = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==2:
-            bee = unit_list.Bee(self.x, self.y + 400 - random.randint(0, 50), self.is_foe)
+            bee = unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
         elif num ==3:
             queen_ant = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==4:
             jump_spider = unit_list.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == 5:
             bazooka_bug = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
-        '''
+        elif num == 6:
+            bombard_dragonfly = unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
 
 
     def get_bb(self):
@@ -160,7 +160,7 @@ class ComputerBase:
     def update(self):
         if get_time() - self.init_time > 3:
             self.init_time = get_time()
-            i = random.randint(0,5)
+            i = random.randint(0,6)
             self.generate_unit(i)
 
         self.cur_state.do(self)

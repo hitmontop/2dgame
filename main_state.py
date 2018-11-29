@@ -16,6 +16,7 @@ import random
 
 
 import unit_list
+import unit_functions
 
 name = "MainState"
 
@@ -58,8 +59,8 @@ def enter():
     background.set_center_object(camera)
     camera.set_background(background)
 
-    player_base = PlayerBase(50, 230)
-    computer_base = ComputerBase(background.w - 50, 230)
+    player_base = PlayerBase(50, unit_functions.GROUND_HEIGHT)
+    computer_base = ComputerBase(background.w - 50, unit_functions.GROUND_HEIGHT)
 
     bee = unit_list.Bee(computer_base.x, computer_base.y + 200 - random.randint(0, 50), computer_base.is_foe)
 

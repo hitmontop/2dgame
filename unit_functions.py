@@ -1,6 +1,11 @@
 
 import main_state
 
+GROUND_HEIGHT = 230
+GROUND_HEIGHT_FOR_AIR_UNITS = 200
+SKY_HEIGHT = 350
+SKY_HEIGHT_BOMBARD = 500
+
 
 def is_this_unit_dead(self):
     if self.hp <= 0:

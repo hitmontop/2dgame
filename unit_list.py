@@ -1,7 +1,9 @@
 from unit_meele import Ant
-from spitter_ant import SpitterAnt
 from unit_meele import Bee
-from queen_ant import QueenAnt
-from jump_spider import JumpSpider
-from bazooka_bug import BazookaBug
-from bombard_dragon_fly import BombardDragonFly
+
+from unit_range import SpitterAnt
+from unit_range import QueenAnt
+from unit_range import BazookaBug
+
+from unit_jump_spider import JumpSpider
+from unit_bombard_dragonfly import BombardDragonFly

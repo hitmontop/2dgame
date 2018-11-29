@@ -11,13 +11,7 @@ class RunState:
 
     @staticmethod
     def enter(unit):
-        unit.speed = unit.RUN_SPEED_PPS
-
-        if unit.is_foe:
-            unit.dir = -1
-
-        else:
-            unit.dir = 1
+        pass
 
     @staticmethod
     def exit(unit):
@@ -26,9 +20,15 @@ class RunState:
     @staticmethod
     def do(unit):
 
+        if unit.is_foe:
+            unit.dir = math.pi
+
+        else:
+            unit.dir = 0
+
         unit.frame = (unit.frame + unit.RUN_FRAMES_PER_ACTION *
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
-        unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
+        unit.x += unit.RUN_SPEED_PPS * math.cos(unit.dir) * game_framework.frame_time
 
         if abs(unit.y - unit.INIT_HEIGHT) > unit.PIXEL_PER_METER * 0.002:
             if unit.y < unit.INIT_HEIGHT:
@@ -40,7 +40,7 @@ class RunState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir > 0:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -145,6 +145,11 @@ class DyingState:
         if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
             unit.add_event(RunState)
 
+
+        if unit.is_air_unit:
+            if unit.y > unit_functions.GROUND_HEIGHT_FOR_AIR_UNITS:
+                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
@@ -152,7 +157,7 @@ class DyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir > 0:
+        if math.cos(unit.dir) > 0:
             unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
         else:
@@ -161,8 +166,6 @@ class DyingState:
 
 
 class MeeleUnit:
-    image = None
-    cost = 10
 
     def __init__(self):
         self.IMAGE_SIZE
@@ -581,10 +584,6 @@ class Bee(MeeleUnit):
         self.event_que = []
         self.cur_state = RunState
 
-        if self.is_foe:
-            self.dir = -1
-        else:
-            self.dir = 1
 
         if Bee.image is None:
             self.image = load_image('resource\\image\\unit\\bee.png')
@@ -660,10 +659,6 @@ class Ant(MeeleUnit):
         self.event_que = []
         self.cur_state = RunState
 
-        if self.is_foe:
-            self.dir = -1
-        else:
-            self.dir = 1
 
         if Bee.image is None:
             self.image = load_image('resource\\image\\unit\\ant.png')

@@ -1,14 +1,14 @@
-import unit_functions
-import homing_projectile
-
 import game_world
 import game_framework
-
+import unit_functions
 from behavior_tree import*
 from hp_bar import*
-import main_state
+from smoke import Smoke
+
+import unit_bomb_projectile
 
 UNIT_LIST = 2
+
 
 class RunState:
 
@@ -33,6 +33,7 @@ class RunState:
                       unit.RUN_ACTION_PER_TIME * game_framework.frame_time) % unit.RUN_FRAMES_PER_ACTION
         unit.x += unit.RUN_SPEED_PPS * unit.dir * game_framework.frame_time
 
+
     @staticmethod
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
@@ -49,8 +50,10 @@ class ChaseState:
 
     @staticmethod
     def enter(unit):
-        if (unit.target is None) is False:
-            unit.temp_x, unit.temp_y = unit.target.x, unit.target.y
+        if unit.target.x <= unit.x:
+            unit.dir = -1
+        else:
+            unit.dir = 1
 
     @staticmethod
     def exit(unit):
@@ -98,9 +101,8 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
-            unit.attack_target()
-            unit.attack_init_time = get_time()
+
+        unit.attack_target()
 
         if (unit.target is None) is False:
             if unit.target.x <= unit.x:
@@ -126,7 +128,7 @@ class DyingState:
 
     @staticmethod
     def enter(unit):
-        unit.dying_sound.play()
+
 
         unit.frame = 0
         unit.delete_this_unit_from_checking_layer()
@@ -145,6 +147,10 @@ class DyingState:
         if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
             unit.add_event(RunState)
 
+        if unit.is_air_unit:
+            if unit.y > unit_functions.GROUND_HEIGHT_FOR_AIR_UNITS:
+                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
 
@@ -160,15 +166,15 @@ class DyingState:
                                  unit.IMAGE_SIZE, cx, cy)
 
 
-class SpitterAnt:
+class BombardDragonFly:
     image = None
-    cost = 30
+    cost = 40
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
 
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.05
+        self.RUN_SPEED_KMPH = 0.2
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
@@ -189,9 +195,9 @@ class SpitterAnt:
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 20
-        self.range = self.PIXEL_PER_METER * 0.04
-        self.sight = self.PIXEL_PER_METER * 0.07
+        self.damage = 100
+        self.range = self.PIXEL_PER_METER * 0.02
+        self.sight = self.PIXEL_PER_METER * 0.02
         self.speed = 0
         self.dir = 0
 
@@ -200,23 +206,24 @@ class SpitterAnt:
         self.y = y
         self.target_x_temp = 0
 
+        self.flying_sound = load_wav('resource\\sound\\helicopter.wav')
+        self.flying_sound.set_volume(10)
+
         self.frame = 0
         self.time = 0
         self.init_time = 0
+        self.smoke_time =0
 
         self.target = None
 
         self.is_this_unit_can_attack_ground = True
-        self.is_this_unit_can_attack_air = True
+        self.is_this_unit_can_attack_air = False
 
-        self.is_air_unit = False
+        self.is_air_unit = True
+
+        self.is_attacked = False
 
         self.is_foe = is_foe
-
-        self.attack_sound = load_wav('resource\\sound\\spit.wav')
-        self.attack_sound.set_volume(20)
-        self.dying_sound = load_wav('resource\\sound\\def_death.wav')
-        self.dying_sound.set_volume(10)
 
         self.valid_target_list = []
         self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
@@ -227,7 +234,7 @@ class SpitterAnt:
         self.hp_bar = hp_bar
         game_world.add_object(hp_bar, 4)
 
-        if SpitterAnt.image is None:
+        if BombardDragonFly.image is None:
             self.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
         self.add_self()
@@ -240,6 +247,7 @@ class SpitterAnt:
         else:
             self.dir = 1
 
+        self.flying_sound.play()
 
 
 # -----------------------------------------------------------------------------------------------------------------#
@@ -378,8 +386,9 @@ class SpitterAnt:
 
     def attack_target(self):
         if (self.target is None) is False:
-            self.attack_sound.play()
-            missile = homing_projectile.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
+            self.is_attacked = True
+            missile = unit_bomb_projectile.ProjectileBomBardDragonFly(self.x, self.y, self.target, self.valid_target_list, self.damage)
+            self.add_event(RunState)
 
 
 
@@ -390,12 +399,12 @@ class SpitterAnt:
         return BehaviorTree.SUCCESS
 
     def chase(self):
-        if (self.cur_state is ChaseState) is False:
+        if (self.cur_state is ChaseState) is False and self.is_attacked is False:
             self.add_event(ChaseState)
         return BehaviorTree.SUCCESS
 
     def attack(self):
-        if (self.cur_state is AttackState) is False:
+        if (self.cur_state is AttackState) is False and self.is_attacked is False:
             self.add_event(AttackState)
         return BehaviorTree.SUCCESS
 
@@ -508,6 +517,12 @@ class SpitterAnt:
             if self.init_time <= 0:
                 self.bt.run()
                 self.init_time += 0.1
+                smoke = Smoke(self.x, self.y)
+
+        self.smoke_time -= game_framework.frame_time
+        if self.smoke_time <= 0:
+            smoke = Smoke(self.x, self.y)
+            self.smoke_time += 0.1
 
         self.cur_state.do(self)
         if len(self.event_que) > 0:
