@@ -4,7 +4,7 @@ import game_framework
 import game_world
 
 from background import Background
-from camara import Camera
+from camera import Camera
 from base_player import PlayerBase
 from base_computer import ComputerBase
 
@@ -104,6 +104,7 @@ def update():
     timer -= game_framework.frame_time
     if timer <= 0:
         game_world.money += 10
+        print(game_world.money)
         timer += 1
 
 

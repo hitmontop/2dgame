@@ -185,15 +185,16 @@ class AntGenerateButton(ToggleButton):
             self.cur_state = IdleState
 
         self.x, self.y = x, y
+        self.indicator = None
 
         if AntGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.Ant.cost
-        turret = unit_list.Turret(main_state.camera.x - main_state.canvas_width //2  + game_world.x , unit_functions.GROUND_HEIGHT_FOR_INDICATORS,  False)
+        game_world.money -= unit_list.Turret.cost
+        turret = unit_list.Turret(self.indicator.x , self.indicator.y,  False)
 
     def is_inactive(self):
-        if game_world.money < unit_list.Ant.cost:
+        if game_world.money < unit_list.Turret.cost:
             return True
         return False

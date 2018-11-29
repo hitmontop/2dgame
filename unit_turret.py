@@ -161,7 +161,7 @@ class Turret:
     cost = 80
 
     def __init__(self, x, y, is_foe):
-        self.IMAGE_SIZE = 100
+        self.IMAGE_SIZE = 150
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.05
@@ -169,25 +169,25 @@ class Turret:
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 0.5
+        self.RUN_TIME_PER_ACTION = 1
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
-        self.RUN_FRAMES_PER_ACTION = 6
+        self.RUN_FRAMES_PER_ACTION = 4
 
         self.ATTACK_TIME_PER_ACTION = 1
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
-        self.ATTACK_FRAMES_PER_ACTION = 3
+        self.ATTACK_FRAMES_PER_ACTION = 4
         self.attack_init_time = 0
 
-        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_TIME_PER_ACTION = 0.6
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
-        self.DYING_FRAMES_PER_ACTION = 2
+        self.DYING_FRAMES_PER_ACTION = 4
         self.dying_init_time = 0
 
-        self.max_hp = 80
-        self.hp = 80
-        self.damage = 20
-        self.range = self.PIXEL_PER_METER * 0.04
-        self.sight = self.PIXEL_PER_METER * 0.07
+        self.max_hp = 300
+        self.hp = 300
+        self.damage = 80
+        self.range = self.PIXEL_PER_METER * 0.09
+        self.sight = self.PIXEL_PER_METER * 0.09
 
         self.dir = 0
         self.x = x
@@ -223,7 +223,7 @@ class Turret:
         self.cur_state = RunState
 
         if Turret.image is None:
-            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
+            self.image = load_image('resource\\image\\unit\\nepandes.png')
 
         self.add_self()
 # -----------------------------------------------------------------------------------------------------------------#
