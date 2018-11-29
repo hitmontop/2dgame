@@ -32,12 +32,10 @@ def handle_events():
             game_world.x, game_world.y = event.x, HEIGHT - 1 - event.y
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            for o in game_world.search_objects(5):
-                o.handle_event(event)
+            game_world.clicked = True
 
         elif event.type == SDL_MOUSEBUTTONUP:
-            for o in game_world.search_objects(5):
-                o.handle_event(event)
+            game_world.clicked = False
 
 
 

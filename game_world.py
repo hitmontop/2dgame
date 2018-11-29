@@ -7,7 +7,11 @@
 # layer 5: UI
 
 money = 0
+
+#mouse
 x, y = 0, 0
+clicked = False
+
 objects = []
 
 computer_ground_unit = []

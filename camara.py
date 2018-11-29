@@ -46,5 +46,5 @@ class Camera:
         if self.y - self.canvas_height//2 + 150 > game_world.y : return False
         return True
 
-    def handle_event(self, event):
+    def handle_event(self):
         pass

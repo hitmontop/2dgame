@@ -9,6 +9,7 @@ from base_player import PlayerBase
 from base_computer import ComputerBase
 
 import button
+import button_toggle
 
 
 
@@ -43,6 +44,7 @@ def enter():
     button.JumpSpiderGenerateButton(500, 750)
     button.BazookaBugGenerateButton(600, 750)
     button.BombardDragonFlyGenerateButton(700, 750)
+    button_toggle.AntGenerateButton(500, 500)
 
 
     global background, font, player_base, computer_base, camera
@@ -83,15 +85,11 @@ def handle_events():
 
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
-
-            for o in game_world.search_objects(5):
-                o.handle_event(event)
+            game_world.clicked = True
 
 
         elif event.type == SDL_MOUSEBUTTONUP:
-
-            for o in game_world.search_objects(5):
-                o.handle_event(event)
+            game_world.clicked = False
 
 
 

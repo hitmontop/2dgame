@@ -41,7 +41,7 @@ class IdleState:
         if unit.is_inactive():
             unit.add_event(InactiveState)
 
-        elif unit.is_mouse_on_the_button() and unit.clicked is False:
+        elif unit.is_mouse_on_the_button() and game_world.clicked is False:
             unit.add_event(MouseOnState)
 
     @staticmethod
@@ -66,7 +66,7 @@ class MouseOnState:
             unit.add_event(InactiveState)
 
         elif unit.is_mouse_on_the_button():
-            if unit.clicked:
+            if game_world.clicked:
                 unit.add_event(ClickedState)
         else:
             unit.add_event(IdleState)
@@ -92,7 +92,7 @@ class ClickedState:
         if unit.is_inactive():
             unit.add_event(InactiveState)
 
-        elif unit.clicked is False:
+        elif game_world.clicked is False:
             if unit.is_mouse_on_the_button():
                 unit.press_sound.play()
                 unit.click_action()
@@ -116,8 +116,6 @@ class Button:
         self.event_que = []
 
         self.cur_state = IdleState
-
-        self.clicked = False
 
         self.x = 0
         self.y = 0
@@ -166,11 +164,8 @@ class Button:
     def draw(self):
         self.cur_state.draw(self)
 
-    def handle_event(self, event):
-        if event.type == SDL_MOUSEBUTTONDOWN:
-            self.clicked = True
-        elif event.type == SDL_MOUSEBUTTONUP:
-            self.clicked = False
+    def handle_event(self):
+        pass
 
 
 
@@ -226,12 +221,6 @@ class StartButton(Button):
         elif game_world.y > self.y + (self.IMAGE_HEIGHT - 60) / 2:
             return False
         return True
-
-
-
-
-
-
 
 
 class AntGenerateButton(Button):
