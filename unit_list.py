@@ -7,3 +7,5 @@ from unit_range import BazookaBug
 
 from unit_jump_spider import JumpSpider
 from unit_bombard_dragonfly import BombardDragonFly
+
+from unit_turret import Turret
