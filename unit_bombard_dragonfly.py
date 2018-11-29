@@ -38,12 +38,22 @@ class RunState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+        if unit.is_attacked:
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+
         else:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+
 
 
 class ChaseState:
@@ -79,11 +89,20 @@ class ChaseState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if  unit.dir == 1:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+        if unit.is_attacked:
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+
         else:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
 
 
@@ -117,11 +136,20 @@ class AttackState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if unit.dir == 1:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
+        if unit.is_attacked:
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 2, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+
         else:
-            unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 3, unit.IMAGE_SIZE,
+            if unit.dir == 1:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 4, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+            else:
+                unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, unit.IMAGE_SIZE * 5, unit.IMAGE_SIZE,
                                  unit.IMAGE_SIZE, cx, cy)
 
 class DyingState:
@@ -171,7 +199,7 @@ class BombardDragonFly:
     cost = 40
 
     def __init__(self, x, y, is_foe):
-        self.IMAGE_SIZE = 100
+        self.IMAGE_SIZE = 200
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.2
@@ -179,25 +207,25 @@ class BombardDragonFly:
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 0.5
+        self.RUN_TIME_PER_ACTION = 0.05
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
-        self.RUN_FRAMES_PER_ACTION = 6
+        self.RUN_FRAMES_PER_ACTION = 2
 
-        self.ATTACK_TIME_PER_ACTION = 1
+        self.ATTACK_TIME_PER_ACTION = 0.01
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
-        self.ATTACK_FRAMES_PER_ACTION = 3
+        self.ATTACK_FRAMES_PER_ACTION = 2
         self.attack_init_time = 0
 
-        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_TIME_PER_ACTION = 3
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
-        self.DYING_FRAMES_PER_ACTION = 2
+        self.DYING_FRAMES_PER_ACTION = 1
         self.dying_init_time = 0
 
         self.max_hp = 80
         self.hp = 80
         self.damage = 100
-        self.range = self.PIXEL_PER_METER * 0.02
-        self.sight = self.PIXEL_PER_METER * 0.02
+        self.range = self.PIXEL_PER_METER * 0.01
+        self.sight = self.PIXEL_PER_METER * 0.01
         self.speed = 0
         self.dir = 0
 
@@ -235,7 +263,7 @@ class BombardDragonFly:
         game_world.add_object(hp_bar, 4)
 
         if BombardDragonFly.image is None:
-            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
+            self.image = load_image('resource\\image\\unit\\dragon.png')
 
         self.add_self()
 
@@ -414,9 +442,9 @@ class BombardDragonFly:
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE-25) // 2, \
-               self.y - (self.IMAGE_SIZE-35) // 2, \
+               self.y - (self.IMAGE_SIZE-50) // 2, \
                self.x + (self.IMAGE_SIZE-25) // 2, \
-               self.y + (self.IMAGE_SIZE-35) // 2
+               self.y + (self.IMAGE_SIZE-50) // 2
 
     def collide_sight(self, o):
         left, bottom, right, top = o.get_bb()

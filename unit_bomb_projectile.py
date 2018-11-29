@@ -35,7 +35,12 @@ class FlyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
+        if math.cos(unit.dir) > 0:
+            unit.image.clip_draw(0, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
+        else:
+            unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE,
+                                 unit.IMAGE_SIZE, cx, cy)
 
 
 class ExplodingState:
@@ -43,7 +48,7 @@ class ExplodingState:
     @staticmethod
     def enter(unit):
         unit.explode_sound.play()
-        unit.init_time = get_time()
+        game_world.remove_object(unit)
 
     @staticmethod
     def exit(unit):
@@ -51,16 +56,11 @@ class ExplodingState:
 
     @staticmethod
     def do(unit):
-        unit.frame = (unit.frame + unit.EXPLODING_FRAMES_PER_ACTION * unit.EXPLODING_ACTION_PER_TIME * game_framework.frame_time) % unit.EXPLODING_FRAMES_PER_ACTION
-
-        if get_time() - unit.init_time >= unit.EXPLODING_TIME_PER_ACTION:
-            unit.add_event(FlyingState)
+        pass
 
     @staticmethod
     def draw(unit):
-        cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
-
-        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
+        pass
 
 
 
@@ -89,8 +89,7 @@ class BombProjectile:
 
         self.x, self.y = 0, 0
         self.destination_x, self.destination_y = 0, 0
-        self.dir = 1
-
+        self.dir = 0
         self.damage = 0
 
         self.event_que = []
@@ -151,17 +150,13 @@ class ProjectileBazookaBug(BombProjectile):
     image = None
 
     def __init__(self, x, y, target, vaild_target_list, damage):
-        self.IMAGE_SIZE = 50
+        self.IMAGE_SIZE = 90
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.2
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
-
-        self.EXPLODING_TIME_PER_ACTION = 0.3
-        self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
-        self.EXPLODING_FRAMES_PER_ACTION = 4
 
         self.generate_smoke_time = 0.1
 
@@ -173,7 +168,7 @@ class ProjectileBazookaBug(BombProjectile):
 
         self.x, self.y = x, y
         self.destination_x, self.destination_y = target.x, target.y
-        self.dir = 1
+        self.dir = math.atan2(self.destination_y - self.y, self.destination_x - self.x)
 
         self.damage = damage
 
@@ -184,7 +179,7 @@ class ProjectileBazookaBug(BombProjectile):
         self.explode_sound.set_volume(32)
 
         if ProjectileBazookaBug.image is None:
-            self.image = load_image('resource\\image\\projectile\\projectile_bazookabug.png')
+            self.image = load_image('resource\\image\\projectile\\dragon_bomb.png')
 
         self.add_self()
 
@@ -193,17 +188,13 @@ class ProjectileBomBardDragonFly(BombProjectile):
     image = None
 
     def __init__(self, x, y, target, vaild_target_list, damage):
-        self.IMAGE_SIZE = 50
+        self.IMAGE_SIZE = 90
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.2
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
-
-        self.EXPLODING_TIME_PER_ACTION = 0.3
-        self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
-        self.EXPLODING_FRAMES_PER_ACTION = 4
 
         self.generate_smoke_time = 0.1
 
@@ -215,7 +206,11 @@ class ProjectileBomBardDragonFly(BombProjectile):
 
         self.x, self.y = x, y
         self.destination_x, self.destination_y = target.x, target.y
-        self.dir = 1
+
+        if self.x <= self.destination_x:
+            self.dir = 0
+        else:
+            self.dir= math.pi
 
         self.damage = damage
 
@@ -228,7 +223,7 @@ class ProjectileBomBardDragonFly(BombProjectile):
         self.fire_sound.set_volume(20)
 
         if ProjectileBomBardDragonFly.image is None:
-            self.image = load_image('resource\\image\\projectile\\projectile_bazookabug.png')
+            self.image = load_image('resource\\image\\projectile\\dragon_bomb.png')
 
         self.add_self()
 
