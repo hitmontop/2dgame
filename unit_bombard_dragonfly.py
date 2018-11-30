@@ -221,8 +221,8 @@ class BombardDragonFly:
         self.DYING_FRAMES_PER_ACTION = 1
         self.dying_init_time = 0
 
-        self.max_hp = 80
-        self.hp = 80
+        self.max_hp = 200
+        self.hp = 200
         self.damage = 100
         self.range = self.PIXEL_PER_METER * 0.01
         self.sight = self.PIXEL_PER_METER * 0.01

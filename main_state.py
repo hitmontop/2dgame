@@ -64,7 +64,6 @@ def enter():
     player_base = PlayerBase(50, unit_functions.GROUND_HEIGHT)
     computer_base = ComputerBase(background.w - 50, unit_functions.GROUND_HEIGHT)
 
-    bee = unit_list.Bee(computer_base.x, computer_base.y + 200 - random.randint(0, 50), computer_base.is_foe)
 
 def exit():
     game_world.clear()

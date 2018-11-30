@@ -146,15 +146,6 @@ class HomingProjectile:
 
 
 
-
-
-
-
-
-
-
-
-
 class ProjectileSpitterAnt(HomingProjectile):
     image = None
 
@@ -162,7 +153,7 @@ class ProjectileSpitterAnt(HomingProjectile):
         self.IMAGE_SIZE = 25
 
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.18
+        self.RUN_SPEED_KMPH = 0.25
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)

@@ -518,11 +518,11 @@ class MeeleUnit:
 
 class Bee(MeeleUnit):
     image = None
-    cost = 30
+    cost = 10
 
     def __init__(self, x, y, is_foe):
 
-        self.IMAGE_SIZE = 100
+        self.IMAGE_SIZE = 40
         self.INIT_HEIGHT = y
         self.DYING_HEIGHT = y - 150
 
@@ -536,8 +536,8 @@ class Bee(MeeleUnit):
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 2
 
-        self.ATTACK_TIME_PER_ACTION = 0.3
-        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_TIME_PER_ACTION = 0.2
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 2
         self.attack_init_time = 0
 
@@ -546,9 +546,9 @@ class Bee(MeeleUnit):
         self.DYING_FRAMES_PER_ACTION = 2
         self.dying_init_time = 0
 
-        self.max_hp = 100
-        self.hp = 100
-        self.damage = 30
+        self.max_hp = 30
+        self.hp = 30
+        self.damage = 4
         self.sight = self.PIXEL_PER_METER * 0.05
 
         self.dir = 0
@@ -563,9 +563,9 @@ class Bee(MeeleUnit):
         self.target = None
 
         self.attack_sound = load_wav('resource\\sound\\scourge_death.wav')
-        self.attack_sound.set_volume(10)
+        self.attack_sound.set_volume(3)
         self.dying_sound = load_wav('resource\\sound\\scourge_death.wav')
-        self.dying_sound.set_volume(10)
+        self.dying_sound.set_volume(3)
 
         self.is_this_unit_can_attack_ground = True
         self.is_this_unit_can_attack_air = True
@@ -589,6 +589,12 @@ class Bee(MeeleUnit):
             self.image = load_image('resource\\image\\unit\\bee.png')
 
         self.add_self()
+
+    def get_bb(self):
+        return self.x - (self.IMAGE_SIZE) // 2, \
+               self.y - (self.IMAGE_SIZE) // 2, \
+               self.x + (self.IMAGE_SIZE) // 2, \
+               self.y + (self.IMAGE_SIZE) // 2
 
 
 

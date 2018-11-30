@@ -649,7 +649,7 @@ class QueenAnt(RangeUnit):
     image = None
     cost = 50
     def __init__(self, x, y, is_foe):
-        self.IMAGE_SIZE = 100
+        self.IMAGE_SIZE = 150
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.02
@@ -657,16 +657,16 @@ class QueenAnt(RangeUnit):
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
 
-        self.RUN_TIME_PER_ACTION = 1
+        self.RUN_TIME_PER_ACTION = 2
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
-        self.RUN_FRAMES_PER_ACTION = 5
+        self.RUN_FRAMES_PER_ACTION = 4
 
         self.ATTACK_TIME_PER_ACTION = 2
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
-        self.ATTACK_FRAMES_PER_ACTION = 4
+        self.ATTACK_FRAMES_PER_ACTION = 1
         self.attack_init_time = 0
 
-        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_TIME_PER_ACTION = 2
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
         self.DYING_FRAMES_PER_ACTION = 2
         self.dying_init_time = 0
@@ -711,7 +711,7 @@ class QueenAnt(RangeUnit):
         self.cur_state = RunState
 
         if QueenAnt.image is None:
-            self.image = load_image('resource\\image\\unit\\ant.png')
+            self.image = load_image('resource\\image\\unit\\queen.png')
 
         self.add_self()
 
