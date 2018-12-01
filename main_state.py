@@ -4,6 +4,9 @@ import game_framework
 import game_world
 
 from background import Background
+from background import Background2
+from background import Background3
+
 from camera import Camera
 from base_player import PlayerBase
 from base_computer import ComputerBase
@@ -54,13 +57,23 @@ def enter():
     quit_button = button.QuitButton(1000, 700)
 
     background = Background()
-    game_world.add_object(background, 0)
+
 
     camera = Camera()
     game_world.add_object(camera, 5)
 
     background.set_center_object(camera)
     camera.set_background(background)
+
+    background2 = Background2()
+    background2.set_center_object(background)
+
+    background3 = Background3()
+    background3.set_center_object(background)
+
+    game_world.add_object(background3, 0)
+    game_world.add_object(background2, 0)
+    game_world.add_object(background, 0)
 
     player_base = PlayerBase(50, unit_functions.GROUND_HEIGHT)
     computer_base = ComputerBase(background.w - 50, unit_functions.GROUND_HEIGHT)
