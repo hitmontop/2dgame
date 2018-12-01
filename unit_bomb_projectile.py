@@ -35,12 +35,7 @@ class FlyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        if math.cos(unit.dir) > 0:
-            unit.image.clip_draw(0, unit.IMAGE_SIZE * 0, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, cx, cy)
-        else:
-            unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE,
-                                 unit.IMAGE_SIZE, cx, cy)
+        unit.image.composite_draw( unit.dir, '', cx, cy, unit.IMAGE_SIZE, unit.IMAGE_SIZE)
 
 
 class ExplodingState:
@@ -151,7 +146,7 @@ class ProjectileBazookaBug(BombProjectile):
     image = None
 
     def __init__(self, x, y, target, vaild_target_list, damage):
-        self.IMAGE_SIZE = 90
+        self.IMAGE_SIZE = 50
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.2
@@ -177,10 +172,10 @@ class ProjectileBazookaBug(BombProjectile):
         self.cur_state = FlyingState
 
         self.explode_sound = load_wav('resource\\sound\\bomb_explosion.wav')
-        self.explode_sound.set_volume(32)
+        self.explode_sound.set_volume(50)
 
         if ProjectileBazookaBug.image is None:
-            self.image = load_image('resource\\image\\projectile\\dragon_bomb.png')
+            self.image = load_image('resource\\image\\projectile\\bazooka_bomb.png')
 
         self.add_self()
 

@@ -228,7 +228,6 @@ class Bloom(Egg):
 
         self.event_que = []
         self.cur_state = WaitingState
-
         self.waiting_init_time = get_time()
         self.hatch_init_time =0
         self.dying_init_time = 0

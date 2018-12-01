@@ -32,9 +32,9 @@ class RunState:
 
         if abs(unit.y - unit.INIT_HEIGHT) > unit.PIXEL_PER_METER * 0.002:
             if unit.y < unit.INIT_HEIGHT:
-                unit.y += unit.RUN_SPEED_PPS/10 * game_framework.frame_time
+                unit.y += unit.RUN_SPEED_PPS * game_framework.frame_time
             else:
-                unit.y -= unit.RUN_SPEED_PPS/10 * game_framework.frame_time
+                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
 
     @staticmethod
     def draw(unit):
