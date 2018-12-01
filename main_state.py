@@ -44,7 +44,8 @@ def enter():
     button.JumpSpiderGenerateButton(500, 750)
     button.BazookaBugGenerateButton(600, 750)
     button.BombardDragonFlyGenerateButton(700, 750)
-    button_toggle.AntGenerateButton(500, 500)
+    button.WaspGenerateButton(800, 750)
+    button_toggle.TurretGenerateButton(500, 500)
 
 
     global background, font, player_base, computer_base, camera

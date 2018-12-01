@@ -3,7 +3,7 @@ import game_framework
 import unit_functions
 from behavior_tree import*
 from hp_bar import*
-from smoke import Smoke
+import particle
 
 import unit_bomb_projectile
 
@@ -545,11 +545,11 @@ class BombardDragonFly:
             if self.init_time <= 0:
                 self.bt.run()
                 self.init_time += 0.1
-                smoke = Smoke(self.x, self.y)
+                smoke = particle.Smoke(self.x, self.y)
 
         self.smoke_time -= game_framework.frame_time
         if self.smoke_time <= 0:
-            smoke = Smoke(self.x, self.y)
+            smoke = particle.Smoke(self.x, self.y)
             self.smoke_time += 0.1
 
         self.cur_state.do(self)

@@ -7,6 +7,8 @@ import unit_functions
 
 import random
 
+ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly, wasp = range(8)
+
 class IdleState:
 
     @staticmethod
@@ -132,20 +134,22 @@ class PlayerBase:
         game_world.player_ground_unit.remove(self)
 
     def generate_unit(self , num):
-        if num == 0:
-            ant = unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
-        elif num ==1:
-            spitter_ant = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num ==2:
-            bee = unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
-        elif num ==3:
-            queen_ant = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num ==4:
-            jump_spider = unit_list.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == 5:
-            bazooka_bug = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == 6:
-            bombard_dragonfly = unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
+        if num == ant:
+            unit = unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
+        elif num == spitter_ant:
+            unit = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == bee:
+            unit = unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
+        elif num == queen_ant:
+            unit = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num ==jump_spider:
+            unit = unit_list.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == bazooka_bug:
+            unit = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == bombard_dragonfly:
+            unit = unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
+        elif num == wasp:
+            unit = unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0,50), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \

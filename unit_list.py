@@ -4,8 +4,11 @@ from unit_meele import Bee
 from unit_range import SpitterAnt
 from unit_range import QueenAnt
 from unit_range import BazookaBug
+from unit_range import Wasp
 
 from unit_jump_spider import JumpSpider
 from unit_bombard_dragonfly import BombardDragonFly
 
 from unit_turret import Turret
+
+from unit_egg import Bloom

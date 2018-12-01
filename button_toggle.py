@@ -171,7 +171,7 @@ class ToggleButton:
 
 
 
-class AntGenerateButton(ToggleButton):
+class TurretGenerateButton(ToggleButton):
     image = None
 
     def __init__(self, x, y):
@@ -187,12 +187,12 @@ class AntGenerateButton(ToggleButton):
         self.x, self.y = x, y
         self.indicator = None
 
-        if AntGenerateButton.image is None:
+        if TurretGenerateButton.image is None:
             self.image = load_image('resource\\image\\button\\generate_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.Turret.cost
-        turret = unit_list.Turret(self.indicator.x , self.indicator.y,  False)
+        obj = unit_list.Bloom(self.indicator.x, self.indicator.y, False)
 
     def is_inactive(self):
         if game_world.money < unit_list.Turret.cost:

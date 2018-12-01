@@ -148,7 +148,8 @@ class DyingState:
 
         if unit.is_air_unit:
             if unit.y > unit_functions.GROUND_HEIGHT_FOR_AIR_UNITS:
-                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+                unit.y -= unit.acc * game_framework.frame_time
+                unit.acc += 5
 
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
@@ -524,7 +525,6 @@ class Bee(MeeleUnit):
 
         self.IMAGE_SIZE = 40
         self.INIT_HEIGHT = y
-        self.DYING_HEIGHT = y - 150
 
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.15
@@ -543,13 +543,15 @@ class Bee(MeeleUnit):
 
         self.DYING_TIME_PER_ACTION = 4
         self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
-        self.DYING_FRAMES_PER_ACTION = 2
+        self.DYING_FRAMES_PER_ACTION = 1
         self.dying_init_time = 0
+
+        self.acc = 0
 
         self.max_hp = 30
         self.hp = 30
         self.damage = 4
-        self.sight = self.PIXEL_PER_METER * 0.05
+        self.sight = self.PIXEL_PER_METER * 0.03
 
         self.dir = 0
         self.x = x

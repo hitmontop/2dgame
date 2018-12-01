@@ -1,7 +1,7 @@
 from pico2d import*
 import game_world
 import game_framework
-import smoke
+import particle
 import unit_functions
 
 class FlyingState:
@@ -26,8 +26,8 @@ class FlyingState:
 
         unit.generate_smoke_time -= game_framework.frame_time
         if unit.generate_smoke_time <= 0:
-            smoke.Smoke(unit.x, unit.y)
-            unit.generate_smoke_time += 0.1
+            particle.Smoke(unit.x, unit.y)
+            unit.generate_smoke_time += 0.08
 
 
 
@@ -48,6 +48,7 @@ class ExplodingState:
     @staticmethod
     def enter(unit):
         unit.explode_sound.play()
+        particle.Explosion(unit.x, unit.y)
         game_world.remove_object(unit)
 
     @staticmethod
