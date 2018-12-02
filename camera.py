@@ -5,7 +5,7 @@ from pico2d import*
 class Camera:
     def __init__(self):
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.5
+        self.RUN_SPEED_KMPH = 0.8
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
@@ -18,7 +18,6 @@ class Camera:
     def update(self):
         if self.collision_left():
             self.x -= self.RUN_SPEED_PPS * game_framework.frame_time
-
         if self.collision_right():
             self.x += self.RUN_SPEED_PPS * game_framework.frame_time
 

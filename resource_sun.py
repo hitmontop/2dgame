@@ -31,7 +31,7 @@ class IdleState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
+        unit.image.composite_draw(unit.image_dir, '', cx, cy, unit.IMAGE_SIZE, unit.IMAGE_SIZE)
 
 
 class FlyingState:
@@ -66,7 +66,7 @@ class FlyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(int(unit.frame) * unit.IMAGE_SIZE, 0, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
+        unit.image.composite_draw(unit.image_dir, '', cx, cy, unit.IMAGE_SIZE, unit.IMAGE_SIZE)
 
 
 
@@ -94,7 +94,7 @@ class ResourceSun:
         self.dir = 0
 
         self.image_dir = 0
-        self.DIR_CHANGE_TIME = 0.5
+        self.DIR_CHANGE_TIME = 0.01
         self.dir_time = self.DIR_CHANGE_TIME
 
         self.LAPSE_TIME = 5
@@ -146,7 +146,7 @@ class ResourceSun:
 
         self.dir_time -= game_framework.frame_time
         if self.dir_time <= 0:
-            self.image_dir += math.pi // 6
+            self.image_dir += math.pi / 120
             self.dir_time += self.DIR_CHANGE_TIME
 
         self.cur_state.do(self)

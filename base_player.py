@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
-import win_state
+import defeat_state
 
 import unit_list
 import unit_functions
@@ -78,7 +78,7 @@ class BrokenState:
 
     @staticmethod
     def do(unit):
-        game_framework.push_state(win_state)
+        game_framework.push_state(defeat_state)
 
     @staticmethod
     def draw(unit):

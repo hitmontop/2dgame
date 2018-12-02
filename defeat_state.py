@@ -5,18 +5,19 @@ import game_world
 import main_state
 from pico2d import*
 
-from indicator import VictoryMark
+from indicator import DefeatMark
+
 HEIGHT = 800
 
-name = "WinState"
+name = "DefeatState"
 
 restart_button = None
-vitory_mark = None
+defeat_mark = None
 
 def enter():
-    global restart_button, vitory_mark
+    global restart_button, defeat_mark
     restart_button = button.RestartButton(main_state.canvas_width//2, main_state.canvas_height//2 - 200)
-    vitory_mark = VictoryMark(main_state.canvas_width // 2, main_state.canvas_height // 2)
+    defeat_mark = DefeatMark(main_state.canvas_width//2, main_state.canvas_height//2)
 
 def exit():
     game_world.clear()
@@ -44,6 +45,8 @@ def handle_events():
 
 def update():
     restart_button.update()
+
+
 def draw():
     clear_canvas()
 

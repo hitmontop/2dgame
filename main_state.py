@@ -39,7 +39,7 @@ timer = 0
 moeny_indicator = None
 
 def enter():
-    game_world.money =200
+    game_world.money = 200
 
     get_canvas_w_d()
 

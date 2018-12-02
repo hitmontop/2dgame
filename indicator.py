@@ -57,6 +57,62 @@ class PauseMark:
     def handle_event(self, event):
         pass
 
+class VictoryMark:
+    def __init__(self,x,y):
+        self.image = load_image('resource\\image\\victory.png')
+        self.IMAGE_SIZE = self.image.w//2
+        self.x, self.y = main_state.canvas_width //2 , main_state.canvas_height//2
+        self.frame = 0
+        self.add_self()
+
+        self.BLINK_TIME_PER_ACTION = 1
+        self.BLINK_ACTION_PER_TIME = 1.0 / self.BLINK_TIME_PER_ACTION
+        self.BLINK_FRAMES_PER_ACTION = 2
+
+
+    def add_self(self):
+        game_world.add_object(self, 5)
+
+    def draw(self):
+        self.image.clip_draw(int(self.frame) * self.IMAGE_SIZE, self.IMAGE_SIZE * 0, self.IMAGE_SIZE,
+                             self.IMAGE_SIZE, self.x, self.y)
+
+
+    def update(self):
+        self.frame = (self.frame + self.BLINK_FRAMES_PER_ACTION *
+                      self.BLINK_ACTION_PER_TIME * game_framework.frame_time) % self.BLINK_FRAMES_PER_ACTION
+
+    def handle_event(self, event):
+        pass
+
+class DefeatMark:
+    def __init__(self,x,y):
+        self.image = load_image('resource\\image\\defeat.png')
+        self.IMAGE_SIZE = self.image.w//2
+        self.x, self.y = main_state.canvas_width //2 , main_state.canvas_height//2
+        self.frame = 0
+        self.add_self()
+
+        self.BLINK_TIME_PER_ACTION = 1
+        self.BLINK_ACTION_PER_TIME = 1.0 / self.BLINK_TIME_PER_ACTION
+        self.BLINK_FRAMES_PER_ACTION = 2
+
+
+    def add_self(self):
+        game_world.add_object(self, 5)
+
+    def draw(self):
+        self.image.clip_draw(int(self.frame) * self.IMAGE_SIZE, self.IMAGE_SIZE * 0, self.IMAGE_SIZE,
+                             self.IMAGE_SIZE, self.x, self.y)
+
+
+    def update(self):
+        self.frame = (self.frame + self.BLINK_FRAMES_PER_ACTION *
+                      self.BLINK_ACTION_PER_TIME * game_framework.frame_time) % self.BLINK_FRAMES_PER_ACTION
+
+    def handle_event(self, event):
+        pass
+
 
 class MoneyIndicator:
     def __init__(self):
