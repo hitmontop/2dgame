@@ -83,8 +83,8 @@ class SunFlower:
 
         self.is_air_unit = False
         self.is_foe = is_foe
-        self.max_hp = 1
-        self.hp = 1
+        self.max_hp = 100
+        self.hp = 100
 
         self.frame = 0
         self.x, self.y = x, y

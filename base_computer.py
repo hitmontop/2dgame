@@ -147,7 +147,7 @@ class ComputerBase:
         elif num ==3:
             unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==4:
-            unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
+            pass
         elif num == 5:
             unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == 6:
@@ -171,7 +171,7 @@ class ComputerBase:
     def update(self):
         self.unit_generate_time -= game_framework.frame_time
         if self.unit_generate_time <= 0:
-            self.unit_generate_time += 3
+            self.unit_generate_time += 5
             i = random.randint(0, 6)
             self.generate_unit(i)
 
@@ -179,6 +179,7 @@ class ComputerBase:
             i = random.randint(0, 6)
             self.generate_unit(i)
             unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
+            unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
             self.temp_hp = self.hp
 
         self.cur_state.do(self)
