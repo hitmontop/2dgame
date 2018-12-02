@@ -7,13 +7,15 @@ from background import Background
 from background import Background2
 from background import Background3
 
+from indicator import MoneyIndicator
+
 from camera import Camera
 from base_player import PlayerBase
 from base_computer import ComputerBase
 
 import button
 import button_toggle
-
+import pause_state
 
 
 import random
@@ -34,27 +36,32 @@ camera = None
 background = None
 font = None
 timer = 0
+moeny_indicator = None
 
 def enter():
+    game_world.money =200
+
     get_canvas_w_d()
 
     game_world.add_layer(6)
 
-    button.AntGenerateButton(100, 750)
-    button.SpitterAntGenerateButton(200, 750)
-    button.BeeGenerateButton(300,750)
-    button.QueenAntGenerateButton(400, 750)
-    button.JumpSpiderGenerateButton(500, 750)
-    button.BazookaBugGenerateButton(600, 750)
-    button.BombardDragonFlyGenerateButton(700, 750)
-    button.WaspGenerateButton(800, 750)
-    button_toggle.TurretGenerateButton(500, 500)
+    button_toggle.SunFlowerGenerateButton(50, 750)
+    button.AntGenerateButton(150, 750)
+    button.BeeGenerateButton(250,750)
+    button.SpitterAntGenerateButton(350, 750)
+    button.BazookaBugGenerateButton(450, 750)
+    button.BombardDragonFlyGenerateButton(550, 750)
+    button.QueenAntGenerateButton(650, 750)
+    button.WaspGenerateButton(750, 750)
+    button_toggle.TurretGenerateButton(850, 750)
+    button.BeetleGenerateButton(950, 750)
+
+    button.PauseButton(canvas_width - 50, canvas_height -50)
 
 
-    global background, font, player_base, computer_base, camera
+
+    global background, font, player_base, computer_base, camera, moeny_indicator
     font = load_font('ENCR10B.TTF', 16)
-
-    quit_button = button.QuitButton(1000, 700)
 
     background = Background()
 
@@ -78,6 +85,7 @@ def enter():
     player_base = PlayerBase(50, unit_functions.GROUND_HEIGHT)
     computer_base = ComputerBase(background.w - 50, unit_functions.GROUND_HEIGHT)
 
+    moeny_indicator = MoneyIndicator()
 
 def exit():
     game_world.clear()
@@ -114,13 +122,14 @@ def update():
         game_object.update()
     game_world.sort_unit_layer()
 
-    timer -= game_framework.frame_time
-    if timer <= 0:
-        game_world.money += 10
-        print(game_world.money)
-        timer += 1
 
 
+def pause():
+    pass
+
+
+def resume():
+    pass
 
 
 def draw():

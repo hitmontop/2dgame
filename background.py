@@ -1,5 +1,24 @@
 from pico2d import*
 
+class TitleBackground:
+    def __init__(self):
+        self.image = load_image('resource\\image\\background.png')
+        self.canvas_width = get_canvas_width()
+        self.canvas_height = get_canvas_height()
+        self.w = self.image.w
+        self.h = self.image.h
+
+        self.x, self.y = self.canvas_width//2 , self.canvas_height//2
+
+    def draw(self):
+        self.image.draw(self.x, self.y, self.w, self.h)
+
+    def update(self):
+        pass
+
+    def handle_event(self, event):
+        pass
+
 class Background:
     def __init__(self):
         self.image = load_image('resource\\image\\new_background.png')

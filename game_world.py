@@ -52,6 +52,16 @@ def clear():
     for o in all_objects():
         del o
     objects.clear()
+    clear_checking_layer()
+
+def clear_checking_layer():
+    computer_ground_unit.clear()
+    computer_air_unit.clear()
+    computer_all_unit.clear()
+
+    player_ground_unit.clear()
+    player_air_unit.clear()
+    player_all_unit.clear()
 
 
 def search_objects(i):

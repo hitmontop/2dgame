@@ -40,14 +40,15 @@ class FlyingState:
     def draw(unit):
         cx, cy = unit_functions.get_cx_cy(unit.x, unit.y)
 
-        unit.image.clip_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, cx, cy)
+        unit.image.clip_composite_draw(0, unit.IMAGE_SIZE * 1, unit.IMAGE_SIZE, unit.IMAGE_SIZE, unit.dir, '', cx, cy,
+                                       unit.IMAGE_SIZE, unit.IMAGE_SIZE)
 
 
 class ExplodingState:
 
     @staticmethod
     def enter(unit):
-        unit.init_time = get_time()
+        unit.init_time = unit.EXPLODING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -57,8 +58,14 @@ class ExplodingState:
     def do(unit):
         unit.frame = (unit.frame + unit.EXPLODING_FRAMES_PER_ACTION * unit.EXPLODING_ACTION_PER_TIME * game_framework.frame_time) % unit.EXPLODING_FRAMES_PER_ACTION
 
-        if get_time() - unit.init_time >= unit.EXPLODING_TIME_PER_ACTION:
+        unit.init_time -= game_framework.frame_time
+        if unit.init_time <= 0:
+            unit.init_time += unit.EXPLODING_TIME_PER_ACTION
             unit.add_event(FlyingState)
+
+
+
+
 
     @staticmethod
     def draw(unit):
@@ -178,6 +185,79 @@ class ProjectileSpitterAnt(HomingProjectile):
         self.cur_state = FlyingState
 
         if ProjectileSpitterAnt.image is None:
-            self.image = load_image('resource\\image\\projectile\\projectile_spitter_ant.png')
+            ProjectileSpitterAnt.image = load_image('resource\\image\\projectile\\projectile_spitter_ant.png')
+
+        self.add_self()
+
+class ProjectileSeed(HomingProjectile):
+    image = None
+
+    def __init__(self, x, y, target, damage):
+        self.IMAGE_SIZE = 30
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.4
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.EXPLODING_TIME_PER_ACTION = 0.3
+        self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
+        self.EXPLODING_FRAMES_PER_ACTION = 4
+
+        self.target = target
+        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = 0,0,0,0
+        self.frame = 0
+        self.init_time = 0
+
+
+        self.x, self.y = x, y
+        self.temp_x, self.temp_y = x, y
+        self.dir = math.atan2(self.temp_y - self.y, self.temp_x - self.x)
+
+        self.damage = damage
+
+        self.event_que = []
+        self.cur_state = FlyingState
+
+        if ProjectileSeed.image is None:
+            ProjectileSeed.image = load_image('resource\\image\\projectile\\seed.png')
+
+        self.add_self()
+
+
+class ProjectileNeedle(HomingProjectile):
+    image = None
+
+    def __init__(self, x, y, target, damage):
+        self.IMAGE_SIZE = 30
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.6
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.EXPLODING_TIME_PER_ACTION = 0.3
+        self.EXPLODING_ACTION_PER_TIME = 1.0 / self.EXPLODING_TIME_PER_ACTION
+        self.EXPLODING_FRAMES_PER_ACTION = 4
+
+        self.target = target
+        self.obj_left, self.obj_bottom, self.obj_right, self.obj_top = 0,0,0,0
+        self.frame = 0
+        self.init_time = 0
+
+
+        self.x, self.y = x, y
+        self.temp_x, self.temp_y = x, y
+        self.dir = math.atan2(self.temp_y - self.y, self.temp_x - self.x)
+
+        self.damage = damage
+
+        self.event_que = []
+        self.cur_state = FlyingState
+
+        if ProjectileNeedle.image is None:
+            ProjectileNeedle.image = load_image('resource\\image\\projectile\\needle.png')
 
         self.add_self()

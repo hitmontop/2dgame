@@ -89,7 +89,7 @@ class AttackState:
     @staticmethod
     def enter(unit):
         unit.frame = 0
-        unit.attack_init_time = get_time()
+        unit.attack_init_time = unit.ATTACK_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -97,9 +97,10 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
+        unit.attack_init_time -= game_framework.frame_time
+        if unit.attack_init_time <= 0:
             unit.attack_target()
-            unit.attack_init_time = get_time()
+            unit.attack_init_time += unit.ATTACK_TIME_PER_ACTION
 
         if (unit.target is None) is False:
             if unit.target.x <= unit.x:
@@ -133,7 +134,7 @@ class DyingState:
         game_world.add_object(unit, 1)
         game_world.pull_object(unit)
 
-        unit.dying_init_time = get_time()
+        unit.dying_init_time = unit.DYING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -141,7 +142,9 @@ class DyingState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
+        unit.dying_init_time -= game_framework.frame_time
+        if unit.dying_init_time <= 0:
+            unit.dying_init_time += unit.DYING_TIME_PER_ACTION
             unit.add_event(RunState)
 
         if unit.is_air_unit:
@@ -564,7 +567,7 @@ class SpitterAnt(RangeUnit):
         self.cur_state = RunState
 
         if SpitterAnt.image is None:
-            self.image = load_image('resource\\image\\unit\\spitter_ant.png')
+            SpitterAnt.image = load_image('resource\\image\\unit\\spitter_ant.png')
 
         self.add_self()
 
@@ -576,7 +579,7 @@ class SpitterAnt(RangeUnit):
 
 class BazookaBug(RangeUnit):
     image = None
-    cost = 80
+    cost = 40
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 120
 
@@ -641,7 +644,7 @@ class BazookaBug(RangeUnit):
 
 
         if BazookaBug.image is None:
-            self.image = load_image('resource\\image\\unit\\bazooka.png')
+            BazookaBug.image = load_image('resource\\image\\unit\\bazooka.png')
 
         self.add_self()
 
@@ -716,7 +719,7 @@ class QueenAnt(RangeUnit):
         self.cur_state = RunState
 
         if QueenAnt.image is None:
-            self.image = load_image('resource\\image\\unit\\queen.png')
+            QueenAnt.image = load_image('resource\\image\\unit\\queen.png')
 
         self.add_self()
 
@@ -758,7 +761,7 @@ class Wasp(RangeUnit):
 
         self.max_hp = 80
         self.hp = 80
-        self.damage = 50
+        self.damage = 40
         self.range = self.PIXEL_PER_METER * 0.04
         self.sight = self.PIXEL_PER_METER * 0.07
 
@@ -796,12 +799,12 @@ class Wasp(RangeUnit):
         self.cur_state = RunState
 
         if Wasp.image is None:
-            self.image = load_image('resource\\image\\unit\\wasp.png')
+            Wasp.image = load_image('resource\\image\\unit\\wasp.png')
 
         self.add_self()
 
     def attack_target(self):
         if (self.target is None) is False:
             self.attack_sound.play()
-            missile = unit_projectile_list.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
+            missile = unit_projectile_list.ProjectileNeedle(self.x, self.y, self.target, self.damage)
 

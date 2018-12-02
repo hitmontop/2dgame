@@ -87,7 +87,7 @@ class AttackState:
     @staticmethod
     def enter(unit):
         unit.frame = 0
-        unit.attack_init_time = get_time()
+        unit.attack_init_time = unit.ATTACK_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -95,9 +95,11 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
+
+        unit.attack_init_time -= game_framework.frame_time
+        if unit.attack_init_time <= 0:
             unit.attack_target()
-            unit.attack_init_time = get_time()
+            unit.attack_init_time += unit.ATTACK_TIME_PER_ACTION
 
         if (unit.target is None) is False:
             if unit.target.x <= unit.x:
@@ -131,7 +133,7 @@ class DyingState:
         game_world.add_object(unit, 1)
         game_world.pull_object(unit)
 
-        unit.dying_init_time = get_time()
+        unit.dying_init_time = unit.DYING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -139,7 +141,9 @@ class DyingState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
+        unit.dying_init_time -= game_framework.frame_time
+        if unit.dying_init_time <= 0:
+            unit.dying_init_time += unit.DYING_TIME_PER_ACTION
             unit.add_event(RunState)
 
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
@@ -223,7 +227,7 @@ class Turret:
         self.cur_state = RunState
 
         if Turret.image is None:
-            self.image = load_image('resource\\image\\unit\\nepandes.png')
+            Turret.image = load_image('resource\\image\\unit\\nepandes.png')
 
         self.add_self()
 # -----------------------------------------------------------------------------------------------------------------#
@@ -363,7 +367,7 @@ class Turret:
     def attack_target(self):
         if (self.target is None) is False:
             self.attack_sound.play()
-            missile = unit_projectile_list.ProjectileSpitterAnt(self.x, self.y, self.target, self.damage)
+            missile = unit_projectile_list.ProjectileSeed(self.x, self.y, self.target, self.damage)
 
 
 

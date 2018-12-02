@@ -93,7 +93,7 @@ class AttackState:
     @staticmethod
     def enter(unit):
         unit.frame = 0
-        unit.attack_init_time = get_time()
+        unit.attack_init_time = unit.ATTACK_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -101,9 +101,11 @@ class AttackState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.attack_init_time >= unit.ATTACK_TIME_PER_ACTION:
+
+        unit.attack_init_time -= game_framework.frame_time
+        if unit.attack_init_time <= 0:
             unit.attack_target()
-            unit.attack_init_time = get_time()
+            unit.attack_init_time += unit.ATTACK_TIME_PER_ACTION
 
         if (unit.target is None) is False:
             unit.dir = math.atan2(unit.temp_y - unit.y, unit.temp_x - unit.x)
@@ -134,7 +136,7 @@ class DyingState:
         game_world.add_object(unit, 1)
         game_world.pull_object(unit)
 
-        unit.dying_init_time = get_time()
+        unit.dying_init_time = unit.DYING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -142,7 +144,10 @@ class DyingState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
+
+        unit.dying_init_time -= game_framework.frame_time
+        if unit.dying_init_time <= 0:
+            unit.dying_init_time += unit.DYING_TIME_PER_ACTION
             unit.add_event(RunState)
 
 
@@ -588,7 +593,7 @@ class Bee(MeeleUnit):
 
 
         if Bee.image is None:
-            self.image = load_image('resource\\image\\unit\\bee.png')
+            Bee.image = load_image('resource\\image\\unit\\bee.png')
 
         self.add_self()
 
@@ -668,8 +673,82 @@ class Ant(MeeleUnit):
         self.cur_state = RunState
 
 
-        if Bee.image is None:
-            self.image = load_image('resource\\image\\unit\\ant.png')
+        if Ant.image is None:
+            Ant.image = load_image('resource\\image\\unit\\ant.png')
+
+        self.add_self()
+
+
+class Beetle(MeeleUnit):
+    image = None
+    cost = 100
+
+    def __init__(self, x, y, is_foe):
+        self.IMAGE_SIZE = 180
+        self.INIT_HEIGHT = y
+
+        self.PIXEL_PER_METER = (100 / 0.02)
+        self.RUN_SPEED_KMPH = 0.04
+        self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
+        self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
+        self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)
+
+        self.RUN_TIME_PER_ACTION = 1
+        self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
+        self.RUN_FRAMES_PER_ACTION = 2
+
+        self.ATTACK_TIME_PER_ACTION = 0.7
+        self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
+        self.ATTACK_FRAMES_PER_ACTION = 4
+        self.attack_init_time = 0
+
+        self.DYING_TIME_PER_ACTION = 4
+        self.DYING_ACTION_PER_TIME = 1.0 / self.DYING_TIME_PER_ACTION
+        self.DYING_FRAMES_PER_ACTION = 2
+        self.dying_init_time = 0
+
+        self.max_hp = 500
+        self.hp = 500
+        self.damage = 100
+        self.range = self.PIXEL_PER_METER * 0.02
+        self.sight = self.PIXEL_PER_METER * 0.05
+
+        self.dir = 0
+        self.x = x
+        self.y = y
+        self.temp_x, self.temp_y = 0, 0
+
+        self.frame = 0
+        self.time = 0
+        self.init_time = 0
+
+        self.target = None
+
+        self.attack_sound = load_wav('resource\\sound\\ult_attack.wav')
+        self.attack_sound.set_volume(10)
+        self.dying_sound = load_wav('resource\\sound\\ult_death.wav')
+        self.dying_sound.set_volume(10)
+
+        self.is_this_unit_can_attack_ground = True
+        self.is_this_unit_can_attack_air = False
+        self.is_air_unit = False
+        self.is_foe = is_foe
+
+        self.valid_target_list = []
+        self.get_valid_target_list(self.is_this_unit_can_attack_air, self.is_this_unit_can_attack_ground)
+
+        self.build_behavior_tree()
+
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
+
+        self.event_que = []
+        self.cur_state = RunState
+
+
+        if Beetle.image is None:
+            Beetle.image = load_image('resource\\image\\unit\\beetle.png')
 
         self.add_self()
 

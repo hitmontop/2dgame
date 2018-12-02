@@ -188,7 +188,7 @@ class TurretGenerateButton(ToggleButton):
         self.indicator = None
 
         if TurretGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            TurretGenerateButton.image = load_image('resource\\image\\button\\turret_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.Turret.cost
@@ -196,5 +196,33 @@ class TurretGenerateButton(ToggleButton):
 
     def is_inactive(self):
         if game_world.money < unit_list.Turret.cost:
+            return True
+        return False
+
+class SunFlowerGenerateButton(ToggleButton):
+    image = None
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.x, self.y = x, y
+        self.indicator = None
+
+        if SunFlowerGenerateButton.image is None:
+            SunFlowerGenerateButton.image = load_image('resource\\image\\button\\sunflower_button.png')
+
+    def click_action(self):
+        game_world.money -= unit_list.SunFlower.cost
+        obj = unit_list.SunBloom(self.indicator.x, self.indicator.y, False)
+
+    def is_inactive(self):
+        if game_world.money < unit_list.SunFlower.cost:
             return True
         return False

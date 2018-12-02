@@ -5,7 +5,7 @@ import main_state
 from pico2d import*
 import unit_list
 
-ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly, wasp = range(8)
+ant, spitter_ant, bee, queen_ant, beetle, bazooka_bug, bombard_dragonfly, wasp = range(8)
 
 class InactiveState:
     @staticmethod
@@ -179,7 +179,7 @@ class QuitButton(Button):
         self.x, self.y = x, y
 
         if QuitButton.image is None:
-            self.image = load_image('resource\\image\\button\\quit_button.png')
+            QuitButton.image = load_image('resource\\image\\button\\quit_button.png')
 
     def click_action(self):
         game_framework.quit()
@@ -206,7 +206,7 @@ class StartButton(Button):
         self.x, self.y = x, y
 
         if StartButton.image is None:
-            self.image = load_image('resource\\image\\button\\start_button.png')
+            StartButton.image = load_image('resource\\image\\button\\start_button.png')
 
     def click_action(self):
         game_framework.change_state(main_state)
@@ -239,7 +239,7 @@ class AntGenerateButton(Button):
         self.x, self.y = x, y
 
         if AntGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            AntGenerateButton.image = load_image('resource\\image\\button\\ant_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.Ant.cost
@@ -267,7 +267,7 @@ class SpitterAntGenerateButton(Button):
         self.x, self.y = x, y
 
         if SpitterAntGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            SpitterAntGenerateButton.image = load_image('resource\\image\\button\\spitter_ant_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.SpitterAnt.cost
@@ -294,7 +294,7 @@ class QueenAntGenerateButton(Button):
         self.x, self.y = x, y
 
         if QueenAntGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            QueenAntGenerateButton.image = load_image('resource\\image\\button\\queen_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.QueenAnt.cost
@@ -321,7 +321,7 @@ class BeeGenerateButton(Button):
         self.x, self.y = x, y
 
         if BeeGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            BeeGenerateButton.image = load_image('resource\\image\\button\\bee_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.Bee.cost
@@ -332,7 +332,7 @@ class BeeGenerateButton(Button):
             return True
         return False
 
-class JumpSpiderGenerateButton(Button):
+class BeetleGenerateButton(Button):
     image = None
 
     def __init__(self, x, y):
@@ -347,15 +347,15 @@ class JumpSpiderGenerateButton(Button):
 
         self.x, self.y = x, y
 
-        if JumpSpiderGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+        if BeetleGenerateButton.image is None:
+            BeetleGenerateButton.image = load_image('resource\\image\\button\\beetle_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.JumpSpider.cost
-        main_state.player_base.generate_unit(jump_spider)
+        game_world.money -= unit_list.Beetle.cost
+        main_state.player_base.generate_unit(beetle)
 
     def is_inactive(self):
-        if game_world.money < unit_list.JumpSpider.cost:
+        if game_world.money < unit_list.Beetle.cost:
             return True
         return False
 
@@ -375,14 +375,14 @@ class BazookaBugGenerateButton(Button):
         self.x, self.y = x, y
 
         if BazookaBugGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            BazookaBugGenerateButton.image = load_image('resource\\image\\button\\bazooka_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.JumpSpider.cost
+        game_world.money -= unit_list.BazookaBug.cost
         main_state.player_base.generate_unit(bazooka_bug)
 
     def is_inactive(self):
-        if game_world.money < unit_list.JumpSpider.cost:
+        if game_world.money < unit_list.BazookaBug.cost:
             return True
         return False
 
@@ -402,7 +402,7 @@ class BombardDragonFlyGenerateButton(Button):
         self.x, self.y = x, y
 
         if BombardDragonFlyGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            BombardDragonFlyGenerateButton.image = load_image('resource\\image\\button\\dragon_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.BombardDragonFly.cost
@@ -429,7 +429,7 @@ class WaspGenerateButton(Button):
         self.x, self.y = x, y
 
         if WaspGenerateButton.image is None:
-            self.image = load_image('resource\\image\\button\\generate_button.png')
+            WaspGenerateButton.image = load_image('resource\\image\\button\\wasp_button.png')
 
     def click_action(self):
         game_world.money -= unit_list.Wasp.cost
@@ -438,4 +438,79 @@ class WaspGenerateButton(Button):
     def is_inactive(self):
         if game_world.money < unit_list.Wasp.cost:
             return True
+        return False
+
+
+import pause_state
+class PauseButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.x, self.y = x, y
+
+        if PauseButton.image is None:
+            PauseButton.image = load_image('resource\\image\\button\\pause_button.png')
+
+    def click_action(self):
+        game_framework.push_state(pause_state)
+
+    def is_inactive(self):
+        return False
+
+class ResumeButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.IMAGE_HEIGHT = 80
+        self.IMAGE_WIDTH = 80
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.x, self.y = x, y
+
+        if ResumeButton.image is None:
+            ResumeButton.image = load_image('resource\\image\\button\\resume_button.png')
+
+    def click_action(self):
+        game_framework.pop_state()
+
+    def is_inactive(self):
+        return False
+
+
+class RestartButton(Button):
+    image = None
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.IMAGE_HEIGHT = 100
+        self.IMAGE_WIDTH = 200
+
+        if self.is_inactive():
+            self.cur_state = InactiveState
+        else:
+            self.cur_state = IdleState
+
+        self.x, self.y = x, y
+
+        if RestartButton.image is None:
+            RestartButton.image = load_image('resource\\image\\button\\restart_button.png')
+
+    def click_action(self):
+        game_framework.change_state(main_state)
+
+    def is_inactive(self):
         return False

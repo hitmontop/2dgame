@@ -97,7 +97,7 @@ class HpBar:
         self.master = master
 
         if HpBar.image is None:
-            self.image = load_image('resource\\image\\hp_bar.png')
+            HpBar.image = load_image('resource\\image\\hp_bar.png')
 
         self.cur_state = IdleState
 

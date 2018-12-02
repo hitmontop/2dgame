@@ -1,9 +1,11 @@
 from pico2d import *
 import game_framework
 import game_world
+import win_state
 
 import unit_list
 import unit_functions
+from hp_bar import HpBar
 
 import random
 
@@ -38,7 +40,7 @@ class ExplodingState:
     def enter(unit):
         unit.delete_this_unit_from_checking_layer()
 
-        unit.init_time = get_time()
+        unit.init_time = unit.EXPLODING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -50,7 +52,9 @@ class ExplodingState:
         unit.frame = (unit.frame + unit.EXPLODING_FRAMES_PER_ACTION *
                       unit.EXPLODING_ACTION_PER_TIME * game_framework.frame_time) % unit.EXPLODING_FRAMES_PER_ACTION
 
-        if get_time() - unit.init_time >= unit.EXPLODING_TIME_PER_ACTION:
+        unit.init_time -= game_framework.frame_time
+        if unit.init_time <= 0:
+            unit.init_time += unit.EXPLODING_TIME_PER_ACTION
             unit.add_event(BrokenState)
 
     @staticmethod
@@ -74,7 +78,7 @@ class BrokenState:
 
     @staticmethod
     def do(unit):
-        pass
+        game_framework.push_state(win_state)
 
     @staticmethod
     def draw(unit):
@@ -102,8 +106,8 @@ class PlayerBase:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 100
-        self.hp = 100
+        self.max_hp = 500
+        self.hp = 500
 
         self.x = x
         self.y = y
@@ -123,6 +127,11 @@ class PlayerBase:
         self.init_time = 0
         self.cnt = 0
 
+        hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
+        self.hp_bar = hp_bar
+        game_world.add_object(hp_bar, 4)
+
+
     def add_self(self):
         game_world.add_object(self, 1)
 
@@ -132,6 +141,7 @@ class PlayerBase:
     def delete_this_unit_from_checking_layer(self):
         game_world.player_all_unit.remove(self)
         game_world.player_ground_unit.remove(self)
+        game_world.remove_object(self.hp_bar)
 
     def generate_unit(self , num):
         if num == ant:
@@ -143,7 +153,7 @@ class PlayerBase:
         elif num == queen_ant:
             unit = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num ==jump_spider:
-            unit = unit_list.JumpSpider(self.x, self.y - random.randint(0, 50), self.is_foe)
+            unit = unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == bazooka_bug:
             unit = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
         elif num == bombard_dragonfly:

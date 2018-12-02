@@ -1,20 +1,19 @@
-from button import*
+from indicator import PauseMark
+import button
+import game_framework
+import game_world
 import main_state
-from background import Background
-from background import TitleBackground
+from pico2d import*
 
 HEIGHT = 800
 
-name = "MainState"
+name = "WinState"
+
+restart_button = None
 
 def enter():
-    game_world.add_layer(6)
-
-    background = TitleBackground()
-    game_world.add_object(background, 0)
-
-    start_button = StartButton(600, 500)
-    quit_button = QuitButton(600, 300)
+    global restart_button
+    restart_button = button.RestartButton(main_state.canvas_width//2, main_state.canvas_height//2 - 100)
 
 def exit():
     game_world.clear()
@@ -41,8 +40,7 @@ def handle_events():
 
 
 def update():
-    for game_object in game_world.all_objects():
-        game_object.update()
+    restart_button.update()
 
 def draw():
     clear_canvas()
@@ -51,4 +49,3 @@ def draw():
         game_object.draw()
 
     update_canvas()
-

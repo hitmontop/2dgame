@@ -131,7 +131,6 @@ class Explosion(Particle):
 
         self.x, self.y = x, y
         self.opacity = 1
-        self.generate_smoke_time = 0.1
         self.frame = 0
 
         self.event_que = []

@@ -112,7 +112,6 @@ class AttackState:
     @staticmethod
     def enter(unit):
         unit.frame = 0
-        unit.attack_init_time = get_time()
 
     @staticmethod
     def exit(unit):
@@ -164,7 +163,7 @@ class DyingState:
         game_world.add_object(unit, 1)
         game_world.pull_object(unit)
 
-        unit.dying_init_time = get_time()
+        unit.dying_init_time = unit.DYING_TIME_PER_ACTION
 
     @staticmethod
     def exit(unit):
@@ -172,12 +171,15 @@ class DyingState:
 
     @staticmethod
     def do(unit):
-        if get_time() - unit.dying_init_time >= unit.DYING_TIME_PER_ACTION:
+        unit.dying_init_time -= game_framework.frame_time
+        if unit.dying_init_time <= 0:
+            unit.dying_init_time += unit.DYING_TIME_PER_ACTION
             unit.add_event(RunState)
 
         if unit.is_air_unit:
             if unit.y > unit_functions.GROUND_HEIGHT_FOR_AIR_UNITS:
-                unit.y -= unit.RUN_SPEED_PPS * game_framework.frame_time
+                unit.y -= unit.acc * game_framework.frame_time
+                unit.acc += 5
 
         unit.frame = (unit.frame + unit.DYING_FRAMES_PER_ACTION *
                     unit.DYING_ACTION_PER_TIME * game_framework.frame_time) % unit.DYING_FRAMES_PER_ACTION
@@ -241,6 +243,7 @@ class BombardDragonFly:
         self.time = 0
         self.init_time = 0
         self.smoke_time =0
+        self.acc = 0
 
         self.target = None
 
@@ -263,7 +266,7 @@ class BombardDragonFly:
         game_world.add_object(hp_bar, 4)
 
         if BombardDragonFly.image is None:
-            self.image = load_image('resource\\image\\unit\\dragon.png')
+            BombardDragonFly.image = load_image('resource\\image\\unit\\dragon.png')
 
         self.add_self()
 

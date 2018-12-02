@@ -91,8 +91,6 @@ class BombProjectile:
         self.event_que = []
         self.cur_state = FlyingState
 
-        self.add_self()
-
         self.explode_sound = None
 
     def add_self(self):
@@ -175,7 +173,7 @@ class ProjectileBazookaBug(BombProjectile):
         self.explode_sound.set_volume(50)
 
         if ProjectileBazookaBug.image is None:
-            self.image = load_image('resource\\image\\projectile\\bazooka_bomb.png')
+            ProjectileBazookaBug.image = load_image('resource\\image\\projectile\\bazooka_bomb.png')
 
         self.add_self()
 
@@ -219,7 +217,7 @@ class ProjectileBomBardDragonFly(BombProjectile):
         self.fire_sound.set_volume(20)
 
         if ProjectileBomBardDragonFly.image is None:
-            self.image = load_image('resource\\image\\projectile\\dragon_bomb.png')
+            ProjectileBomBardDragonFly.image = load_image('resource\\image\\projectile\\dragon_bomb.png')
 
         self.add_self()
 

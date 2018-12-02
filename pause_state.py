@@ -1,23 +1,25 @@
-from button import*
+from indicator import PauseMark
+import button
+import game_framework
+import game_world
 import main_state
-from background import Background
-from background import TitleBackground
+from pico2d import*
 
 HEIGHT = 800
 
-name = "MainState"
+name = "PauseState"
+
+pause_mark = None
+resume_button =None
 
 def enter():
-    game_world.add_layer(6)
-
-    background = TitleBackground()
-    game_world.add_object(background, 0)
-
-    start_button = StartButton(600, 500)
-    quit_button = QuitButton(600, 300)
+    global pause_mark, resume_button
+    pause_mark = PauseMark()
+    resume_button = button.ResumeButton(main_state.canvas_width -50, main_state.canvas_height-50)
 
 def exit():
-    game_world.clear()
+    game_world.remove_object(pause_mark)
+    game_world.remove_object(resume_button)
 
 def handle_events():
     events = get_events()
@@ -41,8 +43,8 @@ def handle_events():
 
 
 def update():
-    for game_object in game_world.all_objects():
-        game_object.update()
+    pause_mark.update()
+    resume_button.update()
 
 def draw():
     clear_canvas()
@@ -51,4 +53,3 @@ def draw():
         game_object.draw()
 
     update_canvas()
-
