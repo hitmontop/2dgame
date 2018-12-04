@@ -25,6 +25,9 @@ class IdleState:
             unit.sun_sound.play()
             unit.add_event(FlyingState)
 
+        if unit.y > unit_functions.GROUND_HEIGHT:
+            unit.y -= unit.RUN_SPEED_PPS / 5 * game_framework.frame_time
+
 
 
     @staticmethod
@@ -78,7 +81,7 @@ class ResourceSun:
         self.IMAGE_SIZE = 80
 
         self.PIXEL_PER_METER = (100 / 0.02)
-        self.RUN_SPEED_KMPH = 0.4
+        self.RUN_SPEED_KMPH = 0.8
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)
         self.RUN_SPEED_MPS = (self.RUN_SPEED_MPM / 60.0)
         self.RUN_SPEED_PPS = (self.RUN_SPEED_MPS * self.PIXEL_PER_METER)

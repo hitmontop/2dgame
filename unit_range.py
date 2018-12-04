@@ -731,7 +731,7 @@ class QueenAnt(RangeUnit):
 
 class Wasp(RangeUnit):
     image = None
-    cost = 50
+    cost = 60
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 130

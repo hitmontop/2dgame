@@ -8,7 +8,7 @@ import unit_functions
 from hp_bar import HpBar
 
 import random
-
+from resource_sun import ResourceSun
 ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly, wasp = range(8)
 
 class IdleState:
@@ -25,6 +25,11 @@ class IdleState:
     def do(unit):
         if unit.is_this_unit_dead():
             unit.add_event(ExplodingState)
+
+        unit.sun_time -= game_framework.frame_time
+        if unit.sun_time <= 0:
+            unit.sun_time += unit.GENERATE_SUN_TIME
+            ResourceSun(random.randint (400, 1500), 810)
 
     @staticmethod
     def draw(unit):
@@ -111,6 +116,9 @@ class PlayerBase:
 
         self.x = x
         self.y = y
+
+        self.GENERATE_SUN_TIME = 13
+        self.sun_time = self.GENERATE_SUN_TIME
 
         self.frame = 0
         self.init_time = 0

@@ -29,7 +29,7 @@ class IdleState:
         unit.product_init_time -= game_framework.frame_time
         if unit.product_init_time <= 0:
             unit.product_init_time  += unit.PRODUCT_TIME
-            ResourceSun(unit.x + 50 +random.randint(-30, 30), unit.y + random.randint(0, 30))
+            ResourceSun(unit.x + random.randint(-30, 30), unit.y + random.randint(0, 30))
 
 
 
