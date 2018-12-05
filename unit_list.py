@@ -14,3 +14,5 @@ from unit_sunflower import SunFlower
 
 from unit_egg import Bloom
 from unit_egg import SunBloom
+
+ant, spitter, bee, bazooka, queen, dragon, wasp, beetle, turret, sunflower, bloom, sunbloom = range(12)

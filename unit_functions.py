@@ -12,7 +12,7 @@ SKY_HEIGHT_WASP = 450
 def is_this_unit_dead(self):
     if self.hp <= 0:
         return True
-    elif self.x < 0 or self.x > main_state.background.w:
+    elif self.x < -200 or self.x > main_state.background.w + 200:
         self.hp = 0
         return True
     return False

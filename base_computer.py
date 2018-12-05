@@ -100,14 +100,14 @@ class ComputerBase:
 
         self.max_hp = 2000
         self.hp = 2000
-        self.temp_hp = 2000
+        self.temp_hp1 = 2000
+        self.temp_hp2 = 2000
         self.x = x
         self.y = y
 
         self.frame = 0
         self.init_time = 0
 
-        self.unit_generate_time =0
 
         self.is_foe = True
 
@@ -120,6 +120,12 @@ class ComputerBase:
 
         self.init_time = 0
         self.cnt =0
+
+        self.start_timer = 0
+        self.PHASE = 1
+        self.UNIT_GENERATE_TIME = 4
+        self.unit_generate_time = 0
+
 
         hp_bar = HpBar(self.x, self.y, self.max_hp, self.max_hp, self.is_foe, self)
         self.hp_bar = hp_bar
@@ -137,22 +143,43 @@ class ComputerBase:
         game_world.computer_ground_unit.remove(self)
         game_world.remove_object(self.hp_bar)
 
-    def generate_unit(self , num):
-        if num == 0:
+    def PHASE_1(self , num):
+        if num <= 4:
             unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
-        elif num ==1:
+        elif num <= 9:
             unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num ==2:
-            unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0,50), self.is_foe)
-        elif num ==3:
+        elif num <= 10:
             unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num ==4:
-            pass
-        elif num == 5:
-            unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == 6:
-            unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
 
+    def PHASE_2(self, num):
+        unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0, 50), self.is_foe)
+        unit_list.Ant(self.x, self.y - random.randint(0, 50), self.is_foe)
+
+        if num <= 5:
+            unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+            unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0, 50), self.is_foe)
+        elif num <= 6:
+            unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num <= 7:
+            unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0, 50), self.is_foe)
+        elif num <= 9:
+            unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+            unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
+
+    def PHASE_3(self, num):
+        unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0, 50), self.is_foe)
+        unit_list.Ant(self.x, self.y - random.randint(0, 50), self.is_foe)
+        unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+
+        if num <= 1:
+            unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+            unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0, 50), self.is_foe)
+        elif num <= 4:
+            unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num <= 7:
+            unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num <= 9:
+            unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0, 50), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE-80) // 2, \
@@ -169,18 +196,37 @@ class ComputerBase:
         self.event_que.insert(0, event)
 
     def update(self):
-        self.unit_generate_time -= game_framework.frame_time
-        if self.unit_generate_time <= 0:
-            self.unit_generate_time += 5
-            i = random.randint(0, 6)
-            self.generate_unit(i)
+        self.start_timer += game_framework.frame_time
+        if self.start_timer > 120:
+            self.PHASE = 2
+            self.UNIT_GENERATE_TIME = 5
 
-        if (self.temp_hp == self.hp) is False:
-            i = random.randint(0, 6)
-            self.generate_unit(i)
-            unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
+        self.unit_generate_time -= game_framework.frame_time
+        if self.unit_generate_time < 0:
+            self.unit_generate_time += self.UNIT_GENERATE_TIME
+            if self.PHASE == 1:
+
+                i = random.randint(0, 10)
+                self.PHASE_1(i)
+
+            elif self.PHASE == 2:
+                i = random.randint(0, 9)
+                self.PHASE_2(i)
+
+            elif self.PHASE == 3:
+                i = random.randint(0, 9)
+                self.PHASE_3(i)
+
+        if self.temp_hp1 - self.hp > 100:
+            unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+            unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0, 50), self.is_foe)
+            self.temp_hp1 = self.hp
+
+        if self.temp_hp2 - self.hp > 200:
+            unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0, 50), self.is_foe)
             unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
-            self.temp_hp = self.hp
+            self.temp_hp2 = self.hp
+
 
         self.cur_state.do(self)
         if len(self.event_que) > 0:

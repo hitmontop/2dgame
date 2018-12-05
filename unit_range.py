@@ -503,6 +503,7 @@ class RangeUnit:
 class SpitterAnt(RangeUnit):
     image = None
     cost = 20
+    BUILD_TIME = 0.8
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -580,6 +581,8 @@ class SpitterAnt(RangeUnit):
 class BazookaBug(RangeUnit):
     image = None
     cost = 40
+    BUILD_TIME = 1.5
+
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 120
 
@@ -656,6 +659,7 @@ class BazookaBug(RangeUnit):
 class QueenAnt(RangeUnit):
     image = None
     cost = 50
+    BUILD_TIME = 5
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 150
 
@@ -669,7 +673,7 @@ class QueenAnt(RangeUnit):
         self.RUN_ACTION_PER_TIME = 1.0 / self.RUN_TIME_PER_ACTION
         self.RUN_FRAMES_PER_ACTION = 4
 
-        self.ATTACK_TIME_PER_ACTION = 2
+        self.ATTACK_TIME_PER_ACTION = 3.5
         self.ATTACK_ACTION_PER_TIME = 1.0 / self.ATTACK_TIME_PER_ACTION
         self.ATTACK_FRAMES_PER_ACTION = 1
         self.attack_init_time = 0
@@ -732,6 +736,7 @@ class QueenAnt(RangeUnit):
 class Wasp(RangeUnit):
     image = None
     cost = 60
+    BUILD_TIME = 6
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 130
@@ -806,5 +811,5 @@ class Wasp(RangeUnit):
     def attack_target(self):
         if (self.target is None) is False:
             self.attack_sound.play()
-            missile = unit_projectile_list.ProjectileNeedle(self.x, self.y, self.target, self.damage)
+            missile = unit_projectile_list.ProjectileNeedle(self.x , self.y - self.IMAGE_SIZE//2 + 10, self.target, self.damage)
 

@@ -199,7 +199,7 @@ class DyingState:
 class BombardDragonFly:
     image = None
     cost = 40
-
+    BUILD_TIME = 5
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 200
 

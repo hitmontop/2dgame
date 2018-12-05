@@ -104,7 +104,9 @@ class AttackState:
 
         unit.attack_init_time -= game_framework.frame_time
         if unit.attack_init_time <= 0:
-            unit.attack_target()
+            if (unit.target is None) is False:
+                if unit.collide(unit.target):
+                    unit.attack_target()
             unit.attack_init_time += unit.ATTACK_TIME_PER_ACTION
 
         if (unit.target is None) is False:
@@ -174,6 +176,8 @@ class DyingState:
 class MeeleUnit:
 
     def __init__(self):
+        self.temp_target
+
         self.IMAGE_SIZE
         self.INIT_HEIGHT
         self.DYING_HEIGHT
@@ -525,6 +529,7 @@ class MeeleUnit:
 class Bee(MeeleUnit):
     image = None
     cost = 10
+    BUILD_TIME = 0.3
 
     def __init__(self, x, y, is_foe):
 
@@ -594,7 +599,6 @@ class Bee(MeeleUnit):
 
         if Bee.image is None:
             Bee.image = load_image('resource\\image\\unit\\bee.png')
-
         self.add_self()
 
     def get_bb(self):
@@ -608,6 +612,7 @@ class Bee(MeeleUnit):
 class Ant(MeeleUnit):
     image = None
     cost = 10
+    BUILD_TIME= 0.3
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 100
@@ -682,6 +687,7 @@ class Ant(MeeleUnit):
 class Beetle(MeeleUnit):
     image = None
     cost = 100
+    BUILD_TIME = 10
 
     def __init__(self, x, y, is_foe):
         self.IMAGE_SIZE = 180

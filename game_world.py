@@ -22,6 +22,8 @@ player_ground_unit = []
 player_air_unit = []
 player_all_unit = []
 
+plants_checking_layer = []
+
 def sort_unit_layer():
     objects[2].sort(key=lambda object : object.y, reverse = True)
 
@@ -63,6 +65,7 @@ def clear_checking_layer():
     player_air_unit.clear()
     player_all_unit.clear()
 
+    plants_checking_layer.clear()
 
 def search_objects(i):
     for o in objects[i]:

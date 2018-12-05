@@ -108,6 +108,7 @@ class ClickedState:
 
 
 class Button:
+    font = None
     def __init__(self):
 
         self.IMAGE_HEIGHT = 0
@@ -120,6 +121,7 @@ class Button:
         self.x = 0
         self.y = 0
 
+
         self.mouseover_sound = load_wav('resource\\sound\\mouseover.wav')
         self.mouseover_sound.set_volume(32)
         self.press_sound = load_wav('resource\\sound\\press.wav')
@@ -128,6 +130,9 @@ class Button:
         self.frame = 0
         self.init_time = 0
         self.add_self()
+
+        if Button.font is None:
+            Button.font = load_font('ENCR10B.TTF', 20)
 
     def add_self(self):
         game_world.add_object(self, 5)
@@ -154,6 +159,7 @@ class Button:
         self.event_que.insert(0, event)
 
     def update(self):
+
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -163,6 +169,7 @@ class Button:
 
     def draw(self):
         self.cur_state.draw(self)
+
 
     def handle_event(self):
         pass
@@ -230,6 +237,7 @@ class AntGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.Ant.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -242,8 +250,10 @@ class AntGenerateButton(Button):
             AntGenerateButton.image = load_image('resource\\image\\button\\ant_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.Ant.cost
-        main_state.player_base.generate_unit(ant)
+        if len(main_state.unit_builder.waiting_line) < 7 :
+            game_world.money -= unit_list.Ant.cost
+            main_state.unit_builder.waiting_line.append([unit_list.ant, unit_list.Ant.BUILD_TIME])
+
 
     def is_inactive(self):
         if game_world.money < unit_list.Ant.cost:
@@ -258,6 +268,7 @@ class SpitterAntGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.SpitterAnt.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -270,8 +281,9 @@ class SpitterAntGenerateButton(Button):
             SpitterAntGenerateButton.image = load_image('resource\\image\\button\\spitter_ant_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.SpitterAnt.cost
-        main_state.player_base.generate_unit(spitter_ant)
+        if len(main_state.unit_builder.waiting_line) < 7 :
+            game_world.money -= unit_list.SpitterAnt.cost
+            main_state.unit_builder.waiting_line.append([unit_list.spitter, unit_list.SpitterAnt.BUILD_TIME])
 
     def is_inactive(self):
         if game_world.money < unit_list.SpitterAnt.cost:
@@ -285,6 +297,7 @@ class QueenAntGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.QueenAnt.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -297,8 +310,9 @@ class QueenAntGenerateButton(Button):
             QueenAntGenerateButton.image = load_image('resource\\image\\button\\queen_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.QueenAnt.cost
-        main_state.player_base.generate_unit(queen_ant)
+        if len(main_state.unit_builder.waiting_line) < 7 :
+            game_world.money -= unit_list.QueenAnt.cost
+            main_state.unit_builder.waiting_line.append([unit_list.queen, unit_list.QueenAnt.BUILD_TIME])
 
     def is_inactive(self):
         if game_world.money < unit_list.QueenAnt.cost:
@@ -312,6 +326,7 @@ class BeeGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.Bee.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -324,8 +339,10 @@ class BeeGenerateButton(Button):
             BeeGenerateButton.image = load_image('resource\\image\\button\\bee_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.Bee.cost
-        main_state.player_base.generate_unit(bee)
+        if len(main_state.unit_builder.waiting_line) < 7:
+            game_world.money -= unit_list.Bee.cost
+            main_state.unit_builder.waiting_line.append([unit_list.bee, unit_list.Bee.BUILD_TIME])
+
 
     def is_inactive(self):
         if game_world.money < unit_list.Bee.cost:
@@ -339,6 +356,7 @@ class BeetleGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.Beetle.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -351,8 +369,10 @@ class BeetleGenerateButton(Button):
             BeetleGenerateButton.image = load_image('resource\\image\\button\\beetle_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.Beetle.cost
-        main_state.player_base.generate_unit(beetle)
+        if len(main_state.unit_builder.waiting_line) < 7:
+            game_world.money -= unit_list.Beetle.cost
+            main_state.unit_builder.waiting_line.append([unit_list.beetle, unit_list.Beetle.BUILD_TIME])
+
 
     def is_inactive(self):
         if game_world.money < unit_list.Beetle.cost:
@@ -366,6 +386,7 @@ class BazookaBugGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.BazookaBug.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -378,8 +399,9 @@ class BazookaBugGenerateButton(Button):
             BazookaBugGenerateButton.image = load_image('resource\\image\\button\\bazooka_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.BazookaBug.cost
-        main_state.player_base.generate_unit(bazooka_bug)
+        if len(main_state.unit_builder.waiting_line) < 7:
+            game_world.money -= unit_list.BazookaBug.cost
+            main_state.unit_builder.waiting_line.append([unit_list.bazooka, unit_list.BazookaBug.BUILD_TIME])
 
     def is_inactive(self):
         if game_world.money < unit_list.BazookaBug.cost:
@@ -393,6 +415,7 @@ class BombardDragonFlyGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.BombardDragonFly.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -405,8 +428,10 @@ class BombardDragonFlyGenerateButton(Button):
             BombardDragonFlyGenerateButton.image = load_image('resource\\image\\button\\dragon_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.BombardDragonFly.cost
-        main_state.player_base.generate_unit(bombard_dragonfly)
+        if len(main_state.unit_builder.waiting_line) < 7:
+            game_world.money -= unit_list.BombardDragonFly.cost
+            main_state.unit_builder.waiting_line.append([unit_list.dragon, unit_list.BombardDragonFly.BUILD_TIME])
+
 
     def is_inactive(self):
         if game_world.money < unit_list.BombardDragonFly.cost:
@@ -420,6 +445,7 @@ class WaspGenerateButton(Button):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.cost = unit_list.Wasp.cost
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -432,8 +458,10 @@ class WaspGenerateButton(Button):
             WaspGenerateButton.image = load_image('resource\\image\\button\\wasp_button.png')
 
     def click_action(self):
-        game_world.money -= unit_list.Wasp.cost
-        main_state.player_base.generate_unit(wasp)
+        if len(main_state.unit_builder.waiting_line) < 7:
+            game_world.money -= unit_list.Wasp.cost
+            main_state.unit_builder.waiting_line.append( [unit_list.wasp, unit_list.Wasp.BUILD_TIME])
+
 
     def is_inactive(self):
         if game_world.money < unit_list.Wasp.cost:

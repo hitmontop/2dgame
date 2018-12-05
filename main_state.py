@@ -23,7 +23,7 @@ import random
 
 import unit_list
 import unit_functions
-
+from indicator import UnitBuilder
 name = "MainState"
 
 canvas_width = 0
@@ -37,6 +37,7 @@ background = None
 font = None
 timer = 0
 moeny_indicator = None
+unit_builder = None
 
 def enter():
     game_world.money = 200
@@ -60,7 +61,7 @@ def enter():
 
 
 
-    global background, font, player_base, computer_base, camera, moeny_indicator
+    global background, font, player_base, computer_base, camera, moeny_indicator, unit_builder
     font = load_font('ENCR10B.TTF', 16)
 
     background = Background()
@@ -86,6 +87,9 @@ def enter():
     computer_base = ComputerBase(background.w - 50, unit_functions.GROUND_HEIGHT)
 
     moeny_indicator = MoneyIndicator()
+
+    unit_builder = UnitBuilder()
+    unit_builder.waiting_line_build()
 
 def exit():
     game_world.clear()

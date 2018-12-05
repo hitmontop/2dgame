@@ -29,8 +29,7 @@ class WaitingState:
                 unit.add_event(HatchState)
             else:
                 unit.add_unit()
-                unit.delete_this_unit_from_checking_layer()
-                game_world.remove_object(unit)
+                unit.add_event(DyingState)
 
 
     @staticmethod
@@ -58,10 +57,8 @@ class HatchState:
 
         unit.HATCH_TIME_PER_ACTION -= game_framework.frame_time
         if unit.hatch_init_time <= 0:
-            print("tes")
             unit.add_unit()
-            unit.delete_this_unit_from_checking_layer()
-            game_world.remove_object(unit)
+            unit.add_event(DyingState)
 
 
     @staticmethod
@@ -145,6 +142,7 @@ class Egg:
         pass
 
     def delete_this_unit_from_checking_layer(self):
+        game_world.plants_checking_layer.remove(self)
         if self.is_foe:
             game_world.computer_all_unit.remove(self)
             if self.is_air_unit:
@@ -163,6 +161,7 @@ class Egg:
 
     def add_self(self):
         game_world.add_object(self, UNIT_LIST)
+        game_world.plants_checking_layer.append(self)
 
         if self.is_foe:
             game_world.computer_all_unit.append(self)
@@ -249,10 +248,10 @@ class Bloom(Egg):
         self.add_self()
 
     def get_bb(self):
-        return self.x - (self.IMAGE_SIZE - 100) // 2, \
-               self.y - (self.IMAGE_SIZE - 100) // 2, \
-               self.x + (self.IMAGE_SIZE - 100) // 2, \
-               self.y + (self.IMAGE_SIZE - 100) // 2
+        return self.x - (self.IMAGE_SIZE - 70) // 2, \
+               self.y - (self.IMAGE_SIZE) // 2, \
+               self.x + (self.IMAGE_SIZE - 70) // 2, \
+               self.y + (self.IMAGE_SIZE) // 2
 
     def add_unit(self):
         unit_list.Turret(self.x, self.y, self.is_foe)
@@ -306,10 +305,10 @@ class SunBloom(Egg):
         self.add_self()
 
     def get_bb(self):
-        return self.x - (self.IMAGE_SIZE - 100) // 2, \
-               self.y - (self.IMAGE_SIZE - 100) // 2, \
-               self.x + (self.IMAGE_SIZE - 100) // 2, \
-               self.y + (self.IMAGE_SIZE - 100) // 2
+        return self.x - (self.IMAGE_SIZE - 70) // 2, \
+               self.y - (self.IMAGE_SIZE) // 2, \
+               self.x + (self.IMAGE_SIZE - 70) // 2, \
+               self.y + (self.IMAGE_SIZE) // 2
 
     def add_unit(self):
         unit_list.SunFlower(self.x, self.y, self.is_foe)

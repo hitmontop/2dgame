@@ -3,6 +3,8 @@ import game_framework
 import main_state
 
 from indicator import Indicator_1
+from indicator import Indicator_2
+
 from pico2d import*
 import unit_list
 import unit_functions
@@ -83,7 +85,7 @@ class ClickedState:
 
     @staticmethod
     def enter(unit):
-        unit.indicator = Indicator_1()
+        unit.add_indicator()
 
     @staticmethod
     def exit(unit):
@@ -109,6 +111,7 @@ class ClickedState:
 
 
 class ToggleButton:
+    font = None
     def __init__(self):
 
         self.IMAGE_HEIGHT = 0
@@ -117,6 +120,9 @@ class ToggleButton:
         self.event_que = []
 
         self.cur_state = IdleState
+
+        self.COOL_TIME = 0
+        self.cooltime = 0
 
         self.x = 0
         self.y = 0
@@ -130,6 +136,12 @@ class ToggleButton:
         self.init_time = 0
         self.add_self()
         self.indicator = None
+
+        if ToggleButton.font is None:
+            ToggleButton.font = load_font('ENCR10B.TTF')
+
+    def add_indicator(self):
+        pass
 
     def add_self(self):
         game_world.add_object(self, 5)
@@ -156,6 +168,11 @@ class ToggleButton:
         self.event_que.insert(0, event)
 
     def update(self):
+        if self.cooltime > 0:
+            self.cooltime -= game_framework.frame_time
+        else:
+            self.cooltime = 0
+
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -165,6 +182,9 @@ class ToggleButton:
 
     def draw(self):
         self.cur_state.draw(self)
+
+        if self.cooltime > 0:
+            self.font.draw(self.x - 25, self.y - 55, '%2.1f' % self.cooltime, (255, 0, 0))
 
     def handle_event(self):
         pass
@@ -178,6 +198,7 @@ class TurretGenerateButton(ToggleButton):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.COOL_TIME = 15
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -190,11 +211,18 @@ class TurretGenerateButton(ToggleButton):
         if TurretGenerateButton.image is None:
             TurretGenerateButton.image = load_image('resource\\image\\button\\turret_button.png')
 
+    def add_indicator(self):
+        self.indicator = Indicator_2()
+
     def click_action(self):
-        game_world.money -= unit_list.Turret.cost
-        obj = unit_list.Bloom(self.indicator.x, self.indicator.y, False)
+        if self.indicator.is_collied is False:
+            game_world.money -= unit_list.Turret.cost
+            self.cooltime += self.COOL_TIME
+            obj = unit_list.Bloom(self.indicator.x, self.indicator.y, False)
 
     def is_inactive(self):
+        if self.cooltime > 0:
+            return True
         if game_world.money < unit_list.Turret.cost:
             return True
         return False
@@ -206,6 +234,7 @@ class SunFlowerGenerateButton(ToggleButton):
         super().__init__()
         self.IMAGE_HEIGHT = 80
         self.IMAGE_WIDTH = 80
+        self.COOL_TIME = 15
 
         if self.is_inactive():
             self.cur_state = InactiveState
@@ -218,11 +247,18 @@ class SunFlowerGenerateButton(ToggleButton):
         if SunFlowerGenerateButton.image is None:
             SunFlowerGenerateButton.image = load_image('resource\\image\\button\\sunflower_button.png')
 
+    def add_indicator(self):
+        self.indicator = Indicator_1()
+
     def click_action(self):
-        game_world.money -= unit_list.SunFlower.cost
-        obj = unit_list.SunBloom(self.indicator.x, self.indicator.y, False)
+        if self.indicator.is_collied is False:
+            game_world.money -= unit_list.SunFlower.cost
+            self.cooltime += self.COOL_TIME
+            obj = unit_list.SunBloom(self.indicator.x, self.indicator.y, False)
 
     def is_inactive(self):
+        if self.cooltime > 0:
+            return True
         if game_world.money < unit_list.SunFlower.cost:
             return True
         return False

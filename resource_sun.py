@@ -75,11 +75,10 @@ class FlyingState:
 
 class ResourceSun:
     image = None
-    cost = 50
+    cost = 30
 
     def __init__(self, x, y):
         self.IMAGE_SIZE = 80
-
         self.PIXEL_PER_METER = (100 / 0.02)
         self.RUN_SPEED_KMPH = 0.8
         self.RUN_SPEED_MPM = (self.RUN_SPEED_KMPH * 1000.0 / 60.0)

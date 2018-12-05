@@ -9,7 +9,6 @@ from hp_bar import HpBar
 
 import random
 from resource_sun import ResourceSun
-ant, spitter_ant, bee, queen_ant, jump_spider, bazooka_bug, bombard_dragonfly, wasp = range(8)
 
 class IdleState:
 
@@ -111,13 +110,13 @@ class PlayerBase:
         self.event_que = []
         self.cur_state = IdleState
 
-        self.max_hp = 500
-        self.hp = 500
+        self.max_hp = 800
+        self.hp = 800
 
         self.x = x
         self.y = y
 
-        self.GENERATE_SUN_TIME = 13
+        self.GENERATE_SUN_TIME = 9
         self.sun_time = self.GENERATE_SUN_TIME
 
         self.frame = 0
@@ -152,22 +151,23 @@ class PlayerBase:
         game_world.remove_object(self.hp_bar)
 
     def generate_unit(self , num):
-        if num == ant:
-            unit = unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
-        elif num == spitter_ant:
-            unit = unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == bee:
-            unit = unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
-        elif num == queen_ant:
-            unit = unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num ==jump_spider:
-            unit = unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == bazooka_bug:
-            unit = unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
-        elif num == bombard_dragonfly:
-            unit = unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
-        elif num == wasp:
-            unit = unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0,50), self.is_foe)
+
+        if num == unit_list.ant:
+            unit_list.Ant(self.x, self.y- random.randint(0,50), self.is_foe)
+        elif num == unit_list.spitter:
+            unit_list.SpitterAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == unit_list.bee:
+            unit_list.Bee(self.x, unit_functions.SKY_HEIGHT + random.randint(0,50), self.is_foe)
+        elif num == unit_list.queen:
+            unit_list.QueenAnt(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == unit_list.beetle:
+            unit_list.Beetle(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == unit_list.bazooka:
+            unit_list.BazookaBug(self.x, self.y - random.randint(0, 50), self.is_foe)
+        elif num == unit_list.dragon:
+            unit_list.BombardDragonFly(self.x, unit_functions.SKY_HEIGHT_BOMBARD + random.randint(0,50), self.is_foe)
+        elif num == unit_list.wasp:
+            unit_list.Wasp(self.x, unit_functions.SKY_HEIGHT_WASP + random.randint(0,50), self.is_foe)
 
     def get_bb(self):
         return self.x - (self.IMAGE_SIZE - 80) // 2, \
